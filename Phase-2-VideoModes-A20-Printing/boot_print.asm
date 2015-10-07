@@ -15,7 +15,8 @@ jmp start			; Safely jump ourselves away from any stored
 ;==================================================
 ; 		DATA SEGEMENT
 ;==================================================
-warmupmsg db "Press any key to continue booting...", 10, 13, 0
+newline db 10, 13
+warmupmsg db "Press any key to continue booting...", newline, 0
 bootmsg db "Hello BIOS! Thanks!", 0
 ;==================================================
 ;		CODE SEGMENT
