@@ -1,0 +1,70 @@
+Shell:
+=======
+touch - Create an empty file with the name as the argument
+
+mkdir - Create a directory
+
+ghex - Hex Editor for editing raw bytes. Remember, in OS, machine CODE and
+	DATA are indistingusiable. Save files as raw .bin (binary) so that
+	it can be made into an iso. 
+
+truncate - Shrinks or extends the size of a file by the specified size, used
+	   before making the bootable floopy to chunk the file to the correct
+	   file size. Example:
+	 - s = --size=SIZE, adjust the file size in bytes (1200k for floopy)
+
+mkisofs - Makes an iso image of the input file. Example command:
+	- o = output file location, output as .iso
+	- b = binary file in, input as .bin
+
+
+sudo - Do an action/command as super user (Super User DO). 
+
+apt-get - In ubuntu (and flavors) apt is the package manager used to get 
+	  packages and other installation files. Some commandes include:
+	- update = updates all existing packages
+	- install = installs the package specified if found in the repos
+
+ls - List all of the files and folders in a directory
+
+cd - Change the directory you are currently in:
+   - ~ = user home directory
+   - / = root directory
+   - . = current directory
+   - .. = one directory above (can be chained: ../../../blah.txt)
+
+
+Emulators & VMs:
+==========
+bochs - Bochs is an x86 emulator and is a great first pass to try a kernel
+        before bringing it to a full VM. Bochs requires some configuration
+	which is done in a bochsrc.txt file. The file usually contains the
+	following entries:
+		- megs = Amount of physical space given to the machine
+		- display_library = library that works (sdl)
+		- romimage = path to the BIOS image used for Bochs, usually in
+			     (/usr/share/bochs/BIOS-bochs-latest)
+		- ata0-master = path to the VGABIOS for Bochs, usually in 
+				(/usr/share/bochs/VGABIOS-lgpl-latest)
+		- boot = choose the device that you want to boot from
+		- log = where the output of the operations will go
+		- clock = emulated clock settings, set to run in realtime
+		- cpu = set number and speed of cpus
+
+
+qemu - Called by qemu-system-x86_64 <path to .bin> and is used as a quick and
+       accurate way to check against x86 emulated hardware. Good for getting
+       binary images up and running quickly.
+
+x86:
+=======
+[MNEMONIC]	-	[OPCODE HEX]	-	[DESCRIPTION]
+JMP-REL-16		E9 (word param)		Junmp near, with relative
+						addressing. Displacement of 
+						jump relative to next
+						instruction word.
+
+JMP-REL-32		E9 (32 bit param)	Jump near, with relative
+						addressing. Displacement of
+						jump relative to next 4-byte
+						instruction.
