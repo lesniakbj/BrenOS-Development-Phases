@@ -10,18 +10,19 @@
 [ORG 0x7C00]			; We get loaded into memory at location 0x7C00
 				; by BIOS
 
-jmp start			; Safely jump ourselves away from any stored
+jmp bootloader_start		; Safely jump ourselves away from any stored
 				; data in the data segement.
 ;==================================================
 ; 		DATA SEGEMENT
 ;==================================================
-newline db 10, 13
-warmupmsg db "Press any key to continue booting...", newline, 0
-bootmsg db "Hello BIOS! Thanks!", 0
+warmupmsg db "Press any key to continue booting...",0x0A, 0x0D, 0
+bootmsg db "Hello BIOS! Thanks!", 0x0A, 0x0D, 0x0A, 0x0D, 0
+lowmemmsg db "Detecting Low Memory: ", 0
+memerrmsg db "Error in Low Memory Detection", 0
 ;==================================================
 ;		CODE SEGMENT
 ;=================================================
-start:
+bootloader_start:
 	xor ax, ax		; 0 out eax to clear junk
 	mov ds, ax		; Set the current data segment offset to 0
 	mov es, ax		; Do the same with es segement register
@@ -37,6 +38,12 @@ start:
 	mov si, bootmsg		; Move the stack data pointer to point to
 				; our bootmsg and call the print routines
 	call write_string
+
+	mov si, lowmemmsg
+	call write_string
+	call detect_low_mem	; After calling this routine, we will get
+				; the value of memory returned in ax
+
 
 	jmp loop
 
@@ -66,6 +73,18 @@ write_character:
 				; set to wanted color here.
 	mov ah, 0x0E
 	int 0x10
+	ret
+
+detect_low_mem:
+	clc			; Clear the carry flag, it gets set if there
+				; is an error in the operation.
+	int 0x12		; BIOS call to get the low memory map
+	jc .mem_error
+	ret
+
+.mem_error:
+	mov si, memerrmsg
+	call write_string
 	ret
 
 loop:
