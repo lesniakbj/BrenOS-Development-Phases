@@ -1,0 +1,5 @@
+In the upcoming phase, we will lay out a memory map for the first stage bootloader, allowing us to specify a space 
+where we will put the contents of the disk before moving it (boot_stage_2) to another location in memory. Further,
+we will learn how to read contents from disk using BIOS interrupts. 
+
+http://www.cs.cmu.edu/~410-s07/p4/p4-boot.pdf
