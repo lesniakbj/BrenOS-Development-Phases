@@ -91,17 +91,13 @@ bootloader_start:
 	mov dx, ax		; To print hex, we need to put the value we
 				; want to print in DX
 	call print_hex
-	mov si, newline
-	call write_string
 
 	mov si, stackmsg
 	call write_string
 	mov ax, ss		; Move SS into AX for printing
 	mov dx, ax
 	call print_hex
-	mov si, newline
-	call write_string
-	
+		
 	mov si, stkptmsg
 	call write_string
 	;mov ax, sp
@@ -113,7 +109,7 @@ bootloader_start:
 	; Now that we have detected our Low Memory, we want to do some
 	; setup so that we can read our 2nd stage bootloader from
 	; the rest of the drive. 
-	call reset_disk
+	; call reset_disk
 
 	jmp loop		; Jump control over all of our functions, 
 				; to an endless loop so we do not exec
