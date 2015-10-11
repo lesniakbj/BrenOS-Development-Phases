@@ -38,12 +38,12 @@ fileSystem:	db "FAT12   "
 
 ; Bootloader Static Messages / Data
 newline db 0x0A, 0x0D, 0
-warmupmsg db "Press any key to continue booting...", 0
-bootmsg db "Continuing with loading...", 0
+warmupmsg db "Press any key to continue booting...", 0x0A, 0x0D, 0
+bootmsg db "Continuing with loading...",0x0A, 0x0D, 0
 stackmsg db "Stack Segement (SS) set to: ", 0
 stkptmsg db "Stack Pointer (SP) setup to: ", 0
 lowmemmsg db "Detecting Low Memory: ", 0
-memerrmsg db "Error in Low Memory Detection", 0
+memerrmsg db "Error in Low Memory Detection", 0x0A, 0x0D, 0
 
 ; Bootloader datq output swap space
 hex_16_out: db '0x0000', 0
@@ -74,15 +74,11 @@ bootloader_start:
 
 	mov si, warmupmsg
 	call write_string
-	mov si, newline
-	call write_string
 	call wait_for_input
 
 
 	mov si, bootmsg		; Move the stack data pointer to point to
 				; our bootmsg and call the print routines
-	call write_string
-	mov si, newline
 	call write_string
 
 	mov si, lowmemmsg
@@ -103,8 +99,8 @@ bootloader_start:
 	mov ax, ss		; Move SS into AX for printing
 	mov dx, ax
 	call print_hex
-	;mov si, newline
-	;call write_string
+	mov si, newline
+	call write_string
 	
 	mov si, stkptmsg
 	call write_string
