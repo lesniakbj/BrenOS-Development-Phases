@@ -1,0 +1,24 @@
+Phase 1:
+=========
+1. Writing Hexidecimal 
+2. The Magic Boot Number
+3. Writing a valid bootloader in Hex
+4. Experiment writing valid bootloader in ASM (traslate Hex -> ASM)
+5. Ambitious: Look at printing data
+
+Phase 2:
+=========
+1. Introduction to the ASM bootloader, inspect HEX
+2. Data vs. Code in Binary files..
+3. Defining data in ASM
+4. Introduction to Interrupts & BIOS calls
+
+<Where does setting up the stack go? Before or after reading from BIOS?>
+
+Phase 3:
+========
+1. What does the 1st stage bootloader need to do?
+2. Understanding Memory addressing and limitations.
+3. Defining a memory map for the inital bootloader and Kernel
+4. Using BIOS to read data from a disk to disk buffer
+5. Reading that new sector (FAT Filesystem?)
