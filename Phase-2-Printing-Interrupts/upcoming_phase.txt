@@ -2,4 +2,7 @@ In the upcoming phase, we will lay out a memory map for the first stage bootload
 where we will put the contents of the disk before moving it (boot_stage_2) to another location in memory. Further,
 we will learn how to read contents from disk using BIOS interrupts. 
 
+Further the experiment in this phase included trying to setup a stack and 
+push/pop all params before calling anything. This is still in progress.
+
 http://www.cs.cmu.edu/~410-s07/p4/p4-boot.pdf

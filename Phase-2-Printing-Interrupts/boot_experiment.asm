@@ -51,6 +51,18 @@ bootloader_start:
 	xor ax, ax		; 0 out eax to clear junk
 	mov ds, ax		; Set the current data segment offset to 0
 	mov es, ax		; Do the same with es segement register
+	
+	; Now we must setup a stack for us to use when we are making function
+	; calls in the low memory area. We still only have access to 16 bits
+	; so it must be within the first 512 bytes of memory. We'll make it
+	; 64 bytes near the boot sector signature.
+	mov ax, 0x07C0		; Setup a stack after the space we are loaded
+				; at. That is, 0x7000 + 512 bytes.
+	add ax, 288
+	mov ss, ax
+	mov sp, 4096
+	;mov sp, stack_section_end ; Remember, the stack grows DOWNWARD, so
+				  ; we need to point the stack to the end 
 
 	call clear_screen	; Clear the screen before we try to print
 				; any strings to the screen
@@ -58,7 +70,6 @@ bootloader_start:
 	mov si, warmupmsg
 	call write_string
 	call wait_for_input
-
 
 	mov si, bootmsg		; Move the stack data pointer to point to
 				; our bootmsg and call the print routines
@@ -86,16 +97,21 @@ bootloader_start:
 				; junk
 
 clear_screen:
+	
 	mov ah, 0
 	int 0x10
+	
 	ret
 
 wait_for_input:
+	
 	xor ax, ax
 	int 0x16
+	
 	ret
 
 write_string:
+	
 	lodsb			; Load the string buffer at ds:si
 	or al, al		; or the current character to ...
 	jz .write_string_end	; If it is 0 (null terminator) jump to the
@@ -104,6 +120,7 @@ write_string:
 	jmp write_string	; Do this until the buffer end is reached
 
 .write_string_end:
+	
 	ret
 
 write_character:
@@ -114,19 +131,22 @@ write_character:
 	ret
 
 detect_low_mem:
+	
 	clc			; Clear the carry flag, it gets set if there
 				; is an error in the operation.
 	int 0x12		; BIOS call to get the low memory map
 	jc .mem_error
+	
 	ret
 
 .mem_error:
 	mov si, memerrmsg
 	call write_string
+	
 	ret
 
 print_hex:
-	;pusha			; Once stack is setup, push regs before
+				; Once stack is setup, push regs before
 				; calling so state can be restored
 
 	mov cx, 4		; Start the counter. AX contains 4 "characters"
@@ -166,15 +186,19 @@ print_hex:
 	mov si, hex_16_out	; Now that we are done converting to char,
 				; lets print that out
 	call write_string
+	
 	ret
 
 reset_disk:
+	
 	mov ah, 0x00		; Move 0 into AH, the function we want to call
 				; 0 = reset floppy function
 	mov dl, 0x00		; dl = drive number, 0 the current drive
 	int 0x13		; Call BIOS reset function
 	jc reset_disk		; If the carry was set there was an error
 				; resetting the disk, try again.
+	
+	ret
 
 loop:
 	jmp loop		; Infinite loop when this is called, nothing
