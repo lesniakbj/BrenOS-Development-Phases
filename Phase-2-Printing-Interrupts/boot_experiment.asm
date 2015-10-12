@@ -111,7 +111,7 @@ bootloader_start:
 	; Now that we have detected our Low Memory, we want to do some
 	; setup so that we can read our 2nd stage bootloader from
 	; the rest of the drive. 
-	; call reset_disk
+	call reset_disk
 
 	jmp loop		; Jump control over all of our functions, 
 				; to an endless loop so we do not exec
@@ -207,7 +207,8 @@ reset_disk:
 	int 0x13		; Call BIOS reset function
 	jc reset_disk		; If the carry was set there was an error
 				; resetting the disk, try again.
-
+	ret
+	
 loop:
 	jmp loop		; Infinite loop when this is called, nothing
 				; else to do.
