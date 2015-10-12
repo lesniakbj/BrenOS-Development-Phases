@@ -12,6 +12,7 @@
 
 jmp bootloader_start		; Safely jump ourselves away from any stored
 				; data in the data segement.
+
 ;==================================================
 ; 		DATA SEGEMENT
 ;==================================================
