@@ -22,3 +22,7 @@ Phase 3:
 3. Defining a memory map for the inital bootloader and Kernel
 4. Using BIOS to read data from a disk to disk buffer
 5. Reading that new sector (FAT Filesystem?)
+
+Phase 4:
+========
+1. Setting BIOS in VBE Mode. Other BIOS Video Modes.

@@ -54,6 +54,8 @@ bootloader_start:
 	xor ax, ax		; 0 out eax to clear junk
 	mov ds, ax		; Set the current data segment offset to 0
 	mov es, ax		; Do the same with es segement register
+	
+	call set_screen_mode
 
 	call clear_screen	; Clear the screen before we try to print
 				; any strings to the screen
@@ -124,6 +126,17 @@ bootloader_start:
 	jmp loop		; Jump control over all of our functions, 
 				; to an endless loop so we do not exec
 				; junk
+
+set_screen_mode:
+	; First set the screen mode to 80x50 Text Mode
+	mov ax, 0x0003
+	int 10h
+	; Now we want to set the font to an 8x8 Font
+	xor bx, bx
+	mov ax, 0x1112
+	int 10h
+	
+	ret
 
 clear_screen:
 	mov ah, 0
