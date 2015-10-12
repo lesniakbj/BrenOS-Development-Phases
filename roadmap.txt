@@ -26,3 +26,6 @@ Phase 3:
 Phase 4:
 ========
 1. Setting BIOS in VBE Mode. Other BIOS Video Modes.
+2. Setting up the A20 line for the kernel.
+3. GDT
+4. Boot02 detecting memory map from BIOS

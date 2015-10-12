@@ -1,0 +1,16 @@
+Shell:
+=======
+vim
+
+Emulators & VMs:
+==========
+
+
+x86:
+=======
+General purpose registers EAX, EBX, ECX, and EDX all have special meaning besides being used as general registers:
+	- AX = 16bit Accumulator, EAX = 32bit Accumulator, RAX = 64bit Accumulator
+	- BX = 16bit Base Register, EBX = 32bit Base Register, EBX = 64bit Base Register
+	- CX = 16bit Counter, ECX = 32bit Counter, ECX = 64bit Counter
+	- DX = 16bit Data Register, EDX = 32bit Data Register, EDX = 64bit Data Register
+	
