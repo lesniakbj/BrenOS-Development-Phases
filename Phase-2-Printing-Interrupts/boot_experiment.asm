@@ -51,53 +51,39 @@ hex_16_out: db '0x0000', 0
 ;		CODE SEGMENT
 ;=================================================
 bootloader_start:
-	xor ax, ax		; 0 out eax to clear junk
-	mov ds, ax		; Set the current data segment offset to 0
-	mov es, ax		; Do the same with es segement register
+	xor ax, ax			; 0 out eax to clear junk
+	mov ds, ax			; Set the current data segment offset to 0
+	mov es, ax			; Do the same with es segement register
+
+	call clear_screen	; Clear the screen before we try to print
+						; any strings to the screen
+	mov si, warmupmsg
+	call write_string
+	call wait_for_input
+
+	mov si, bootmsg	
+	call write_string
 
 	; Ok, now it's time to setup a stack for our stage01 bootloader
 	; to use. This will be used for function calls, and getting ready
 	; for our stage02 bootloader. 
 	mov ax, 0x07C0		; Set up 4K of stack space after this bootloader
-				; code. Start with where this code is loaded
-				; from. 
-	add ax, 32		; 32 Paragrahs to skip past bootloader, and
-				; point SS to the memory segment directly
-				; passed our bootloader
-	mov ss, ax		; Point our SS to the segment directly after
-				; the bootloader
+						; code. Start with where this code is loaded
+						; from. 
+	add ax, 32			; 32 Paragrahs to skip past bootloader, and
+						; point SS to the memory segment directly
+						; passed our bootloader
+	mov ss, ax			; Point our SS to the segment directly after
+						; the bootloader
 	mov sp, 4096		; Move our stack pointer to SS:4096, giving us
-				; 4K of stack space to work with. 
-
-	call clear_screen	; Clear the screen before we try to print
-				; any strings to the screen
-
-	mov si, warmupmsg
-	call write_string
-	call wait_for_input
-
-
-	mov si, bootmsg		; Move the stack data pointer to point to
-				; our bootmsg and call the print routines
-	call write_string
-
-	mov si, lowmemmsg
-	call write_string
-
-	xor ax, ax		; Clear AX beforehand
-	call detect_low_mem	; After calling this routine, we will get
-				; the value of memory returned in ax
-				
-	mov dx, ax		; To print hex, we need to put the value we
-				; want to print in DX
-	call print_hex
+						; 4K of stack space to work with. 
 
 	mov si, stackmsg
 	call write_string
-	mov ax, ss		; Move SS into AX for printing
+	mov ax, ss			; Move SS into AX for printing
 	mov dx, ax
 	call print_hex
-		
+	
 	mov si, stkptmsg
 	call write_string
 	;mov ax, sp
@@ -105,6 +91,17 @@ bootloader_start:
 	;call print_hex
 	;mov si, newline
 	;call write_string
+						
+	mov si, lowmemmsg
+	call write_string
+
+	xor ax, ax			; Clear AX beforehand
+	call detect_low_mem	; After calling this routine, we will get
+						; the value of memory returned in ax
+				
+	mov dx, ax			; To print hex, we need to put the value we
+						; want to print in DX
+	call print_hex
 	
 	; Now that we have detected our Low Memory, we want to do some
 	; setup so that we can read our 2nd stage bootloader from
