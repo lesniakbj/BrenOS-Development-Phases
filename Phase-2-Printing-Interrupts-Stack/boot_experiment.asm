@@ -38,51 +38,46 @@ volLabel:	db "BOS FLOPPY "
 fileSystem:	db "FAT12   "
 
 ; Bootloader Static Messages / Data
-newline db 0x0A, 0x0D, 0
-warmupmsg db "Press any key to continue booting...", 0x0A, 0x0D, 0
-bootmsg db "Continuing with loading...",0x0A, 0x0D, 0
-stackmsg db "Stack Segement (SS) set to: ", 0
-stkptmsg db "Stack Pointer (SP) setup to: ", 0
-lowmemmsg db "Detecting Low Memory: ", 0
-memerrmsg db "Error in Low Memory Detection", 0x0A, 0x0D, 0
+newline 	db 0x0A, 0x0D, 0
+bootmsg 	db "Loading BrenOS Bootloader...", 0x0A, 0x0D, 0
+stksetupmsg	db "Setting up system stack...", 0x0A, 0x0D, 0
+stackmsg 	db "Stack Segement (SS) set to: ", 0
+stkptmsg 	db "Stack Pointer (SP) setup to: ", 0
 
 ; Bootloader datq output swap space
-hex_16_out: db '0x0000', 0
+hex_16_out: 	db '0x0000', 0
 
 ;==================================================
 ;		CODE SEGMENT
 ;=================================================
 bootloader_start:
-	xor ax, ax			; 0 out eax to clear junk
-	mov ds, ax			; Set the current data segment offset to 0
-	mov es, ax			; Do the same with es segement register
+	xor ax, ax		; 0 out eax to clear junk
+	mov ds, ax		; Set the current data segment offset to 0
+	mov es, ax		; Do the same with es segement register
 
 	call clear_screen	; Clear the screen before we try to print
-						; any strings to the screen
-	mov si, warmupmsg
-	call write_string
-	call wait_for_input
+				; any strings to the screen
 
 	mov si, bootmsg	
 	call write_string
 
+
+	mov si, stksetupmsg
+	call write_string
 	; Ok, now it's time to setup a stack for our stage01 bootloader
 	; to use. This will be used for function calls, and getting ready
 	; for our stage02 bootloader. 
-	mov ax, 0x07C0		; Set up 4K of stack space after this bootloader
+	mov ax, 0x9E00		; Set up 4K of stack space after this bootloader
 				; code. Start with where this code is loaded
 				; from. 
-	add ax, 32		; 32 Paragrahs to skip past bootloader, and
-				; point SS to the memory segment directly
-				; passed our bootloader
 	mov ss, ax		; Point our SS to the segment directly after
 				; the bootloader
 	mov sp, 4096		; Move our stack pointer to SS:4096, giving us
-				; 4K of stack space to work with. 
+				; 4K of stack space to work with.
 
 	mov si, stackmsg
 	call write_string
-	mov ax, ss			; Move SS into AX for printing
+	mov ax, ss		; Move SS into AX for printing
 	mov dx, ax
 	call print_hex
 	
@@ -91,23 +86,15 @@ bootloader_start:
 
 	mov si, stkptmsg
 	call write_string
+	
+	xor ax, ax
+	xor dx, dx
 	mov ax, sp
 	mov dx, ax
 	call print_hex
 
 	mov si, newline
 	call write_string
-						
-	mov si, lowmemmsg
-	call write_string
-
-	xor ax, ax			; Clear AX beforehand
-	call detect_low_mem	; After calling this routine, we will get
-						; the value of memory returned in ax
-				
-	mov dx, ax			; To print hex, we need to put the value we
-						; want to print in DX
-	call print_hex
 	
 	; Now that we have detected our Low Memory, we want to do some
 	; setup so that we can read our 2nd stage bootloader from
@@ -121,11 +108,6 @@ bootloader_start:
 clear_screen:
 	mov ah, 0
 	int 0x10
-	ret
-
-wait_for_input:
-	xor ax, ax
-	int 0x16
 	ret
 
 write_string:
@@ -144,18 +126,6 @@ write_character:
 				; set to wanted color here.
 	mov ah, 0x0E
 	int 0x10
-	ret
-
-detect_low_mem:
-	clc			; Clear the carry flag, it gets set if there
-				; is an error in the operation.
-	int 0x12		; BIOS call to get the low memory map
-	jc .mem_error
-	ret
-
-.mem_error:
-	mov si, memerrmsg
-	call write_string
 	ret
 
 print_hex:
@@ -221,5 +191,5 @@ times 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
 				; fills all the intermediate space with
 				; 0 bytes.
 
-dw 0xAA55			; Finally, put the bootsector signature
+bootsig dw 0xAA55		; Finally, put the bootsector signature
 				; at the end of the file.
