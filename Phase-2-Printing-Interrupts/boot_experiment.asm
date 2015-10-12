@@ -47,6 +47,7 @@ memerrmsg db "Error in Low Memory Detection", 0x0A, 0x0D, 0
 
 ; Bootloader datq output swap space
 hex_16_out: db '0x0000', 0
+
 ;==================================================
 ;		CODE SEGMENT
 ;=================================================
