@@ -68,15 +68,15 @@ bootloader_start:
 	; to use. This will be used for function calls, and getting ready
 	; for our stage02 bootloader. 
 	mov ax, 0x07C0		; Set up 4K of stack space after this bootloader
-						; code. Start with where this code is loaded
-						; from. 
-	add ax, 32			; 32 Paragrahs to skip past bootloader, and
-						; point SS to the memory segment directly
-						; passed our bootloader
-	mov ss, ax			; Point our SS to the segment directly after
-						; the bootloader
+				; code. Start with where this code is loaded
+				; from. 
+	add ax, 32		; 32 Paragrahs to skip past bootloader, and
+				; point SS to the memory segment directly
+				; passed our bootloader
+	mov ss, ax		; Point our SS to the segment directly after
+				; the bootloader
 	mov sp, 4096		; Move our stack pointer to SS:4096, giving us
-						; 4K of stack space to work with. 
+				; 4K of stack space to work with. 
 
 	mov si, stackmsg
 	call write_string
@@ -84,13 +84,17 @@ bootloader_start:
 	mov dx, ax
 	call print_hex
 	
+	mov si, newline
+	call write_string
+
 	mov si, stkptmsg
 	call write_string
-	;mov ax, sp
-	;mov dx, ax
-	;call print_hex
-	;mov si, newline
-	;call write_string
+	mov ax, sp
+	mov dx, ax
+	call print_hex
+
+	mov si, newline
+	call write_string
 						
 	mov si, lowmemmsg
 	call write_string
