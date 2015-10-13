@@ -1,17 +1,17 @@
 ;==================================================
 ; The following lines of code are interpreted by the
 ; compiler, and are not a part of the output binary.
-; The directives are specifed below in comments.
+; The directives are specified below in comments.
 ;==================================================
 [BITS 16]		; When loaded by the operating system, we are
 				; loaded into 16 bit mode. Thus, the kernel
-				; bootloader needs to be 16 bits.
+				; boot loader needs to be 16 bits.
 
 [ORG 0x7C00]	; We get loaded into memory at location 0x7C00
 				; by BIOS
 
 jmp bootloader_start	; Safely jump ourselves away from any stored
-						; data in the data segement.
+						; data in the data segment.
 
 ; OEM Parameter Block
 oemName 		db "BrenOS  "	; Must be 8 Bytes long, thus padded with spaces
@@ -39,15 +39,18 @@ fileSystem:		db "FAT12   "
 ;=======================================
 
 ;=======================================
-; bootloader_start(): No Params
-;
-; Boot01 Entry Point, does the
-; following functions:
-; 	- Setup Segment Registers 
-;	- Setup Early Stack for Use
-;	- Load Boot02 from Disk, which lives
-;	  just beyond Boot01 on Disk.
-;	- Jump control to Boot01. 
+; Function: 
+; 	bootloader_start()
+; Params:
+;	<NONE>
+; Description: 
+; 	Boot01 Entry Point, does the
+; 	following functions:
+; 		- Set up Segment Registers 
+;		- Set up Early Stack for Use
+;		- Load Boot02, which lives
+;	  	  just beyond Boot01 on Disk.
+;		- Jump control to Boot02. 
 ;=======================================
 bootloader_start:
 	; ---------------------------
@@ -57,37 +60,37 @@ bootloader_start:
 					; the stack...
 	xor ax, ax		; 0 out eax to clear junk
 	mov ds, ax		; Set the current data segment offset to 0
-	mov es, ax		; Do the same with es segement registes
+	mov es, ax		; Do the same with es segment registers
 
 	
 	;-------------------------
 	; SETUP STACK, 0000:9E00
 	;-------------------------
-	; Ok, now it's time to setup a stack for our stage01 bootloader
+	; Ok, now it's time to set up a stack for our stage01 boot loader
 	; to use. This will be used for function calls, and getting ready
-	; for our stage02 bootloader. 
-	mov ax, 0x9E00		; Set up 4K of stack space after this bootloader
+	; for our stage02 boot loader. 
+	mov ax, 0x9E00		; Set up 4K of stack space after this boot loader
 						; code. Start with where this code is loaded
 						; from. 
 	mov ss, ax			; Point our SS to the segment directly after
-						; the bootloader
+						; the boot loader
 	mov sp, 4096		; Move our stack pointer to SS:4096, giving us
 						; 4K of stack space to work with.
 	sti					; ... and restore our interrupts.
 
 	
-	;------------------------
-	; SETUP SCREEN MODE
-	;------------------------
+	;--------------------------;
+	; 	 SETUP SCREEN MODE
+	;--------------------------;
 	call set_screen_mode
 
 	call clear_screen	; Clear the screen before we try to print
 						; any strings to the screen
 
 						
-	;-------------------------
+	;--------------------------;
 	; STACK SETUP INFORMATION
-	;-------------------------
+	;--------------------------;
 	mov si, stackmsg
 	call write_string
 	mov ax, ss			; Move SS into AX for printing
@@ -109,23 +112,23 @@ bootloader_start:
 	mov si, newline
 	call write_string
 	
-	;-------------------------
-	; DISK SECTION
-	;-------------------------
+	;--------------------------;
+	; 		DISK SECTION
+	;--------------------------;
 	; Now that we have detected our Low Memory, we want to do some
-	; setup so that we can read our 2nd stage bootloader from
+	; set up so that we can read our 2nd stage boot loader from
 	; the rest of the drive. 
 	call reset_disk
 	
-	; Ok... Now we need to read some sedtors from the disk into our
-	; disk buffer space... wait... we need to setup a disk buffer
+	; Ok... Now we need to read some sectors from the disk into our
+	; disk buffer space... wait... we need to set up a disk buffer
 	; space for ourselves first.
 	; Frankly, on second thought, at this level there is no idea of "reserved"
 	; space. Rather, I have a slot in memory that I am given to use. 
 	; Hopefully we don't overflow...
 	mov ax, 0x7E00	; AX = Address where we are going to read a sector
 					; into. This is the beginning of the disk buffer, 
-					; the first bytes beyond the bootloader.
+					; the first bytes beyond the boot loader.
 	mov es, ax		; ES:BX = The where the sectors will be read to
 	xor bx, bx		; 0x7E00:0x0000 -> ES:0
 	
@@ -137,17 +140,35 @@ bootloader_start:
 	; cmp al, 1
 	; jne disk_error
 	
+	;--------------------------;
+	; 	  CONTROL TRANSFER
+	;--------------------------;
 	; Now that we have read that sector to the disk, we can jump to it and
 	; continue execution! Unfortunately, this will not quite work yet, 
 	; as there is no 2nd stage for me to load yet. Thus this is
-	; commented out....
+	; commented out...	
+	
+	; Now, before we go jumping to the new code, we want to do some sanity
+	; checking. That is, I want to ensure that this boot01 code was loaded
+	; where I think it was. This checks that the boot signature (0xAA55) 
+	; was loaded in the correct location. 
+	xor ax, ax				; Clear AX and DX, not entirely sure if this is 
+							; needed or not...
+	xor dx, dx
+	mov ax, word [0x7DFE]	; Move the word at memory location 0x7DFE into AX
+							; this word should be 0xAA55 (or in little endian,
+							; 0x55AA).
+	mov dx, ax
+	call print_hex
 	
 	mov si, keymsg
 	call write_string
 	call wait_for_keypress
 	
-	jmp 0x7E00
-
+	; jmp 0x7E00
+	
+	jmp boot_end
+	
 ;=======================================
 ; Function: 
 ;	set_screen_mode()
@@ -155,7 +176,7 @@ bootloader_start:
 ;	AX = Screen Mode
 ;		0x0003: 80 x 50 Text Mode
 ;		0x1112: 8 x 8 Font
-; Desc: 
+; Description: 
 ;	Sets the screen to the desired
 ;	resolution (80x50 with an 8x8 font).
 ;	Requires int 0x0010 calls.
@@ -204,7 +225,7 @@ print_hex:
 
 	mov ax, dx			; Copy DX to BX so we can mask it
 	shr dx, 4			; Shift it 4 bits to the right, so we are 
-						; dealing witha  value such:
+						; dealing with a value such:
 						; 0xF29A  -->  0x00F2
 	and ax, 0x0F		; Get the last 4 bits, one character
 
@@ -254,11 +275,11 @@ read_disk:
 	mov ch, 0			; CH = Track number to read from, we are on the
 						; 1st track, along with the data
 	mov cl, 1			; CL = Sector to Read, we want the second sector (passed 
-						; the bootloader code)
+						; the boot loader code)
 	mov dh, 0			; DH = Drive Head Number, the 0th head
 	mov dl, 0			; DL = Drive Number, 0th drive is the floppy drive
 	int 0x13			; BIOS call to read the sector based on the params
-						; setup in the previous block
+						; set up in the previous block
 	cmp byte [disk_count], 0
 	jne read_disk_retry	; If there is an error, and we haven't tried 5 times, try again
 	
@@ -288,7 +309,7 @@ boot_end:
 ;==================================================
 ; 		DATA SEGEMENT
 ;==================================================	
-; Bootloader Static Messages / Data
+; Boot loader Static Messages / Data
 newline 	db 0x0A, 0x0D, 0
 stackmsg 	db "Stack Segement set to: ", 0
 stkptmsg 	db "Stack Pointer setup to: ", 0
@@ -296,7 +317,7 @@ dskerrmsg	db "Error reading sector from disk! PANIC!", 0
 keymsg 		db "Waiting for keypress to hand control to Boot02..", 0x0A, 0x0D, 0
 nobootmsg	db "No Boot02!", 0
 
-; Bootloader datq output swap space
+; Boot loader data output swap space
 hex_16_out: db '0x0000', 0
 disk_count	db 0
 
@@ -309,5 +330,5 @@ TIMES 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
 							; fills all the intermediate space with
 							; 0 bytes.
 
-bootsig dw 0xAA55	; Finally, put the bootsector signature
+bootsig dw 0xAA55	; Finally, put the boot sector signature
 					; at the end of the file.
