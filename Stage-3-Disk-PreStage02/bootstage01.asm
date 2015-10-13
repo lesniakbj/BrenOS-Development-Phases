@@ -270,16 +270,16 @@ read_disk_retry:
 	
 read_disk:
 	dec byte [disk_count]
-	mov ah, 0x02		; Function 0x02 = Read Disk Sector
-	mov al, 1			; AL = # of sectors to read, we want the first sector
-	mov ch, 0			; CH = Track number to read from, we are on the
-						; 1st track, along with the data
-	mov cl, 1			; CL = Sector to Read, we want the second sector (passed 
-						; the boot loader code)
-	mov dh, 0			; DH = Drive Head Number, the 0th head
-	mov dl, 0			; DL = Drive Number, 0th drive is the floppy drive
-	int 0x13			; BIOS call to read the sector based on the params
-						; set up in the previous block
+	mov ah, 0x02					; Function 0x02 = Read Disk Sector
+	mov al, 1						; AL = # of sectors to read, we want the first sector
+	mov ch, 0 & 0xff				; CH = Track number to read from, we are on the
+									; 1st track, along with the data
+	mov cl, 1 | ((0 >> 2) & 0xC0)	; CL = Sector to Read, we want the second sector (passed 
+									; the boot loader code)
+	mov dh, 0						; DH = Drive Head Number, the 0th head
+	mov dl, 0						; DL = Drive Number, 0th drive is the floppy drive
+	int 0x13						; BIOS call to read the sector based on the params
+									; set up in the previous block
 	cmp byte [disk_count], 0
 	jne read_disk_retry	; If there is an error, and we haven't tried 5 times, try again
 	
