@@ -152,7 +152,8 @@ bootloader_start:
 	call wait_for_keypress
 	
 	; jmp 0x7E00
-
+	jmp boot_end
+	
 set_screen_mode:
 	; First set the screen mode to 80x50 Text Mode
 	mov ax, 0x0003
@@ -267,6 +268,8 @@ wait_for_keypress:
 
 	ret
 
+boot_end:
+	jmp boot_end
 
 times 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
 				; fills all the intermediate space with
