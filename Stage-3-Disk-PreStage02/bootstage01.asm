@@ -303,6 +303,7 @@ boot_end:
 	call write_string
 	
 .boot_finish:
+	mov ax, [0x7DFE]
 	jmp .boot_finish
 	
 
