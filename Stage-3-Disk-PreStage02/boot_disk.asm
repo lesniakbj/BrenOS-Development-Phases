@@ -265,8 +265,8 @@ disk_error:
 	hlt
 
 wait_for_keypress:
-	mov ah, 0x00
-	int 0x01
+	xor ax, ax
+	int 0x16
 
 	ret
 
