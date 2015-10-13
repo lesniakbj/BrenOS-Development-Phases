@@ -39,33 +39,33 @@ fileSystem:	db "FAT12   "
 
 ; Bootloader Static Messages / Data
 newline 	db 0x0A, 0x0D, 0
-bootmsg 	db "Loading BrenOS Bootloader...", 0x0A, 0x0D, 0
-stksetupmsg	db "Setting up system stack...", 0x0A, 0x0D, 0
-stackmsg 	db "Stack Segement (SS) set to: ", 0
-stkptmsg 	db "Stack Pointer (SP) setup to: ", 0
+stksetupmsg	db "Setting up stack..", 0x0A, 0x0D, 0
+stackmsg 	db "Stack Segement set to: ", 0
+stkptmsg 	db "Stack Pointer setup to: ", 0
+dskerrmsg	db "Error reading sector from disk. PANIC.", 0
+dskendmsg	db "Boot02 has been read..", 0x0A, 0x0D, 0
+cntrlmsg	db "Handing off control to Boot02..", 0x0A, 0x0D, 0
 
 ; Bootloader datq output swap space
 hex_16_out: 	db '0x0000', 0
+disk_count	db 0
 
 ;==================================================
 ;		CODE SEGMENT
 ;=================================================
 bootloader_start:
+	; ---------------------------
+	; SETUP SEGMENTS, 0000:7C00
+	; ---------------------------
+	cli
 	xor ax, ax		; 0 out eax to clear junk
 	mov ds, ax		; Set the current data segment offset to 0
-	mov es, ax		; Do the same with es segement register
+	mov es, ax		; Do the same with es segement registes
+
 	
-	call set_screen_mode
-
-	call clear_screen	; Clear the screen before we try to print
-				; any strings to the screen
-
-	mov si, bootmsg	
-	call write_string
-
-
-	mov si, stksetupmsg
-	call write_string
+	;-------------------------
+	; SETUP STACK, 0000:9E00
+	;-------------------------
 	; Ok, now it's time to setup a stack for our stage01 bootloader
 	; to use. This will be used for function calls, and getting ready
 	; for our stage02 bootloader. 
@@ -76,6 +76,16 @@ bootloader_start:
 				; the bootloader
 	mov sp, 4096		; Move our stack pointer to SS:4096, giving us
 				; 4K of stack space to work with.
+	sti
+
+	
+	;------------------------
+	; SETUP SCREEN MODE
+	;------------------------
+	call set_screen_mode
+
+	call clear_screen	; Clear the screen before we try to print
+				; any strings to the screen
 
 	mov si, stackmsg
 	call write_string
@@ -114,18 +124,27 @@ bootloader_start:
 				; the first bytes beyond the bootloader.
 	mov es, ax		; ES:BX = The where the sectors will be read to
 	xor bx, bx		; 0x7E00:0x0000 -> ES:0
+	
+	mov byte [disk_count], 5
 	call read_disk
+	
+	; The disk has been read, lets make sure we we read the
+	; correct number of sectors
+	cmp al, 1
+	jne disk_error
 	
 	; Now that we have read that sector to the disk, we can jump to it and
 	; continue execution! Unfortunately, this will not quite work yet, 
 	; as there is no 2nd stage for me to load yet. Thus this is
 	; commented out....
-
-	; jmp 0x7E00:0x0
+	mov si, dskendmsg
+	call write_string
 	
-	jmp loop		; Jump control over all of our functions, 
-				; to an endless loop so we do not exec
-				; junk
+	mov si, cntrlmsg
+	call write_string
+	
+	call wait_for_keypress
+	jmp 0x7E00
 
 set_screen_mode:
 	; First set the screen mode to 80x50 Text Mode
@@ -214,6 +233,7 @@ reset_disk:
 	ret
 	
 read_disk:
+	dec byte [disk_count]
 	mov ah, 0x02		; Function 0x02 = Read Disk Sector
 	mov al, 1		; AL = # of sectors to read, we want the first sector
 	mov ch, 1		; CH = Track number to read from, we are on the
@@ -224,13 +244,24 @@ read_disk:
 	mov dl, 0		; DL = Drive Number, 0th drive is the floppy drive
 	int 0x13		; BIOS call to read the sector based on the params
 				; setup in the previous block
-	jc read_disk		; If there is an error, try again
+	cmp byte [disk_count], 0
+	jne read_disk		; If there is an error, try again
 	
 	ret
 
-loop:
-	jmp loop		; Infinite loop when this is called, nothing
-				; else to do.
+disk_error:
+	mov si, dskerrmsg
+	call write_string
+
+	cli
+	hlt
+
+wait_for_keypress:
+	mov ah, 0x00
+	int 0x01
+
+	ret
+
 
 times 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
 				; fills all the intermediate space with
