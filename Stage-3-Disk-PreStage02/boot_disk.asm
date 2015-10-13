@@ -3,19 +3,16 @@
 ; compiler, and are not a part of the output binary.
 ; The directives are specifed below in comments.
 ;==================================================
-[BITS 16]			; When loaded by the operating system, we are
+[BITS 16]		; When loaded by the operating system, we are
 				; loaded into 16 bit mode. Thus, the kernel
 				; bootloader needs to be 16 bits.
 
-[ORG 0x7C00]			; We get loaded into memory at location 0x7C00
+[ORG 0x7C00]	; We get loaded into memory at location 0x7C00
 				; by BIOS
 
-jmp bootloader_start		; Safely jump ourselves away from any stored
-				; data in the data segement.
+jmp bootloader_start	; Safely jump ourselves away from any stored
+						; data in the data segement.
 
-;==================================================
-; 		DATA SEGEMENT
-;==================================================
 ; OEM Parameter Block
 oemName 		db "BrenOS  "	; Must be 8 Bytes long, thus padded with spaces
 bytesPerSector:	dw 512
@@ -37,20 +34,6 @@ serialNum:		dd 0xa0a1a2a3
 volLabel:		db "BOS FLOPPY "
 fileSystem:		db "FAT12   "
 
-; Bootloader Static Messages / Data
-newline 	db 0x0A, 0x0D, 0
-stksetupmsg	db "Setting up stack..", 0x0A, 0x0D, 0
-stackmsg 	db "Stack Segement set to: ", 0
-stkptmsg 	db "Stack Pointer setup to: ", 0
-dskerrmsg	db "Error reading sector from disk! PANIC!", 0
-dskendmsg	db "Boot02 has been read..", 0x0A, 0x0D, 0
-keymsg 		db "Waiting for keypress to hand control to Boot02..", 0x0A, 0x0D, 0
-nobootmsg	db "No Boot02!", 0
-
-; Bootloader datq output swap space
-hex_16_out: db '0x0000', 0
-disk_count	db 0
-
 ;=======================================
 ;		CODE SEGMENT
 ;=======================================
@@ -70,8 +53,10 @@ bootloader_start:
 	; ---------------------------
 	; SETUP SEGMENTS, 0000:7C00
 	; ---------------------------
-	cli
+	cli				; Clear interrupts before we set segments or
+					; the stack...
 	xor ax, ax		; 0 out eax to clear junk
+	mov cs, ax		; Set the current code segment to offset 0
 	mov ds, ax		; Set the current data segment offset to 0
 	mov es, ax		; Do the same with es segement registes
 
@@ -89,7 +74,7 @@ bootloader_start:
 						; the bootloader
 	mov sp, 4096		; Move our stack pointer to SS:4096, giving us
 						; 4K of stack space to work with.
-	sti
+	sti					; ... and restore our interrupts.
 
 	
 	;------------------------
@@ -157,8 +142,6 @@ bootloader_start:
 	; continue execution! Unfortunately, this will not quite work yet, 
 	; as there is no 2nd stage for me to load yet. Thus this is
 	; commented out....
-	mov si, dskendmsg
-	call write_string
 	
 	mov si, keymsg
 	call write_string
@@ -166,15 +149,28 @@ bootloader_start:
 	
 	; jmp 0x7E00
 	jmp boot_end
-	
+
+
+;=======================================
+; Function: 
+;	set_screen_mode()
+; Params:
+;	AX = Screen Mode
+;		0x0003: 80 x 50 Text Mode
+;		0x1112: 8 x 8 Font
+; Desc: 
+;	Sets the screen to the desired
+;	resolution (80x50 with an 8x8 font).
+;	Requires int 0x0010 calls.
+;=======================================
 set_screen_mode:
-	; First set the screen mode to 80x50 Text Mode
-	mov ax, 0x0003
-	int 10h
-	; Now we want to set the font to an 8x8 Font
-	xor bx, bx
-	mov ax, 0x1112
-	int 10h
+	
+	mov ax, 0x0003		; First set the screen mode to 80x50 Text Mode
+	int 0x0010			; BIOS Video function to set mode.
+	
+	xor bx, bx			; Clear bx
+	mov ax, 0x1112		; Now we want to set the font to an 8x8 Font
+	int 0x0010
 	
 	ret
 
@@ -251,7 +247,10 @@ reset_disk:
 						; resetting the disk, try again.
 	ret
 	
-read_disk:
+read_disk_sector:
+	mov di, 0x0005
+	
+.read_sector_loop:
 	dec byte [disk_count]
 	mov ah, 0x02		; Function 0x02 = Read Disk Sector
 	mov al, 1			; AL = # of sectors to read, we want the first sector
@@ -287,8 +286,28 @@ boot_end:
 	
 .boot_finish:
 	jmp .boot_finish
+	
 
-times 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
+;==================================================
+; 		DATA SEGEMENT
+;==================================================	
+; Bootloader Static Messages / Data
+newline 	db 0x0A, 0x0D, 0
+stackmsg 	db "Stack Segement set to: ", 0
+stkptmsg 	db "Stack Pointer setup to: ", 0
+dskerrmsg	db "Error reading sector from disk! PANIC!", 0
+keymsg 		db "Waiting for keypress to hand control to Boot02..", 0x0A, 0x0D, 0
+nobootmsg	db "No Boot02!", 0
+
+; Bootloader datq output swap space
+hex_16_out: db '0x0000', 0
+disk_count	db 0
+
+bootSector 	db 0x00
+bootHead	db 0x00
+bootTrack	db 0x00
+	
+TIMES 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
 							; fills all the intermediate space with
 							; 0 bytes.
 
