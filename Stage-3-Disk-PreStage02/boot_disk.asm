@@ -247,10 +247,7 @@ reset_disk:
 						; resetting the disk, try again.
 	ret
 	
-read_disk_sector:
-	mov di, 0x0005
-	
-.read_sector_loop:
+read_disk:
 	dec byte [disk_count]
 	mov ah, 0x02		; Function 0x02 = Read Disk Sector
 	mov al, 1			; AL = # of sectors to read, we want the first sector
