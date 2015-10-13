@@ -7,16 +7,11 @@
 ; and can consist of a large amount of pre initialization
 ; to the kernel. 
 
-[ORG 0x7E00]		; We offset to 0 for now, after the shell is done
-			; we will use correct segmentation
+[ORG 0x7E00]	; We offset to 0 for now, after the shell is done
+				; we will use correct segmentation
 [BITS 16]		; Yep, still in 16bit Real Mode
 
 jmp boot_stage02_main
-
-; =======================
-;     STAGE02 DATA
-; ======================
-boot2msg db 'Welcome to 2nd stage...', 0
 
 ; =========================
 ; 	CODE SEGMENT
@@ -25,7 +20,7 @@ boot_stage02_main:
 	mov si, boot2msg
 	call write_string
 	
-	jmp loop
+	jmp loop_stub
 
 write_string:
 	lodsb
@@ -38,5 +33,10 @@ write_string:
 .print_done:
 	ret
 
-loop:
-	jmp loop
+loop_stub:
+	jmp loop_stub
+
+; =======================
+;     STAGE02 DATA
+; ======================
+boot2msg db 'Welcome to 2nd stage...', 0

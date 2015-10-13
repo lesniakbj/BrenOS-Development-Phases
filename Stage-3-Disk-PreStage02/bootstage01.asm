@@ -123,7 +123,7 @@ bootloader_start:
 	; Frankly, on second thought, at this level there is no idea of "reserved"
 	; space. Rather, I have a slot in memory that I am given to use. 
 	; Hopefully we don't overflow...
-	mov ax, 0x7E00	; AX = Address where we are going to read a sector
+	mov ax, 0x07E0	; AX = Address where we are going to read a sector
 					; into. This is the beginning of the disk buffer, 
 					; the first bytes beyond the bootloader.
 	mov es, ax		; ES:BX = The where the sectors will be read to
@@ -246,20 +246,23 @@ reset_disk:
 						; resetting the disk, try again.
 	ret
 	
+read_disk_retry:
+	call reset_disk
+	
 read_disk:
 	dec byte [disk_count]
 	mov ah, 0x02		; Function 0x02 = Read Disk Sector
 	mov al, 1			; AL = # of sectors to read, we want the first sector
-	mov ch, 1			; CH = Track number to read from, we are on the
+	mov ch, 0			; CH = Track number to read from, we are on the
 						; 1st track, along with the data
-	mov cl, 2			; CL = Sector to Read, we want the second sector (passed 
+	mov cl, 1			; CL = Sector to Read, we want the second sector (passed 
 						; the bootloader code)
 	mov dh, 0			; DH = Drive Head Number, the 0th head
 	mov dl, 0			; DL = Drive Number, 0th drive is the floppy drive
 	int 0x13			; BIOS call to read the sector based on the params
 						; setup in the previous block
 	cmp byte [disk_count], 0
-	jne read_disk		; If there is an error, and we haven't tried 5 times, try again
+	jne read_disk_retry	; If there is an error, and we haven't tried 5 times, try again
 	
 	ret
 
