@@ -146,9 +146,7 @@ bootloader_start:
 	call write_string
 	call wait_for_keypress
 	
-	; jmp 0x7E00
-	jmp boot_end
-
+	jmp 0x7E00
 
 ;=======================================
 ; Function: 
