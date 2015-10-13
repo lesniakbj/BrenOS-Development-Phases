@@ -42,17 +42,30 @@ newline 	db 0x0A, 0x0D, 0
 stksetupmsg	db "Setting up stack..", 0x0A, 0x0D, 0
 stackmsg 	db "Stack Segement set to: ", 0
 stkptmsg 	db "Stack Pointer setup to: ", 0
-dskerrmsg	db "Error reading sector from disk. PANIC.", 0
+dskerrmsg	db "Error reading sector from disk! PANIC!", 0
 dskendmsg	db "Boot02 has been read..", 0x0A, 0x0D, 0
 keymsg 		db "Waiting for keypress to hand control to Boot02..", 0x0A, 0x0D, 0
+nobootmsg	db "No Boot02!", 0
 
 ; Bootloader datq output swap space
 hex_16_out: db '0x0000', 0
 disk_count	db 0
 
-;==================================================
+;=======================================
 ;		CODE SEGMENT
-;=================================================
+;=======================================
+
+;=======================================
+; bootloader_start(): No Params
+;
+; Boot01 Entry Point, does the
+; following functions:
+; 	- Setup Segment Registers 
+;	- Setup Early Stack for Use
+;	- Load Boot02 from Disk, which lives
+;	  just beyond Boot01 on Disk.
+;	- Jump control to Boot01. 
+;=======================================
 bootloader_start:
 	; ---------------------------
 	; SETUP SEGMENTS, 0000:7C00
@@ -269,11 +282,15 @@ wait_for_keypress:
 	ret
 
 boot_end:
-	jmp boot_end
+	mov si, nobootmsg
+	call write_string
+	
+.boot_finish:
+	jmp .boot_finish
 
 times 510 - ($ - $$) db 0	; Compiler macro ($ and $$) that
-				; fills all the intermediate space with
-				; 0 bytes.
+							; fills all the intermediate space with
+							; 0 bytes.
 
-bootsig dw 0xAA55		; Finally, put the bootsector signature
-				; at the end of the file.
+bootsig dw 0xAA55	; Finally, put the bootsector signature
+					; at the end of the file.
