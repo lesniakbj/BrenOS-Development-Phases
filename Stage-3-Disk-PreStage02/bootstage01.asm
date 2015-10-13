@@ -306,7 +306,7 @@ boot_end:
 	mov ax, [0x7DFE]	; Before we exit, put the bootsig
 						; into AX, so we can verify that we are
 						; loaded into the location that we expect.
-	mov bx, [bootsig]	; Verify the results with bootsig location.
+	mov bx, bootsig		; Verify the results with bootsig location.
 	jmp .boot_finish
 	
 
