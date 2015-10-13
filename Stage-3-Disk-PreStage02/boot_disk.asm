@@ -56,7 +56,6 @@ bootloader_start:
 	cli				; Clear interrupts before we set segments or
 					; the stack...
 	xor ax, ax		; 0 out eax to clear junk
-	mov cs, ax		; Set the current code segment to offset 0
 	mov ds, ax		; Set the current data segment offset to 0
 	mov es, ax		; Do the same with es segement registes
 
@@ -300,6 +299,7 @@ nobootmsg	db "No Boot02!", 0
 hex_16_out: db '0x0000', 0
 disk_count	db 0
 
+; Drive information about absolute load location
 bootSector 	db 0x00
 bootHead	db 0x00
 bootTrack	db 0x00
