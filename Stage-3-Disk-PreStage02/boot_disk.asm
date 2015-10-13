@@ -45,6 +45,7 @@ stkptmsg 	db "Stack Pointer setup to: ", 0
 dskerrmsg	db "Error reading sector from disk. PANIC.", 0
 dskendmsg	db "Boot02 has been read..", 0x0A, 0x0D, 0
 cntrlmsg	db "Handing off control to Boot02..", 0x0A, 0x0D, 0
+keymsg 		db "Waiting for keypress..", 0x0A, 0x0D, 0
 
 ; Bootloader datq output swap space
 hex_16_out: db '0x0000', 0
@@ -151,7 +152,9 @@ bootloader_start:
 	call write_string
 	
 	call wait_for_keypress
-	jmp 0x7E00
+	mov si, keymsg
+	call write_string
+	; jmp 0x7E00
 
 set_screen_mode:
 	; First set the screen mode to 80x50 Text Mode
