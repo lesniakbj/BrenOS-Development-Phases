@@ -152,12 +152,12 @@ bootloader_start:
 	; checking. That is, I want to ensure that this boot01 code was loaded
 	; where I think it was. This checks that the boot signature (0xAA55) 
 	; was loaded in the correct location. 
-	xor ax, ax				; Clear AX and DX, not entirely sure if this is 
-							; needed or not...
+	xor ax, ax			; Clear AX and DX, not entirely sure if this is 
+						; needed or not...
 	xor dx, dx
-	mov ax, word [0x7DFE]	; Move the word at memory location 0x7DFE into AX
-							; this word should be 0xAA55 (or in little endian,
-							; 0x55AA).
+	mov ax, [0x7DFE]	; Move the word at memory location 0x7DFE into AX
+						; this word should be 0xAA55 (or in little endian,
+						; 0x55AA).
 	mov dx, ax
 	call print_hex
 	
@@ -303,7 +303,10 @@ boot_end:
 	call write_string
 	
 .boot_finish:
-	mov ax, [0x7DFE]
+	mov ax, [0x7DFE]	; Before we exit, put the bootsig
+						; into AX, so we can verify that we are
+						; loaded into the location that we expect.
+	mov bx, [bootsig]	; Verify the results with bootsig location.
 	jmp .boot_finish
 	
 
