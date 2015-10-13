@@ -123,7 +123,7 @@ bootloader_start:
 	; Frankly, on second thought, at this level there is no idea of "reserved"
 	; space. Rather, I have a slot in memory that I am given to use. 
 	; Hopefully we don't overflow...
-	mov ax, 0x07E0	; AX = Address where we are going to read a sector
+	mov ax, 0x7E00	; AX = Address where we are going to read a sector
 					; into. This is the beginning of the disk buffer, 
 					; the first bytes beyond the bootloader.
 	mov es, ax		; ES:BX = The where the sectors will be read to
