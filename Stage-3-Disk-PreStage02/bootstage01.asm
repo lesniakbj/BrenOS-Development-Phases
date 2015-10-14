@@ -132,7 +132,7 @@ bootloader_start:
 	mov es, ax		; ES:BX = The where the sectors will be read to
 	xor bx, bx		; 0x7E00:0x0000 -> ES:0
 	
-	mov byte [disk_count], 5
+	; mov byte [disk_count], 5
 	call read_disk
 	
 	; The disk has been read, lets make sure we we read the
@@ -152,20 +152,12 @@ bootloader_start:
 	; checking. That is, I want to ensure that this boot01 code was loaded
 	; where I think it was. This checks that the boot signature (0xAA55) 
 	; was loaded in the correct location. 
-	xor ax, ax			; Clear AX and DX, not entirely sure if this is 
-						; needed or not...
-	xor dx, dx
-	mov ax, [0x7DFE]	; Move the word at memory location 0x7DFE into AX
-						; this word should be 0xAA55 (or in little endian,
-						; 0x55AA).
-	mov dx, ax
-	call print_hex
 	
 	mov si, keymsg
 	call write_string
 	call wait_for_keypress
 	
-	jmp 0x7E00:0x00
+	jmp 0x7E00
 	
 	; jmp boot_end
 	
@@ -269,7 +261,7 @@ read_disk_retry:
 	call reset_disk
 	
 read_disk:
-	dec byte [disk_count]
+	; dec byte [disk_count]
 	mov ah, 0x02					; Function 0x02 = Read Disk Sector
 	mov al, 1						; AL = # of sectors to read, we want the first sector
 	mov ch, 0						; CH = Track number to read from, we are on the
@@ -280,9 +272,9 @@ read_disk:
 	mov dl, 0						; DL = Drive Number, 0th drive is the floppy drive
 	int 0x13						; BIOS call to read the sector based on the params
 									; set up in the previous block
-	cmp byte [disk_count], 0
-	jne read_disk_retry				; If there is an error, and we haven't tried 5 times, try again
-	
+	; cmp byte [disk_count], 0
+	; jne read_disk_retry				; If there is an error, and we haven't tried 5 times, try again
+
 	ret
 
 disk_error:
