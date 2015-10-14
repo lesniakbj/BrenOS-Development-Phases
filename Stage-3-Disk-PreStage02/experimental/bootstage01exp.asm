@@ -6,7 +6,7 @@ mov sp, bp
 call read_from_disk
 
 mov si, BOOT2_SAMEFILE_MSG
-call print_string
+call write_string
 
 jmp $
 
@@ -41,10 +41,10 @@ read_from_disk:
 ;===================;
 READ_ERROR: db "Error reading disk!", 0
 	
-TIMES 510 - ($ - $$) db 0 
+TIMES 510 - ($ - $$) db 0x00 
 dw 0xAA55
 
-BOOT2_SAMEFILE_MSG:	db "Has this been read from disk yet?!?", 0
+BOOT2_SAMEFILE_MSG:	db "Has this been read into memory yet?!?", 0
 
 ; NOTE:
 ; ======================
@@ -55,4 +55,4 @@ BOOT2_SAMEFILE_MSG:	db "Has this been read from disk yet?!?", 0
 ; true of all sectors we read in some 
 ; emulators. Thus, the last sector of every
 ; code segment must be padded.
-TIMES 512 - ($ - $$) db 0
+TIMES 512 db 0x00
