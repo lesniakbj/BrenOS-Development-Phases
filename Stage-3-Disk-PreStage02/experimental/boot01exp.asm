@@ -3,10 +3,6 @@
 mov bp, 0xFFFF
 mov sp, bp
 
-; DX should be loaded with the boot drive 
-; number. Should be 0.
-call write_hex
-
 call read_from_disk
 
 jmp $
