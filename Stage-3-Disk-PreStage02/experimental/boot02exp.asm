@@ -21,4 +21,4 @@ BOOT2_2FILE_MSG:	db "Has this been read from disk yet?!?", 0
 ; true of all sectors we read in some 
 ; emulators. Thus, the last sector of every
 ; code segment must be padded.
-TIMES 512 db 0x00
+TIMES 1024 db 0x00
