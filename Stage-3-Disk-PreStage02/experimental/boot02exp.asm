@@ -1,3 +1,5 @@
+[ORG 0x7E00]
+
 mov si, BOOT2_SAMEFILE_MSG
 call write_string
 
