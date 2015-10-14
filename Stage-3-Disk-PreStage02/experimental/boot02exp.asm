@@ -1,12 +1,3 @@
-[ORG 0x7E00]
-
-mov si, BOOT2_2FILE_MSG
-call write_string
-
-jmp $
-
-%include "funcs/output_functions.asm"
-	
 ;===================;
 ;	BOOT-2 DATA
 ;===================;
