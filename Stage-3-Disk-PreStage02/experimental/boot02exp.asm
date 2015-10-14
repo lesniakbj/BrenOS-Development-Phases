@@ -1,6 +1,6 @@
 [ORG 0x7E00]
 
-mov si, BOOT2_SAMEFILE_MSG
+mov si, BOOT2_2FILE_MSG
 call write_string
 
 jmp $
@@ -10,7 +10,7 @@ jmp $
 ;===================;
 ;	BOOT-2 DATA
 ;===================;
-BOOT2_SAMEFILE_MSG:	db "Has this been read from disk yet?!?", 0
+BOOT2_2FILE_MSG:	db "Has this been read from disk yet?!?", 0
 
 ; NOTE:
 ; ======================
