@@ -1,3 +1,13 @@
+mov si, BOOT2_SAMEFILE_MSG
+call write_string
+
+jmp $
+
+%include "funcs/output_functions.asm"
+	
+;===================;
+;	BOOT-2 DATA
+;===================;
 BOOT2_SAMEFILE_MSG:	db "Has this been read from disk yet?!?", 0
 
 ; NOTE:

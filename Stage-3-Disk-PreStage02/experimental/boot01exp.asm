@@ -5,9 +5,6 @@ mov sp, bp
 
 call read_from_disk
 
-mov si, BOOT2_SAMEFILE_MSG
-call write_string
-
 jmp $
 
 %include "funcs/output_functions.asm"
