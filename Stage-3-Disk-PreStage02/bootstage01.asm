@@ -93,21 +93,14 @@ bootloader_start:
 	;--------------------------;
 	mov si, stackmsg
 	call write_string
-	mov ax, ss			; Move SS into AX for printing
-	mov dx, ax
-	call print_hex
+	; ==
 	
 	mov si, newline
 	call write_string
 
 	mov si, stkptmsg
 	call write_string
-	
-	xor ax, ax
-	xor dx, dx
-	mov ax, sp
-	mov dx, ax
-	call print_hex
+	; ==
 
 	mov si, newline
 	call write_string
@@ -207,47 +200,14 @@ write_character:
 	int 0x10
 	ret
 
-print_hex:
-	mov cx, 4	; Start the counter. AX contains 4 "characters"
-				; and thus our counter is 4.  4 bits per char.
-				; Control continues to hex_to_char_loop
-				
-.hex_to_char_loop:
-	dec cx				; Pre decrement our counter
-
-	mov ax, dx			; Copy DX to BX so we can mask it
-	shr dx, 4			; Shift it 4 bits to the right, so we are 
-						; dealing with a value such:
-						; 0xF29A  -->  0x00F2
-	and ax, 0x0F		; Get the last 4 bits, one character
-
-	mov bx, hex_16_out	; Set BX to our output memory address
-	add bx, 2			; Skip the '0x' char in the string
-	add bx, cx			; Add the counter to the address so
-						; we can address the correct byte in the string
-
-	cmp ax, 0xA			; Check to see if this is a letter or number
-	jl .set_letter		; If its a number, set the value immediately
-						; otherwise there is some preprocessing
-	add byte [bx], 7	; If its a letter, add 7 to offset to ASCII
-						; values
-
-	jl .set_letter
-
-.set_letter:
-	add byte [bx], al		; Add the value of the byte to the char at bx
-
-	cmp cx, 0				; Check the counter to see if we are done
-	je .print_hex_done		; If we are done, head on out of here
-	jmp .hex_to_char_loop	; Otherwise, leads head back to the printing
-							; loop so we can print the value
-
-.print_hex_done:
-	mov si, hex_16_out	; Now that we are done converting to char,
-						; lets print that out
-	call write_string
-	ret
-
+write_hex:
+	; TEST DATA 
+	mov dx, 0xBE02		; Example data, 0xBE02 
+	
+	; BEGIN PROCEDURE
+	mov bx, dx
+	shr bx, 12			; Move 0xBE02 -> 0x000B
+	
 reset_disk:
 	mov ah, 0x00		; Move 0 into AH, the function we want to call
 						; 0 = reset floppy function
@@ -314,7 +274,7 @@ keymsg 		db "Waiting for keypress to hand control to Boot02..", 0x0A, 0x0D, 0
 nobootmsg	db "No Boot02!", 0
 
 ; Boot loader data output swap space
-hex_16_out: db '0x0000', 0
+HEX_OUT: 	db '0x????', 0
 disk_count	db 0
 
 ; Drive information about absolute load location
