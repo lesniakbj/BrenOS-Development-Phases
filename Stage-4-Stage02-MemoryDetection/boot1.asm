@@ -112,8 +112,8 @@ read_from_disk:
 	ret 
 
 .disk_read_error:
-	mov si, READ_ERROR
-	call write_string
+	mov si, [READ_ERROR]
+	; call write_string
 	jmp $
 
 ;===================;
