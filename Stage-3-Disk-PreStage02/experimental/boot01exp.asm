@@ -7,7 +7,7 @@ call write_hex
 
 call read_from_disk
 
-jmp $
+jmp 0x0000:0x7E00
 
 %include "funcs/output_functions.asm"
 
@@ -15,7 +15,7 @@ read_from_disk:
 	mov ah, 0x02	; Read Sector Function
 	
 	mov al, 1		; Number of Sectors to Read
-	mov dl, 0x80	; Use the 1st (C:) Drive. HDD.
+	; mov dl, 0x80	; Use the 1st (C:) Drive. HDD.
 	mov ch, 0		; Use the 1st Cylinder/Track
 	mov dh, 0		; Use the 1st Read/Write Head
 	mov cl, 2		; Read the 2nd Sector
