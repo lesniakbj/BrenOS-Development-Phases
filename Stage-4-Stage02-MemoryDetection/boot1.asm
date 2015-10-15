@@ -87,7 +87,7 @@ reset_disk:
 	mov ah, 0				; Reset disk function
 	mov dl, [diskNumber]	; This will only be run if on Floppy
 	int 0x13
-	jc .reset_disk
+	jc reset_disk
 	
 	popa
 	ret
