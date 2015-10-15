@@ -69,6 +69,7 @@ boot1_start:
 	; write_hex(dl) function.
 	call write_hex
 
+	call reset_disk
 	call read_from_disk
 	jmp 0x0000:0x7E00
 
@@ -80,7 +81,19 @@ boot1_start:
 ; functions here.
 ; %include "funcs/disk_functions.asm"
 
+reset_disk:
+	pusha
+	
+	mov ah, 0				; Reset disk function
+	mov dl, [diskNumber]	; This will only be run if on Floppy
+	int 0x13
+	jc .reset_disk
+	
+	popa
+	ret
+	
 read_from_disk:
+	pusha
 	; Read Sector Function
 	mov ah, 0x02
 	
@@ -88,12 +101,12 @@ read_from_disk:
 	; we are reading from...
 	mov al, 1				; Number of Sectors to Read
 	mov dl, [driveNumber]	; Use the 1st (C:) Drive. HDD.
-	mov ch, 0				; Use the 1st Cylinder/Track
+	mov ch, 1				; Use the 1st Cylinder/Track
 	mov dh, 0				; Use the 1st Read/Write Head
 	mov cl, 2				; Read the 2nd Sector
 	
 	; Where to buffer the disk read to...
-	; ES:BX
+	; ES:BX -> 0x0000:0x7E00
 	mov bx, 0x0000
 	mov es, bx
 	mov bx, 0x7E00
@@ -101,6 +114,8 @@ read_from_disk:
 	int 0x13
 	
 	jc .disk_read_error
+	
+	popa
 	ret 
 
 .disk_read_error:
