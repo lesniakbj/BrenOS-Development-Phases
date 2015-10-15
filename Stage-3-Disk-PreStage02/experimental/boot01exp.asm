@@ -7,7 +7,7 @@ call write_hex
 
 call read_from_disk
 
-jmp $
+jmp 0x0000:0x7E00
 
 %include "funcs/output_functions.asm"
 
