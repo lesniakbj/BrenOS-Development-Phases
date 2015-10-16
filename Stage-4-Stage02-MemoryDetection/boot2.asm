@@ -20,17 +20,20 @@ boot2_start:
 	; Now we should write what we are 
 	; are doing, for record keeping.
 	; mov si, LOW_MEM_DET_MSG
-	; call write_string
+	call write_string
 	
 	; Lets now detect the total amount
 	; of low memory.
-	; call detect_low_memory
+	call detect_low_memory
 	
 	; Now that we have the low memory in
 	; AX, lets put it in DX so we can
 	; write it to the screen.
-	; mov dx, ax
-	; call write_hex
+	mov dx, ax
+	call write_hex
+	
+	call write_newline
+	call write_color_row
 	
 	jmp $
 

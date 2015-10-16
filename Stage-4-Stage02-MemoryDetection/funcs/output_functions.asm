@@ -72,13 +72,18 @@ write_hex:
 	pop si
 	pop bx
 	ret
-	
+
 ;=======================;
 ;	 HELPER FUNCTIONS	;
 ;=======================;
+write_newline:
+	mov si, NEWLINE
+	call write_string
+	ret
+	
 write_color_row:
 	mov al, ' '
-	mov cx, [SCREEN_WIDTH]
+	mov cx, 80
 	call write_char
 	ret
 
@@ -87,5 +92,5 @@ write_color_row:
 ;==============================;
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
+NEWLINE			db 0x0A, 0x0D, 0
 TEXT_COLOR		db 0x74
-SCREEN_WIDTH 	db 0x50
