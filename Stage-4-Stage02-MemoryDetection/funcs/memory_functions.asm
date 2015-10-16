@@ -1,3 +1,6 @@
+;=======================;
+;	PRIMARY FUNCTIONS	;
+;=======================;
 detect_low_memory:
 	clc
 	int 0x12
@@ -6,3 +9,10 @@ detect_low_memory:
 	; to a memory location 
 	; for handling
 	ret
+	
+detect_high_memory:
+	
+	ret
+	
+HIGH_MEM_STRUCT:
+	resb 

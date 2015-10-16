@@ -11,6 +11,7 @@ write_string:
 	je .string_end
 		
 	mov ah, 0x0E
+	mov bl, [TEXT_COLOR]
 	int 0x10
 	jmp .string_loop
 	
@@ -29,7 +30,6 @@ write_string:
 write_char:
 	mov ah, 0x09
 	mov bh, 0
-	mov bl, [TEXT_COLOR]
 	
 	int 0x10
 	
@@ -87,6 +87,7 @@ write_color_row:
 	
 	mov al, ' '
 	mov cx, [SCREEN_WIDTH]
+	mov bl, [LINE_COLOR]
 	call write_char
 	
 	pop cx
@@ -99,5 +100,6 @@ write_color_row:
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
 NEWLINE			db 0x0A, 0x0D, 0
-TEXT_COLOR		db 0x74
+LINE_COLOR		db 0x74
+TEXT_COLOR		db 0x04
 SCREEN_WIDTH	dw 80

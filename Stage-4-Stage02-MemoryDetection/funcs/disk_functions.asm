@@ -1,3 +1,6 @@
+;=======================;
+;	PRIMARY FUNCTIONS	;
+;=======================;
 read_from_disk:
 	mov ah, 0x02	; Read Sector Function
 	
