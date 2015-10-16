@@ -84,7 +84,7 @@ boot1_start:
 	mov si, NEW_LINE
 	call write_string
 	
-	jmp 0x7C00 + 512
+	jmp stage02_load
 	cli
 	hlt
 	
@@ -119,7 +119,7 @@ read_from_disk:
 	; ES:BX -> 0x0000:0x7E00
 	mov bx, 0
 	mov es, bx
-	mov bx, 0x7E00
+	mov bx, stage02_load
 	
 	; ERROR CHECKING [soon]...	
 	mov [readSegment], es
@@ -215,3 +215,7 @@ readOffset	dw 0
 	
 TIMES 510 - ($ - $$) db 0 
 dw 0xAA55
+
+; Here we create a label to jump to
+; when Stage02 loads.
+stage02_load:
