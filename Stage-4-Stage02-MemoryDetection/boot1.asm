@@ -104,11 +104,15 @@ read_from_disk:
 	
 	; Where to buffer the disk read to...
 	; ES:BX -> 0x0000:0x7E00
-	mov bx, 0x0000
+	mov bx, 0
 	mov es, bx
 	mov bx, 0x7E00
 	
 	; ERROR CHECKING [soon]...	
+	push bx
+	mov dx, bx
+	call write_hex
+	pop bx
 	int 0x13
 	
 	jc .disk_read_error
@@ -184,7 +188,7 @@ OFFSET_CHAR	db ':', 0
 NEW_LINE	db 0x0A, 0x0D, 0
 
 ; Other Data
-HEX_CHARS	db '0123456789ABCDEF'
+HEX_CHARS	db '0123456789ABCDEF', 0
 HEX_OUT 	db '0x???? ', 0
 diskNumber	db 0
 	

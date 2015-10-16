@@ -1,4 +1,5 @@
-[ORG 0x0000:0x7E00]
+[BITS 16]
+[ORG 0x7E00]
 
 mov si, TEST_STRING
 call write_string
