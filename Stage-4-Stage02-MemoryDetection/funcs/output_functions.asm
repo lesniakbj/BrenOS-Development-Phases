@@ -83,7 +83,7 @@ write_newline:
 	
 write_color_row:
 	mov al, ' '
-	mov cx, 80
+	mov cx, [SCREEN_WIDTH]
 	call write_char
 	ret
 
@@ -94,3 +94,4 @@ HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
 NEWLINE			db 0x0A, 0x0D, 0
 TEXT_COLOR		db 0x74
+SCREEN_WIDTH	dw 0x0050
