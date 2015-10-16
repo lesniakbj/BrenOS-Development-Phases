@@ -109,10 +109,11 @@ read_from_disk:
 	mov bx, 0x7E00
 	
 	; ERROR CHECKING [soon]...	
-	push bx
+	push dx
 	mov dx, bx
 	call write_hex
-	pop bx
+	pop dx
+	
 	int 0x13
 	
 	jc .disk_read_error
