@@ -4,7 +4,7 @@
 boot2_start:
 	; Ok, we made it. Lets clear the 
 	; screen before we continue on...
-	call clear_screen
+	call clear_sceen
 	
 	; Now we should write what we are 
 	; are doing, for record keeping.
