@@ -78,7 +78,7 @@ write_hex:
 ;=======================;
 write_color_row:
 	mov al, ' '
-	mov cx, 80
+	mov cx, SCREEN_WIDTH
 	call write_char
 	ret
 
