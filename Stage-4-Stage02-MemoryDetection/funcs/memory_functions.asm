@@ -13,6 +13,3 @@ detect_low_memory:
 detect_high_memory:
 	
 	ret
-	
-HIGH_MEM_STRUCT:
-	resb 
