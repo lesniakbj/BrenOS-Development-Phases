@@ -84,8 +84,13 @@ boot1_start:
 	mov si, NEW_LINE
 	call write_string
 	
+	jmp 0x0000:load_boot2
+	
+load_boot2:
 	jmp 0x07E0
-
+	cli
+	hlt
+	
 ; Note: These can't be included due to the
 ; fact that they use variables defined here.
 ; Thus, they are are simply included as 
