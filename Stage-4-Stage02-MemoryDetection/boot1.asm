@@ -127,6 +127,7 @@ read_from_disk:
 write_string:
 	push ax
 	push si
+
 	
 .string_loop:
 	lodsb
@@ -177,6 +178,8 @@ write_hex:
 	mov si, HEX_OUT
 	call write_string
 	
+	pop si
+	pop bx
 	ret
 
 ;===================;
