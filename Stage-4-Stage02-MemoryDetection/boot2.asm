@@ -10,7 +10,7 @@ boot2_start:
 	mov al, 'H'
 	mov cx, 1
 	call write_char
-	call write_color_row
+	;call write_color_row
 	
 	; .. now that the screen is clear
 	; lets set the screen mode we want
