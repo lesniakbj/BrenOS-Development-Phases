@@ -87,7 +87,7 @@ boot1_start:
 	mov dx, stage02_load
 	call write_hex
 	
-	jmp stage02_load
+	jmp 0x0000:stage02_load
 	cli
 	hlt
 	
