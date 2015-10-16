@@ -77,15 +77,9 @@ write_hex:
 ;	 HELPER FUNCTIONS	;
 ;=======================;
 write_color_row:
-	push ax
-	push cx
-	
 	mov al, ' '
-	mov cx, [SCREEN_WIDTH]
+	mov cx, 5
 	call write_char
-	
-	pop cx
-	pop ax
 	ret
 
 ;==============================;
