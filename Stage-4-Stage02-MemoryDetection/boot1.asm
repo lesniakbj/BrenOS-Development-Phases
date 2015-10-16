@@ -68,7 +68,10 @@ boot1_start:
 	call reset_disk
 	call read_from_disk
 	
-	mov si, READ_TO
+	; Lets write a message of where
+	; we loaded the disk in memory
+	; to. 
+	mov si, READ_TO_MSG
 	call write_string
 	mov dx, [readSegment]
 	call write_hex
@@ -84,12 +87,9 @@ boot1_start:
 	mov si, NEW_LINE
 	call write_string
 	
-	mov dx, stage02_load
-	call write_hex
-	
 	xor si, si
 	xor di, di
-	jmp stage02_load
+	jmp 0x0000:stage02_load
 	jmp $
 	
 ; Note: These can't be included due to the
@@ -125,7 +125,7 @@ read_from_disk:
 	mov es, bx
 	mov bx, stage02_load
 	
-	; ERROR CHECKING [soon]...	
+	; ERROR CHECKING...	
 	mov [readSegment], es
 	mov [readOffset], bx
 	
@@ -198,22 +198,22 @@ write_hex:
 	pop bx
 	ret
 
-;===================;
-;	BOOT-1 DATA
-;===================;
-; String Data
+;========================;
+;		BOOT-1 DATA		 ;
+;========================;
+; Output Data
 READ_ERROR 	db 'Error reading disk!', 0
-READ_TO		db 'Reading sector to: ', 0
+READ_TO_MSG	db 'Reading sector to: ', 0
 CNTRL_MSG	db 'Handing off control...', 0
 OFFSET_CHAR	db ':', 0
 NEW_LINE	db 0x0A, 0x0D, 0
-
-; Other Data
 HEX_CHARS	db '0123456789ABCDEF', 0
 HEX_OUT 	db '0x????', 0
+
+; Other Data
 diskNumber	db 0
 
-; Error Checking DATA
+; Error Checking Data
 readSegment	dw 0
 readOffset	dw 0
 	

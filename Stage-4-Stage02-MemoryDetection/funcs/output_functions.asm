@@ -1,5 +1,5 @@
 ;=======================;
-;	USEFUL BIOS FUNCS
+;	USEFUL BIOS FUNCS	;
 ;=======================;
 
 write_string:
@@ -54,9 +54,13 @@ write_hex:
 	
 	mov si, HEX_OUT
 	call write_string
+	
+	pop si
+	pop bx
+	ret
 
 ;==============================;
-;	FUNCTIONS DATA
+;		FUNCTIONS DATA		   ;
 ;==============================;
 HEX_CHARS: db '0123456789ABCDEF'
 HEX_OUT: db '0x???? ', 0

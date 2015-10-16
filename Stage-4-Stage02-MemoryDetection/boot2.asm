@@ -1,31 +1,35 @@
 [BITS 16]
 [ORG 0x7E00]
 
-mov si, TEST_STRING
-call write_string
-
-mov ax, 0xBE01
-jmp $
-
-write_string:
-	push ax
-	push si
+boot2_start:
+	; Ok, we made it. Lets clear the 
+	; screen before we continue on...
+	call clear_screen
 	
-.string_loop:
-	lodsb
-	cmp al, 0
-	je .string_end
-		
-	mov ah, 0x0E
-	int 0x10
-	jmp .string_loop
+	; Now we should write what we are 
+	; are doing, for record keeping.
+	mov si, LOW_MEM_DET_MSG
+	call write_string
 	
-.string_end:
-	pop si
-	pop ax
-	ret
+	; Lets now detect the total amount
+	; of low memory.
+	call detect_low_memory
+	
+	; Now that we have the low memory in
+	; AX, lets put it in DX so we can
+	; write it to the screen.
+	mov dx, ax
+	call write_hex
+	
+	jmp $
 
-TEST_STRING db 'Are we loaded correctly?!'
+
+%include 'funcs/screen_functions.asm'
+%include 'funcs/memory_functions.asm'
+%include 'funcs/output_functions.asm'
+
+
+LOW_MEM_DET_MSG db 'Detecting Low Memory (KB): ', 0 
 
 ; NOTE:
 ; ======================
