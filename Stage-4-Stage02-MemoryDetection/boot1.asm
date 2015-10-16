@@ -60,12 +60,14 @@ boot1_start:
 	; booted from.
 	mov [diskNumber], dl
 	
+	
+	mov si, READ_TO
+	call write_string
 	; DL contains the drive number,
 	; which is conviently where we
 	; put the parameter for the 
 	; write_hex(dl) function.
 	; call write_hex
-
 	call reset_disk
 	call read_from_disk
 	
@@ -105,6 +107,16 @@ read_from_disk:
 	mov bx, 0x0000
 	mov es, bx
 	mov bx, 0x7E00
+	
+	; ERROR CHECKING...
+	mov dx, es
+	call write_hex
+	mov si, OFFSET_CHAR
+	call write_string
+	mov bx, es
+	call write_hex
+	mov si, NEW_LINE
+	call write_string
 	
 	int 0x13
 	
@@ -174,12 +186,15 @@ write_hex:
 ;	BOOT-1 DATA
 ;===================;
 ; String Data
-READ_ERROR db 'Error reading disk!', 0
+READ_ERROR 	db 'Error reading disk!', 0
 CNTRL_MSG	db 'Handing off control...', 0
-	
+READ_TO		db 'Reading sector to: '
+OFFSET_CHAR	db ':', 0
+NEW_LINE	db 0x0A, 0x0D, 0
+
 ; Other Data
-HEX_CHARS: db '0123456789ABCDEF'
-HEX_OUT: db '0x???? ', 0
+HEX_CHARS	db '0123456789ABCDEF'
+HEX_OUT 	db '0x???? ', 0
 diskNumber	db 0
 	
 TIMES 510 - ($ - $$) db 0 
