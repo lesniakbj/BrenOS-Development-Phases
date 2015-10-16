@@ -82,9 +82,15 @@ write_newline:
 	ret
 	
 write_color_row:
+	push ax
+	push cx
+	
 	mov al, ' '
 	mov cx, [SCREEN_WIDTH]
 	call write_char
+	
+	pop cx
+	pop ax
 	ret
 
 ;==============================;

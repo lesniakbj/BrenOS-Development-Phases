@@ -13,6 +13,14 @@ boot2_start:
 	
 	call write_color_row
 	call write_newline
+	call write_newline
+	
+	mov si, MEM_DET_MSG
+	call write_string
+	call write_newline
+	mov si, DIVIDER_MSG
+	call write_string
+	call write_newline
 	
 	; Now we should write what we are 
 	; are doing, for record keeping.
@@ -30,6 +38,7 @@ boot2_start:
 	call write_hex
 	
 	call write_newline
+	call write_newline
 	call write_color_row
 	
 	jmp $
@@ -39,8 +48,9 @@ boot2_start:
 %include 'funcs/memory_functions.asm'
 %include 'funcs/output_functions.asm'
 
-
-LOW_MEM_DET_MSG db 'Detecting Low Memory (KB): ', 0 
+MEM_DET_MSG		db 'Detecting Memory Map', 0
+LOW_MEM_DET_MSG db 'Detecting Low Memory (KB): ', 0
+DIVIDER_MSG		db '=================================', 0
 
 ; NOTE:
 ; ======================
