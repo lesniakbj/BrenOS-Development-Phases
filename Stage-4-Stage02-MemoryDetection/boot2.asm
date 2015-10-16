@@ -15,7 +15,7 @@ boot2_start:
 	mov al, 'H'
 	mov cx, 1
 	call write_char
-	; call write_color_row
+	call write_color_row
 	
 	; Now we should write what we are 
 	; are doing, for record keeping.
