@@ -176,6 +176,8 @@ write_hex:
 	
 	mov si, HEX_OUT
 	call write_string
+	
+	ret
 
 ;===================;
 ;	BOOT-1 DATA
