@@ -55,9 +55,9 @@ boot2_start:
 %include 'funcs/memory_functions.asm'
 %include 'funcs/output_functions.asm'
 
-MEM_DET_MSG		db 'Detecting Memory Map', 0
-LOW_MEM_DET_MSG db 'Detecting Low Memory (KB): ', 0
-DIVIDER_MSG		db '=================================', 0
+MEM_DET_MSG		db ' Detecting Memory Map', 0
+LOW_MEM_DET_MSG db ' Detecting Low Memory (KB): ', 0
+DIVIDER_MSG		db ' =================================', 0
 
 ; NOTE:
 ; ======================
