@@ -11,15 +11,12 @@ boot2_start:
 	; to use for now (80:25:8x8)
 	call set_screen_mode
 	
-	; FUNC TEST
-	mov al, 'H'
-	mov cx, 1
-	call write_char
 	call write_color_row
+	call write_newline
 	
 	; Now we should write what we are 
 	; are doing, for record keeping.
-	; mov si, LOW_MEM_DET_MSG
+	mov si, LOW_MEM_DET_MSG
 	call write_string
 	
 	; Lets now detect the total amount
