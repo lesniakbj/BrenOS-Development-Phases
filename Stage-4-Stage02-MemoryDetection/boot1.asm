@@ -8,7 +8,7 @@
 ; Cononicalize CS:IP to 0x0000:0x7C00
 ; 	Note: Some BIOS' start us at 
 ;	0x07C0:0x0000. We fix that.
-jmp 0x0000:boot1_start
+jmp short boot1_start
 nop
 
 ;====================================;
@@ -89,9 +89,8 @@ boot1_start:
 	
 	xor si, si
 	xor di, di
-	jmp 0x0000:stage02_load
-	cli
-	hlt
+	jmp stage02_load
+	jmp $
 	
 ; Note: These can't be included due to the
 ; fact that they use variables defined here.
@@ -204,14 +203,14 @@ write_hex:
 ;===================;
 ; String Data
 READ_ERROR 	db 'Error reading disk!', 0
-CNTRL_MSG	db 'Handing off control...', 0
 READ_TO		db 'Reading sector to: ', 0
+CNTRL_MSG	db 'Handing off control...', 0
 OFFSET_CHAR	db ':', 0
 NEW_LINE	db 0x0A, 0x0D, 0
 
 ; Other Data
 HEX_CHARS	db '0123456789ABCDEF', 0
-HEX_OUT 	db '0x???? ', 0
+HEX_OUT 	db '0x????', 0
 diskNumber	db 0
 
 ; Error Checking DATA

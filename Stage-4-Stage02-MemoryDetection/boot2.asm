@@ -5,8 +5,7 @@ mov si, TEST_STRING
 call write_string
 
 mov ax, 0xBE01
-cli
-hlt
+jmp $
 
 write_string:
 	push ax
