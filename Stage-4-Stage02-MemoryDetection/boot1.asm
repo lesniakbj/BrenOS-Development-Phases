@@ -85,7 +85,7 @@ boot1_start:
 	call write_string
 	
 	mov ax, 0x7E00
-	jmp [ax - $]
+	jmp [ax]
 
 ; Note: These can't be included due to the
 ; fact that they use variables defined here.
