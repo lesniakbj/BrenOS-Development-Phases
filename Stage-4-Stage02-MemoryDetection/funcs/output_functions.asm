@@ -93,5 +93,5 @@ write_color_row:
 ;==============================;
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x???? ', 0
-TEXT_COLOR		db 0x0704
+TEXT_COLOR		dw 0x0704
 SCREEN_WIDTH 	db 80
