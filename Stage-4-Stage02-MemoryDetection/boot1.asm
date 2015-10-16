@@ -84,6 +84,9 @@ boot1_start:
 	mov si, NEW_LINE
 	call write_string
 	
+	mov dx, stage02_load
+	call write_hex
+	
 	jmp stage02_load
 	cli
 	hlt
