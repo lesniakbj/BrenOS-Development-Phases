@@ -6,6 +6,11 @@ boot2_start:
 	; screen before we continue on...
 	call clear_sceen
 	
+	; .. now that the screen is clear
+	; lets set the screen mode we want
+	; to use for now (80:25:8x8)
+	call set_screen_mode
+	
 	; Now we should write what we are 
 	; are doing, for record keeping.
 	mov si, LOW_MEM_DET_MSG
