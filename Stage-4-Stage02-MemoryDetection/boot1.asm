@@ -109,11 +109,13 @@ read_from_disk:
 	mov bx, 0x7E00
 	
 	; ERROR CHECKING...
+	push bx
 	mov dx, es
 	call write_hex
+	pop bx
 	mov si, OFFSET_CHAR
 	call write_string
-	mov bx, es
+	mov dx, bx
 	call write_hex
 	mov si, NEW_LINE
 	call write_string
@@ -125,7 +127,7 @@ read_from_disk:
 
 .disk_read_error:
 	mov si, [READ_ERROR]
-	; call write_string
+	call write_string
 	jmp $
 	
 
