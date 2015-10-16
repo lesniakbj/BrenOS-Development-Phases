@@ -67,19 +67,18 @@ boot1_start:
 	; which is conviently where we
 	; put the parameter for the 
 	; write_hex(dl) function.
-	call write_hex
+	; call write_hex
 
 	call reset_disk
 	call read_from_disk
 	jmp 0x0000:0x7E00
-
-%include "funcs/output_functions.asm"
 
 ; Note: These can't be included due to the
 ; fact that they use variables defined here.
 ; Thus, they are are simply included as 
 ; functions here.
 ; %include "funcs/disk_functions.asm"
+; %include "funcs/output_functions.asm"
 
 reset_disk:
 	mov ah, 0				; Reset disk function
