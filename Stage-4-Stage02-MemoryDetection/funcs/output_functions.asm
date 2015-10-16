@@ -78,7 +78,7 @@ write_hex:
 ;=======================;
 write_color_row:
 	mov al, ' '
-	mov cx, 5
+	mov cx, 80
 	call write_char
 	ret
 
@@ -86,6 +86,6 @@ write_color_row:
 ;		FUNCTIONS DATA		   ;
 ;==============================;
 HEX_CHARS 		db '0123456789ABCDEF'
-HEX_OUT 		db '0x???? ', 0
+HEX_OUT 		db '0x????', 0
 TEXT_COLOR		db 0x74
 SCREEN_WIDTH 	db 5
