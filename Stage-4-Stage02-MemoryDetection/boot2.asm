@@ -11,15 +11,21 @@ boot2_start:
 	; to use for now (80:25:8x8)
 	call set_screen_mode
 	
+	; Add some color to the screen, see 
+	; if we can turn this into a msg
+	; screen.
 	call write_color_row
 	call write_newline
 	call write_newline
 	
+	; Tell the user that we are now
+	; detecting memory in their system.
 	mov si, MEM_DET_MSG
 	call write_string
 	call write_newline
 	mov si, DIVIDER_MSG
 	call write_string
+	call write_newline
 	call write_newline
 	
 	; Now we should write what we are 
@@ -37,6 +43,7 @@ boot2_start:
 	mov dx, ax
 	call write_hex
 	
+	; And back to this, add some 
 	call write_newline
 	call write_newline
 	call write_color_row
