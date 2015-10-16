@@ -6,6 +6,9 @@ boot2_start:
 	; screen before we continue on...
 	call clear_sceen
 	
+	; TEST
+	call write_color_row
+	
 	; .. now that the screen is clear
 	; lets set the screen mode we want
 	; to use for now (80:25:8x8)

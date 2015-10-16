@@ -1,7 +1,6 @@
 ;=======================;
-;	USEFUL BIOS FUNCS	;
+;	PRIMARY FUNCTIONS	;
 ;=======================;
-
 write_string:
 	push ax
 	push si
@@ -20,6 +19,21 @@ write_string:
 	pop ax
 	ret
 
+;-------------------;
+; Func:				;
+;	write_char()	;
+; Params:			;
+;	al = Char		;
+;	cx = # of Times	;
+;-------------------;
+write_char:
+	mov ah, 0x09
+	mov bh, 0
+	mov bl, [TEXT_COLOR]
+	
+	int 0x10
+	
+	ret
 	
 write_hex:
 	push bx
@@ -58,9 +72,26 @@ write_hex:
 	pop si
 	pop bx
 	ret
+	
+;=======================;
+;	 HELPER FUNCTIONS	;
+;=======================;
+write_color_row:
+	push ax
+	push cx
+	
+	mov al, ' '
+	mov cx, [SCREEN_WIDTH]
+	call write_char
+	
+	pop cx
+	pop ax
+	ret
 
 ;==============================;
 ;		FUNCTIONS DATA		   ;
 ;==============================;
-HEX_CHARS: db '0123456789ABCDEF'
-HEX_OUT: db '0x???? ', 0
+HEX_CHARS 		db '0123456789ABCDEF'
+HEX_OUT 		db '0x???? ', 0
+TEXT_COLOR		db 0x0704
+SCREEN_WIDTH 	db 80
