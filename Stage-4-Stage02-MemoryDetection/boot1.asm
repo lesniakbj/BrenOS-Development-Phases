@@ -82,18 +82,14 @@ boot1_start:
 ; %include "funcs/disk_functions.asm"
 
 reset_disk:
-	pusha
-	
 	mov ah, 0				; Reset disk function
 	mov dl, [diskNumber]	; This will only be run if on Floppy
 	int 0x13
-	jc .reset_disk
+	jc reset_disk
 	
-	popa
 	ret
 	
 read_from_disk:
-	pusha
 	; Read Sector Function
 	mov ah, 0x02
 	
@@ -114,8 +110,6 @@ read_from_disk:
 	int 0x13
 	
 	jc .disk_read_error
-	
-	popa
 	ret 
 
 .disk_read_error:
