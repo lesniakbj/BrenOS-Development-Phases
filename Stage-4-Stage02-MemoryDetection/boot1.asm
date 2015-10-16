@@ -190,7 +190,7 @@ write_hex:
 ; String Data
 READ_ERROR 	db 'Error reading disk!', 0
 CNTRL_MSG	db 'Handing off control...', 0
-READ_TO		db 'Reading sector to: '
+READ_TO		db 'Reading sector to: ', 0
 OFFSET_CHAR	db ':', 0
 NEW_LINE	db 0x0A, 0x0D, 0
 
