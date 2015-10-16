@@ -8,7 +8,7 @@
 ; Cononicalize CS:IP to 0x0000:0x7C00
 ; 	Note: Some BIOS' start us at 
 ;	0x07C0:0x0000. We fix that.
-jmp short boot1_start
+jmp 0x0000:boot1_start
 nop
 
 ;====================================;
@@ -60,9 +60,6 @@ boot1_start:
 	; booted from.
 	mov [diskNumber], dl
 	
-	
-	mov si, READ_TO
-	call write_string
 	; DL contains the drive number,
 	; which is conviently where we
 	; put the parameter for the 
@@ -71,8 +68,22 @@ boot1_start:
 	call reset_disk
 	call read_from_disk
 	
+	mov si, READ_TO
+	call write_string
+	mov dx, [readSegment]
+	call write_hex
+	mov si, OFFSET_CHAR
+	call write_string
+	mov dx, [readOffset]
+	call write_hex
+	mov si, NEW_LINE
+	call write_string
+	
 	mov si, CNTRL_MSG
 	call write_string
+	mov si, NEW_LINE
+	call write_string
+	
 	jmp 0x7E00
 
 ; Note: These can't be included due to the
@@ -109,6 +120,9 @@ read_from_disk:
 	mov bx, 0x7E00
 	
 	; ERROR CHECKING [soon]...	
+	mov [readSegment], es
+	mov [readOffset], bx
+	
 	int 0x13
 	
 	jc .disk_read_error
@@ -192,6 +206,10 @@ NEW_LINE	db 0x0A, 0x0D, 0
 HEX_CHARS	db '0123456789ABCDEF', 0
 HEX_OUT 	db '0x???? ', 0
 diskNumber	db 0
+
+; Error Checking DATA
+readSegment	dw 0
+readOffset	dw 0
 	
 TIMES 510 - ($ - $$) db 0 
 dw 0xAA55
