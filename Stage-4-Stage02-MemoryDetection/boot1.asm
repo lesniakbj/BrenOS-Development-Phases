@@ -45,9 +45,6 @@ fileSystemID		db 'FAT     '
 ; code.
 
 boot1_start:
-	; Incase it was filled with junk
-	cld	
-
 	; Setup the segments
 	cli
 	xor ax, ax
@@ -71,7 +68,10 @@ boot1_start:
 
 	call reset_disk
 	call read_from_disk
-	jmp 0x0000:0x7E00
+	
+	mov si, CNTRL_MSG
+	call write_string
+	jmp 0x7E00
 
 ; Note: These can't be included due to the
 ; fact that they use variables defined here.
@@ -174,7 +174,8 @@ write_hex:
 ;	BOOT-1 DATA
 ;===================;
 ; String Data
-READ_ERROR: db "Error reading disk!", 0
+READ_ERROR db 'Error reading disk!', 0
+CNTRL_MSG	db 'Handing off control...', 0
 	
 ; Other Data
 HEX_CHARS: db '0123456789ABCDEF'
