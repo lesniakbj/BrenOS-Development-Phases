@@ -7,6 +7,9 @@ boot2_start:
 	call clear_sceen
 	
 	; TEST
+	mov al, 'H'
+	mov cx, 1
+	call write_char
 	call write_color_row
 	
 	; .. now that the screen is clear
