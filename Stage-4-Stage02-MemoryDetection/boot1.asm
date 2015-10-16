@@ -108,18 +108,7 @@ read_from_disk:
 	mov es, bx
 	mov bx, 0x7E00
 	
-	; ERROR CHECKING...
-	push bx
-	mov dx, es
-	call write_hex
-	pop bx
-	mov si, OFFSET_CHAR
-	call write_string
-	mov dx, bx
-	call write_hex
-	mov si, NEW_LINE
-	call write_string
-	
+	; ERROR CHECKING [soon]...	
 	int 0x13
 	
 	jc .disk_read_error
