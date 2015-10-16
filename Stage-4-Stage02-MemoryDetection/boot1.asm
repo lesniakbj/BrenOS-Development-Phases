@@ -84,8 +84,8 @@ boot1_start:
 	mov si, NEW_LINE
 	call write_string
 	
-	mov ax, 0x7E00
-	jmp [ax]
+	mov bx, 0x7E00
+	jmp [bx]
 
 ; Note: These can't be included due to the
 ; fact that they use variables defined here.
