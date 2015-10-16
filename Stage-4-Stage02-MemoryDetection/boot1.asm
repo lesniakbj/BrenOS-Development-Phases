@@ -84,10 +84,7 @@ boot1_start:
 	mov si, NEW_LINE
 	call write_string
 	
-	jmp 0x0000:load_boot2
-	
-load_boot2:
-	jmp 0x07E0
+	jmp 0x7C00 + 512
 	cli
 	hlt
 	
