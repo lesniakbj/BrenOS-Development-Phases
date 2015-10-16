@@ -116,7 +116,7 @@ read_from_disk:
 	; we are reading from...
 	mov al, 1				; Number of Sectors to Read
 	mov dl, [driveNumber]	; Use the 1st (C:) Drive. HDD.
-	mov ch, 1				; Use the 1st Cylinder/Track
+	mov ch, 0				; Use the 1st Cylinder/Track
 	mov dh, 0				; Use the 1st Read/Write Head
 	mov cl, 2				; Read the 2nd Sector
 	
