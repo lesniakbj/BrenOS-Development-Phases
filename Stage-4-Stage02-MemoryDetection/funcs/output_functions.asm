@@ -152,7 +152,7 @@ write_memory_range_contents_16:
 	call write_newline
 	
 	mov ax, [bytesPerRow]
-	mov [locationOfMem], si
+	mov [initialLocMem], si
 	jmp .start
 	
 	
