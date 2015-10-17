@@ -82,6 +82,12 @@ write_newline:
 
 	ret
 	
+write_space:
+	mov si, SPACE
+	call write_string
+	
+	ret
+	
 write_color_row:
 	push ax
 	push cx
@@ -112,6 +118,10 @@ write_color_row:
 write_memory_range_contents:
 	mov byte [bytesPerRow], 4
 .start:
+	; Stupid... But we don't want
+	; to be against the left side.
+	call write_space
+	
 	dec cx
 	dec byte [bytesPerRow]
 	
@@ -129,7 +139,9 @@ write_memory_range_contents:
 	
 .newline:
 	call write_newline
-	ret
+	mov byte [bytesPerRow], 4
+	
+	jmp .start
 	
 .end:
 	call write_newline
@@ -144,7 +156,7 @@ bytesPerRow		db 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
-HEX_OUT 		db '0x???? ', 0
+HEX_OUT 		db '0x????', 0
 SPACE			db ' '
 NEWLINE			db 0x0A, 0x0D, 0
 LINE_COLOR		db 0x70
