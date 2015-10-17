@@ -148,11 +148,27 @@ write_memory_range_contents_16:
 	jmp .start
 	
 .newline:
+	; We want to print something
+	; like this at the end of 
+	; every line:
+	;	<relative> : <absolute>
+	
+	; This part does the absolute
+	; section of the address.
+	call write_space
 	mov si, PIPE_STRING
 	call write_string
+	call write_space
+	
+	; < INSERT RELATIVE CODE HERE>
+	
+	mov si, COLON_STRING
+	call write_string
+	call write_space
 	
 	mov dx, [locationOfMem]
 	call write_hex
+	
 	
 	call write_newline
 	
@@ -176,7 +192,8 @@ locationOfMem	dw 0
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
 SPACE			db ' ', 0
-PIPE_STRING		db ' | ', 0
+PIPE_STRING		db '|', 0
+COLON_STRING	db ':', 0
 NEWLINE			db 0x0A, 0x0D, 0
 LINE_COLOR		db 0x70
 TEXT_COLOR		db 0x04
