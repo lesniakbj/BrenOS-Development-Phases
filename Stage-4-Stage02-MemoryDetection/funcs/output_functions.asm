@@ -194,6 +194,7 @@ write_memory_range_contents_16:
 	call write_string
 	
 	mov dx, [initialLocMem]
+	add dx, 2
 	call write_hex
 	
 	pop dx
