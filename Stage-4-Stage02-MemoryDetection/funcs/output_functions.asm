@@ -179,8 +179,10 @@ write_memory_range_contents_16:
 	
 	; < INSERT RELATIVE CODE HERE>
 	
-	;mov si, COLON_STRING
-	;call write_string
+	mov dx, si
+	mov si, COLON_STRING
+	call write_string
+	mov si, dx
 	call write_space
 	
 	mov dx, [initialLocMem]
