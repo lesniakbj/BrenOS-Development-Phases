@@ -116,7 +116,7 @@ write_memory_range_contents:
 	je .end
 	
 	inc si
-	jmp write_memory_range_contents:
+	jmp write_memory_range_contents
 
 .end:
 	push si
