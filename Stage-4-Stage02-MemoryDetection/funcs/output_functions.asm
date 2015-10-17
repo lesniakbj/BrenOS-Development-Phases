@@ -188,7 +188,6 @@ write_memory_range_contents_16:
 	call write_space
 	
 	mov dx, [offsetLoc]
-	sub dx, 1
 	call write_hex
 	
 	mov si, COLON_STRING
