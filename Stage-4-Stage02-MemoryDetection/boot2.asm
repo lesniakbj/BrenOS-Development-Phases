@@ -57,6 +57,7 @@ boot2_start:
 	; if there is an error. 
 	call fill_memory_info_buffer
 	
+	xor dx, dx
 	mov dx, [bytesStored]
 	call write_hex
 	call write_newline

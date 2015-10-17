@@ -15,6 +15,7 @@ detect_low_memory:
 ; location for the memory map.
 detect_memory_map:
 	xor ebx, ebx
+	xor ecx, ecx
 	
 	; Move the magic number into edx
 	; before the BIOS call. 
@@ -45,6 +46,5 @@ detect_memory_map:
 ;=======================;
 ;		   DATA			;
 ;=======================;
-preserveEBX	dd 0	; Need to preserve
-memCallOneCL	db 0	; Number of bytes in call 1
+preserveEBX		dd 0	; Need to preserve
 bytesStored 	db 0 
