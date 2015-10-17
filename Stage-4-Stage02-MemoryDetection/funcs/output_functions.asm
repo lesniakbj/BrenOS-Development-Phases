@@ -123,7 +123,7 @@ write_color_row:
 ;-------------------;
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
-	mov initialLocMem, si
+	mov [initialLocMem], si
 	mov word [offsetLoc], 0
 	
 .start:
@@ -153,12 +153,12 @@ write_memory_range_contents_16:
 	call write_newline
 	
 	mov ax, [bytesPerRow]
-	mov initialLocMem, si
+	mov [initialLocMem], si
 	
-	; push ax
-	; shl ax, 1
+	push ax
+	shl ax, 1
 	add [offsetLoc], ax
-	; pop ax
+	pop ax
 	
 	jmp .start
 	
