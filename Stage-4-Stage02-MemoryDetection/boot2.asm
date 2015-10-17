@@ -110,14 +110,23 @@ fill_memory_info_buffer:
 ;===============================;
 ;		BOOT 2 - DATA			;
 ;===============================;
-MEM_DET_MSG		db ' Detecting Memory Map', 0
-LOW_MEM_DET_MSG db ' Detecting Low Memory (KB): ', 0
-DIVIDER_MSG		db ' =================================', 0
-HIGHMEMERR_MSG	db ' Error Using INT 0x15, AX 0xE820!', 0
+MEM_DET_MSG			db ' Detecting Memory Map', 0
+LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
+DIVIDER_MSG			db ' =================================', 0
+HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
 memMapEntryCount	db 0
-memoryMapBuffer		resb 128
+
+memoryMapStruct:
+	baseAddress		dq 0
+	lengthOfRegion	dq 0
+	regionType		dd 0
+	extAttributes	dd 0
+
+memoryMapBuffer:
+	
+	baseAddress		dq 0	
 
 ; NOTE:
 ; ======================
