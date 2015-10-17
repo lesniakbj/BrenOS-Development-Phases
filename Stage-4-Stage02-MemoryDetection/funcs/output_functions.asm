@@ -173,10 +173,8 @@ write_memory_range_contents_16:
 	; section of the address.
 	call write_space
 	
-	mov dx, si
 	mov si, PIPE_STRING
 	call write_string
-	mov si, dx
 	call write_space
 	
 	; < INSERT RELATIVE CODE HERE>
