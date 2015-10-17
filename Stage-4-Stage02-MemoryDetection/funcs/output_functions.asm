@@ -122,10 +122,10 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
-	mov ax, 0
+	mov byte [bytesPerRow], ax
 	
 .start:
-	inc ax
+	dec ax
 	dec cx
 	
 	call write_space
@@ -136,7 +136,7 @@ write_memory_range_contents:
 	cmp cx, 0
 	je .end
 	
-	cmp ax, 8
+	cmp ax, 0
 	je .newline
 	
 	inc si
@@ -145,7 +145,7 @@ write_memory_range_contents:
 .newline:
 	call write_newline
 	
-	mov ax, 0
+	mov ax, [bytesPerRow]
 	jmp .start
 	
 	
@@ -157,7 +157,6 @@ write_memory_range_contents:
 ;		FUNCTIONS DATA		   ;
 ;==============================;
 ; Working data
-saveSI			dw 0
 bytesPerRow		db 0
 
 ; Output and Consts.

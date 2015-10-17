@@ -65,10 +65,11 @@ boot2_start:
 	; our Stage01 boot code, or at least
 	; the first 16 bytes of it. 
 	; CX = Number of Bytes to Read
-	; DX = Entries per Row (to Display)
+	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
-	mov cx, 16
+	mov cx, 32
+	mov ax, 8
 	call write_memory_range_contents
 	
 	call write_newline
