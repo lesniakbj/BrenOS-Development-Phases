@@ -53,8 +53,10 @@ boot2_start:
 	; Inputs: es:di -> destination buffer for 24 byte entries
 	; Outputs: bp = entry count, trashes all registers except esi
 	mov di, memoryMapBuffer
-	; call detect_memory_map
-	mov [memMapEntryCount], bp
+	pusha
+	call detect_memory_map
+	popa
+	; mov [memMapEntryCount], bp
 	
 	call write_newline
 	call write_newline
@@ -62,7 +64,7 @@ boot2_start:
 	
 	; Bochs error check:
 	mov ax, memMapEntryCount
-	mov bx, [memMapEntryCount]
+	; mov bx, [memMapEntryCount]
 	
 	jmp $
 
