@@ -55,7 +55,12 @@ boot2_start:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
-	; mov [memMapEntryCount], bp
+	mov [memMapEntryCount], bp
+	
+	mov si, memoryMapBuffer
+	mov cx, 20
+	mov ax, 5
+	call write_memory_range_contents_16
 	
 	call write_newline
 	call write_newline
@@ -74,6 +79,8 @@ boot2_start:
 	
 	call write_newline
 	call write_newline
+	
+	
 	call write_color_row
 	
 	; Bochs error check:
