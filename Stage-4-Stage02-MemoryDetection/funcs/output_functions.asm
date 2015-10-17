@@ -123,7 +123,7 @@ write_color_row:
 ;-------------------;
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
-	mov [locationOfMem], si
+	mov [initialLocMem], si
 	
 .start:
 	dec ax
@@ -157,7 +157,7 @@ write_memory_range_contents_16:
 	
 	
 .end:
-	jmp .print_addresses
+	call .print_addresses
 	call write_newline
 	ret
 
@@ -190,7 +190,7 @@ write_memory_range_contents_16:
 ;==============================;
 ; Working data
 bytesPerRow		dw 0
-locationOfMem	dw 0
+initialLocMem	dw 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
