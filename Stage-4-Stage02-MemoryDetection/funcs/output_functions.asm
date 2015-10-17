@@ -120,6 +120,8 @@ write_memory_range_contents:
 	inc ax
 	dec cx
 	
+	call write_space
+	
 	mov dx, [si]
 	call write_hex
 	
@@ -133,8 +135,7 @@ write_memory_range_contents:
 	jmp .start
 	
 .newline:
-	mov al, 0x0A
-	call write_char
+	call write_newline
 	
 	mov ax, 0
 	jmp .start
@@ -154,7 +155,7 @@ bytesPerRow		db 0
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
-SPACE			db ' '
+SPACE			db ' ', 0
 NEWLINE			db 0x0A, 0x0D, 0
 LINE_COLOR		db 0x70
 TEXT_COLOR		db 0x04
