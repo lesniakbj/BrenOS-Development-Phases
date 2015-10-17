@@ -135,9 +135,9 @@ write_memory_range_contents:
 	jmp .start
 	
 .newline:
-	call write_newline
+	; call write_newline
 	
-	mov ax, 0
+	; mov ax, 0
 	jmp .start
 	
 	
