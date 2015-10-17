@@ -123,7 +123,7 @@ write_color_row:
 ;-------------------;
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
-	mov [initialLocMem], si
+	mov initialLocMem, si
 	mov word [offsetLoc], 0
 	
 .start:
@@ -153,7 +153,7 @@ write_memory_range_contents_16:
 	call write_newline
 	
 	mov ax, [bytesPerRow]
-	mov [initialLocMem], si
+	mov initialLocMem, si
 	
 	; push ax
 	; shl ax, 1
@@ -193,7 +193,7 @@ write_memory_range_contents_16:
 	mov si, COLON_STRING
 	call write_string
 	
-	mov dx, [initialLocMem]
+	mov dx, initialLocMem
 	call write_hex
 	
 	pop dx
