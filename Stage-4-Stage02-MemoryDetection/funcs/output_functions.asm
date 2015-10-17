@@ -77,15 +77,21 @@ write_char:
 ;	 HELPER FUNCTIONS	;
 ;=======================;
 write_newline:
+	push si
+	
 	mov si, NEWLINE
 	call write_string
 
+	pop si
 	ret
 	
 write_space:
+	push si
+	
 	mov si, SPACE
 	call write_string
 	
+	pop si
 	ret
 	
 write_color_row:
