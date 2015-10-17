@@ -124,6 +124,7 @@ write_color_row:
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
 	mov [initialLocMem], si
+	mov [offsetLoc], 0
 	
 .start:
 	dec ax
@@ -171,6 +172,9 @@ write_memory_range_contents_16:
 	
 	; This part does the absolute
 	; section of the address.
+	push si
+	push dx
+	
 	call write_space
 	
 	mov si, PIPE_STRING
@@ -179,15 +183,15 @@ write_memory_range_contents_16:
 	
 	; < INSERT RELATIVE CODE HERE>
 	
-	mov dx, si
 	mov si, COLON_STRING
 	call write_string
-	mov si, dx
 	call write_space
 	
 	mov dx, [initialLocMem]
 	call write_hex
 	
+	pop dx
+	pop si
 	ret
 
 ;==============================;
@@ -196,6 +200,7 @@ write_memory_range_contents_16:
 ; Working data
 bytesPerRow		dw 0
 initialLocMem	dw 0
+offsetLoc		dw 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
