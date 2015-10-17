@@ -28,27 +28,27 @@ write_hex:
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 2], bl
+	mov [HEX_OUT], bl
 	
 	mov bx, dx
 	shr bx, 8
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 3], bl
+	mov [HEX_OUT + 1], bl
 	
 	mov bx, dx
 	shr bx, 4
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 4], bl
+	mov [HEX_OUT + 2], bl
 	
 	mov bx, dx
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 5], bl
+	mov [HEX_OUT + 3], bl
 	
 	mov si, HEX_OUT
 	call write_string
@@ -221,7 +221,7 @@ firstLine 		db 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
-HEX_OUT 		db '0x????', 0
+HEX_OUT 		db '????', 0
 SPACE			db ' ', 0
 PIPE_STRING		db '|', 0
 COLON_STRING	db ':', 0
