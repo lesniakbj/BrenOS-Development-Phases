@@ -34,8 +34,8 @@ detect_memory_map:
 	; Save ebx as it needs to be preserved,
 	; along with cl, which contains the number
 	; of bytes now stored at ES:DI
-	mov [memCallOneEBX], ebx
-	mov [memCallOneCL], cl
+	mov [preserveEBX], ebx
+	mov [bytesStored], cl
 	
 	ret
 
@@ -45,6 +45,6 @@ detect_memory_map:
 ;=======================;
 ;		   DATA			;
 ;=======================;
-memCallOneEBX	dd 0	; Need to preserve
+preserveEBX	dd 0	; Need to preserve
 memCallOneCL	db 0	; Number of bytes in call 1
-memMapEntry 	db 0 
+bytesStored 	db 0 
