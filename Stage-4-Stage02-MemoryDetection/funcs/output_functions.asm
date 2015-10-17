@@ -125,7 +125,7 @@ write_memory_range_contents:
 	mov dx, [si]
 	call write_hex
 	
-	mov al, SPACE
+	mov al, ' ' 
 	call write_char
 		
 	cmp cx, 0
