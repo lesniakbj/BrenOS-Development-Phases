@@ -124,7 +124,7 @@ write_color_row:
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
 	mov [initialLocMem], si
-	mov word [lineCount], 0
+	mov byte [firstLine], 1
 	mov word [offsetLoc], 0
 	
 .start:
@@ -153,7 +153,7 @@ write_memory_range_contents_16:
 	call .print_addresses
 	call write_newline
 	
-	inc word [lineCount]
+	mov byte [firstLine], 0
 	
 	mov ax, [bytesPerRow]
 	mov [initialLocMem], si
@@ -197,11 +197,12 @@ write_memory_range_contents_16:
 	call write_string
 	
 	mov dx, [initialLocMem]
-	cmp word [lineCount], 0
-	je .over_adjust
+	cmp byte [firstLine], 1
+	je .is_first_line
 	add dx, 2
-
-.over_adjust:
+	
+.is_first_line:
+	mov byte [firstLine], 0
 	call write_hex
 	
 	pop dx
