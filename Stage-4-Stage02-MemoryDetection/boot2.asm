@@ -64,7 +64,7 @@ boot2_start:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
-	jc memory_detect_error
+	; jc memory_detect_error
 	mov [memMapEntryCount], bp
 	
 	; TEST THAT BUFFER FILLED
@@ -99,11 +99,11 @@ boot2_start:
 	; mov bx, [memMapEntryCount]
 	 
 	jmp $
-
 	
 memory_detect_error:
 	mov si, HIGHMEMERR_MSG
 	call write_string
+	jmp .hlt
 	
 .hlt:
 	cli
