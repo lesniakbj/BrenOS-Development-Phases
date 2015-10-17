@@ -52,7 +52,7 @@ boot2_start:
 	; and put it into a buffer for us to use.
 	; Inputs: es:di -> destination buffer for 24 byte entries
 	; Outputs: bp = entry count, trashes all registers except esi
-	mov si, memoryMapBuffer
+	mov di, memoryMapBuffer
 	call detect_memory_map
 	mov [memMapEntryCount], bp
 	
