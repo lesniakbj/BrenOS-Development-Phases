@@ -58,7 +58,7 @@ boot2_start:
 	; TEST THAT BUFFER FILLED
 	mov si, memoryMapBuffer
 	mov cx, 32
-	mov ax, 8
+	mov ax, 6
 	call write_memory_range_contents_16
 	
 	
@@ -71,7 +71,7 @@ boot2_start:
 	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
 	mov cx, 32
-	mov ax, 8
+	mov ax, 6
 	call write_memory_range_contents_16
 	
 	
