@@ -180,7 +180,7 @@ write_memory_range_contents_16:
 	call write_string
 	call write_space
 	
-	mov dx, [locationOfMem]
+	mov dx, [initialLocMem]
 	call write_hex
 	
 	ret
