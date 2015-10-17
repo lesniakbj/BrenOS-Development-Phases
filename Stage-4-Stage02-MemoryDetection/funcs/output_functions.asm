@@ -11,7 +11,6 @@ write_string:
 	je .string_end
 		
 	mov ah, 0x0E
-	mov bl, [TEXT_COLOR]
 	int 0x10
 	jmp .string_loop
 	
@@ -119,10 +118,7 @@ write_memory_range_contents:
 	
 	mov dx, [si]
 	call write_hex
-	
-	mov si, SPACE
-	call write_string
-	
+		
 	cmp cx, 0
 	je .end
 	

@@ -69,7 +69,6 @@ boot2_start:
 	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
 	mov cx, 16
-	mov ax, 8
 	call write_memory_range_contents
 	
 	call write_newline
