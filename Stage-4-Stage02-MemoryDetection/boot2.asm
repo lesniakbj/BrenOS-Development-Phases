@@ -42,11 +42,15 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
+	mov si, HIGH_MEM_CALL_1_MSG
+	call write_string
+	call write_newline
+	call write_newline
 	; TEST: This mem should be 0'ed
-	mov si, memoryMapBuffer
-	mov cx, 12
-	mov ax, 6
-	call write_memory_range_contents_16
+	; mov si, memoryMapBuffer
+	; mov cx, 12
+	; mov ax, 6
+	; call write_memory_range_contents_16
 
 	; Now that we did some screen bookkeeping,
 	; its time to detect the system memory map
@@ -113,6 +117,7 @@ fill_memory_info_buffer:
 MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG			db ' =================================', 0
+HIGH_MEM_CALL_1_MSG db ' Call 1, E820: ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
