@@ -116,16 +116,8 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
-	mov byte [bytesPerRow], 4
-	mov [saveSI], si
 .start:
-	; Stupid... But we don't want
-	; to be against the left side.
-	call write_space
-	mov si, [saveSI]
-	
 	dec cx
-	dec byte [bytesPerRow]
 	
 	mov dx, [si]
 	call write_hex
@@ -133,16 +125,8 @@ write_memory_range_contents:
 	cmp cx, 0
 	je .end
 	
-	cmp byte [bytesPerRow], 0
-	je .newline
-	
 	inc si
-	mov [saveSI], si
 	jmp .start
-	
-.newline:
-	call write_newline
-	ret
 	
 .end:
 	call write_newline
