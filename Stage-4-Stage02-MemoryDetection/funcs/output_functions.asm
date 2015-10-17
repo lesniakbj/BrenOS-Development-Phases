@@ -113,8 +113,10 @@ write_memory_range_contents:
 	dec cx
 	dec dx
 	
+	push si
 	mov dx, [si]
 	call write_hex
+	pop si
 	
 	push si
 	mov si, SPACE
@@ -125,10 +127,10 @@ write_memory_range_contents:
 	je .end
 	
 	cmp dx, 0
-	call .new_row
+	jmp .new_row
 	
 	inc si
-	jmp write_memory_range_contents
+	jmp .start
 
 	
 .new_row:
@@ -137,7 +139,9 @@ write_memory_range_contents:
 	pop si
 	
 	mov dx, [bytesPerRow]
-	ret
+	
+	inc si
+	jmp .start
 	
 .end:
 	push si
