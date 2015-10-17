@@ -29,8 +29,6 @@ detect_memory_map:
 	; contain the magic number, and
 	; the carry flag will be clear if
 	; there is no error. 
-	cmp eax, 0x534D4150
-	jne .error_exit
 	jc .error_exit
 	
 	; Save ebx as it needs to be preserved,

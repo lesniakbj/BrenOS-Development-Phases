@@ -47,6 +47,8 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
+	%comment
+	
 	; TEST THAT BUFFER FILLED
 	mov si, memoryMapBuffer
 	mov cx, 20
@@ -64,7 +66,7 @@ boot2_start:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
-	jc memory_detect_error
+	; jc memory_detect_error
 	mov [memMapEntryCount], bp
 	
 	; TEST THAT BUFFER FILLED
@@ -75,6 +77,8 @@ boot2_start:
 	
 	call write_newline
 	call write_newline
+	
+	%endcomment
 	
 	; Test of the memory range print
 	; function. Lets see if we can print
