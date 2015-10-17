@@ -36,7 +36,6 @@ detect_memory_map:
 	; along with cl, which contains the number
 	; of bytes now stored at ES:DI
 	mov [preserveEBX], ebx
-	mov [bytesStored], cl
 	
 	ret
 
@@ -47,4 +46,3 @@ detect_memory_map:
 ;		   DATA			;
 ;=======================;
 preserveEBX		dd 0	; Need to preserve
-bytesStored 	db 0 
