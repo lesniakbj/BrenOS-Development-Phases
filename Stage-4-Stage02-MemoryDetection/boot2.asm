@@ -80,8 +80,7 @@ DIVIDER_MSG		db ' =================================', 0
 
 ; Buffer & count for memory map structure
 memMapEntryCount	db 0
-memoryMapBuffer:
-	resb db 0
+memoryMapBuffer		resb 0
 
 ; NOTE:
 ; ======================
