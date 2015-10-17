@@ -110,10 +110,10 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
-	mov [bytesPerRow], 4
+	mov byte [bytesPerRow], 4
 .start:
 	dec cx
-	dec [bytesPerRow]
+	dec byte [bytesPerRow]
 	
 	mov dx, [si]
 	call write_hex
