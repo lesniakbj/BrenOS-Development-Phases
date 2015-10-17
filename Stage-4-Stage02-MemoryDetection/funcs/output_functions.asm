@@ -148,7 +148,7 @@ write_memory_range_contents_16:
 	jmp .start
 	
 .newline:
-	mov si, ' | '
+	mov si, " | "
 	call write_string
 	
 	mov dx, [locationOfMem]
