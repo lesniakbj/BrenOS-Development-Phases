@@ -64,6 +64,7 @@ boot2_start:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
+	jc memory_detect_error
 	mov [memMapEntryCount], bp
 	
 	; TEST THAT BUFFER FILLED
@@ -123,7 +124,8 @@ HIGHMEMERR_MSG	db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
 memMapEntryCount	db 0
-memoryMapBuffer		resb 128
+memoryMapBuffer:
+	TIMES 128 db 0
 
 ; NOTE:
 ; ======================

@@ -42,14 +42,11 @@ detect_memory_map:
 	ret
 
 .error_exit:
-	mov si, memError
-	call write_string
 	stc
 	ret
 ;=======================;
 ;		   DATA			;
 ;=======================;
-memError		db 'MEM ERROR!', 0
 memCallOneEBX	dd 0	; Need to preserve
 memCallOneCL	db 0	; Number of bytes in call 1
 memMapEntry 	db 0 
