@@ -79,9 +79,9 @@ LOW_MEM_DET_MSG db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG		db ' =================================', 0
 
 ; Buffer & count for memory map structure
-memMapEntryCount db 0
+memMapEntryCount	db 0
 memoryMapBuffer:
-	resb 128
+	resb db 0
 
 ; NOTE:
 ; ======================
