@@ -122,7 +122,7 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
-	mov byte [bytesPerRow], ax
+	mov [bytesPerRow], ax
 	
 .start:
 	dec ax
@@ -157,7 +157,7 @@ write_memory_range_contents:
 ;		FUNCTIONS DATA		   ;
 ;==============================;
 ; Working data
-bytesPerRow		db 0
+bytesPerRow		dw 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
