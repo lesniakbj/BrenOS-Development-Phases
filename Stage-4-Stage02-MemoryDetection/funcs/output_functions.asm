@@ -159,6 +159,8 @@ write_memory_range_contents_16:
 .end:
 	call .print_addresses
 	call write_newline
+	call write_newline
+	call write_newline
 	ret
 
 .print_addresses:

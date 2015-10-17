@@ -47,9 +47,7 @@ boot2_start:
 	mov cx, 32
 	mov ax, 8
 	call write_memory_range_contents_16
-	call write_newline
-	call write_newline
-	
+
 	; Now that we did some screen bookkeeping,
 	; its time to detect the system memory map
 	; and put it into a buffer for us to use.
@@ -58,13 +56,10 @@ boot2_start:
 	call fill_memory_info_buffer
 	
 	; TEST THAT BUFFER FILLED
-	; mov si, memoryMapBuffer
-	; mov cx, 20
-	; mov ax, 5
-	; call write_memory_range_contents_16
-	
-	; call write_newline
-	; call write_newline
+	mov si, memoryMapBuffer
+	mov cx, 20
+	mov ax, 5
+	call write_memory_range_contents_16
 	
 	
 	; Test of the memory range print
@@ -78,9 +73,6 @@ boot2_start:
 	mov cx, 32
 	mov ax, 8
 	call write_memory_range_contents_16
-	
-	call write_newline
-	call write_newline
 	
 	
 	call write_color_row
