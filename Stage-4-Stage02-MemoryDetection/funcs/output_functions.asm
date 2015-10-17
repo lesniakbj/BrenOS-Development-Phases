@@ -120,10 +120,10 @@ write_memory_range_contents:
 	mov dx, [si]
 	call write_hex
 	
-	mov [saveSI], si
+	push si
 	mov si, SPACE
 	call write_string
-	mov si, [saveSI]
+	pop si
 	
 	cmp cx, 0
 	je .end
