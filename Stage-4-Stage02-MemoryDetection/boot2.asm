@@ -44,7 +44,7 @@ boot2_start:
 	
 	; TEST: This mem should be 0'ed
 	mov si, memoryMapBuffer
-	mov cx, 32
+	mov cx, 40
 	mov ax, 8
 	call write_memory_range_contents_16
 
@@ -57,8 +57,8 @@ boot2_start:
 	
 	; TEST THAT BUFFER FILLED
 	mov si, memoryMapBuffer
-	mov cx, 32
-	mov ax, 6
+	mov cx, 40
+	mov ax, 8
 	call write_memory_range_contents_16
 	
 	
@@ -70,8 +70,8 @@ boot2_start:
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
-	mov cx, 32
-	mov ax, 6
+	mov cx, 40
+	mov ax, 8
 	call write_memory_range_contents_16
 	
 	
