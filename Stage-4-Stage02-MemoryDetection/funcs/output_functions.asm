@@ -139,9 +139,7 @@ write_memory_range_contents:
 	
 .newline:
 	call write_newline
-	mov byte [bytesPerRow], 4
-	
-	jmp .start
+	ret
 	
 .end:
 	call write_newline
