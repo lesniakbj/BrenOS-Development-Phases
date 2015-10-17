@@ -216,7 +216,7 @@ write_memory_range_contents_16:
 bytesPerRow		dw 0
 initialLocMem	dw 0
 offsetLoc		dw 0
-lineCount		dw 0
+firstLine 		db 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
