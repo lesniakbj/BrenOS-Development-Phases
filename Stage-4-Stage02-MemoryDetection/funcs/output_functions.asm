@@ -88,14 +88,14 @@ write_newline:
 write_color_row:
 	push ax
 	push cx
-	push bl
+	push bx
 	
 	mov al, ' '
 	mov cx, [SCREEN_WIDTH]
 	mov bl, [LINE_COLOR]
 	call write_char
 	
-	pop bl
+	pop bx
 	pop cx
 	pop ax
 	ret
