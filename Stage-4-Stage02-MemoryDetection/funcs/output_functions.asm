@@ -124,7 +124,7 @@ write_color_row:
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
 	mov [initialLocMem], si
-	mov [offsetLoc], 0
+	mov word [offsetLoc], 0
 	
 .start:
 	dec ax
