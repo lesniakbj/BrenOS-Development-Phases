@@ -154,6 +154,7 @@ write_memory_range_contents_16:
 	
 	mov ax, [bytesPerRow]
 	mov [initialLocMem], si
+	add [offsetLoc], [bytesPerRow] 
 	jmp .start
 	
 	
@@ -181,11 +182,11 @@ write_memory_range_contents_16:
 	call write_string
 	call write_space
 	
-	; < INSERT RELATIVE CODE HERE>
+	mov dx, [offsetLoc]
+	call write_hex
 	
 	mov si, COLON_STRING
 	call write_string
-	call write_space
 	
 	mov dx, [initialLocMem]
 	call write_hex
