@@ -78,6 +78,7 @@ boot2_start:
 	call write_color_row
 	
 	; Bochs error check:
+	xor eax, eax
 	mov ax, memMapEntryCount
 	mov bx, [memMapEntryCount]
 	 
