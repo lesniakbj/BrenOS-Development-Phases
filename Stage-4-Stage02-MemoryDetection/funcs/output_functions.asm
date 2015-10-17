@@ -194,7 +194,11 @@ write_memory_range_contents_16:
 	call write_string
 	
 	mov dx, [initialLocMem]
+	cmp dx, 0
+	je .over_adjust
 	add dx, 2
+
+.over_adjust:
 	call write_hex
 	
 	pop dx
