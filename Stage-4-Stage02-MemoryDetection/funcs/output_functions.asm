@@ -123,9 +123,10 @@ write_memory_range_contents:
 	dec cx
 	
 	mov dx, [si]
-	call write_hexs
+	call write_hex
 	
-	mov al, 
+	mov al, SPACE
+	call write_char
 		
 	cmp cx, 0
 	je .end
