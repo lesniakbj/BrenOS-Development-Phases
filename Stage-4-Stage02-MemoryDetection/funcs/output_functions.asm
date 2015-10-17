@@ -120,9 +120,11 @@ write_memory_range_contents:
 	mov dx, [si]
 	call write_hex
 	
+	mov [saveSI], si
 	mov si, SPACE
 	call write_string
-		
+	mov si, [saveSI]
+	
 	cmp cx, 0
 	je .end
 	
@@ -137,6 +139,7 @@ write_memory_range_contents:
 ;		FUNCTIONS DATA		   ;
 ;==============================;
 ; Working data
+saveSI			dw 0
 bytesPerRow		db 0
 
 ; Output and Consts.
