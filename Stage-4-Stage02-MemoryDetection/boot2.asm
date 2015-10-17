@@ -60,8 +60,8 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
-	mov si, memoryMapBuffer
-	mov cx, 8
+	mov si, 0x7C00
+	mov cx, 20
 	call write_memory_range_contents
 	
 	call write_newline
