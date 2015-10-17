@@ -122,9 +122,13 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents_16:
+	push ax
+	push cx
+	push dx
+	push si
+	
 	mov [bytesPerRow], ax
 	mov [initialLocMem], si
-	; mov byte [firstLine], 1
 	mov word [offsetLoc], 0
 	
 .start:
@@ -153,8 +157,6 @@ write_memory_range_contents_16:
 	call .print_addresses
 	call write_newline
 	
-	; mov byte [firstLine], 0
-	
 	mov ax, [bytesPerRow]
 	mov [initialLocMem], si
 	
@@ -171,6 +173,11 @@ write_memory_range_contents_16:
 	call write_newline
 	call write_newline
 	call write_newline
+	
+	pop si
+	pop dx
+	pop cx
+	pop ax
 	ret
 
 .print_addresses:
@@ -197,12 +204,7 @@ write_memory_range_contents_16:
 	call write_string
 	
 	mov dx, [initialLocMem]
-	; cmp byte [firstLine], 1
-	; je .is_first_line
 	add dx, 2
-	
-.is_first_line:
-	; mov byte [firstLine], 0
 	call write_hex
 	
 	pop dx
