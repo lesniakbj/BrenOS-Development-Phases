@@ -108,20 +108,16 @@ write_color_row:
 ;		bytes to 	;
 ;		display		;
 ;					;
-; DX -> Number of   ;
+; AX -> Number of   ;
 ;		bytes per   ;
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
-	push si
-	push cx
-	push dx
-	
-	mov [bytesPerRow], dx
+	mov [bytesPerRow], ax
 	
 .start:
 	dec cx
-	dec dx
+	dec ax
 	
 	mov dx, [si]
 	call write_hex
@@ -132,7 +128,7 @@ write_memory_range_contents:
 	cmp cx, 0
 	je .end
 	
-	cmp dx, 0
+	cmp ax, 0
 	jmp .new_row
 	
 	inc si
@@ -141,17 +137,13 @@ write_memory_range_contents:
 	
 .new_row:
 	call write_newline	
-	mov dx, [bytesPerRow]
+	mov ax, [bytesPerRow]
 	
 	inc si
 	jmp .start
 	
 .end:
 	call write_newline
-	
-	pop dx
-	pop cx
-	pop si
 	ret
 
 ;==============================;
