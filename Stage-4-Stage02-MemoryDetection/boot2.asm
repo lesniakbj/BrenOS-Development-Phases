@@ -3,12 +3,9 @@
 
 boot2_start:
 	; Ok, we made it. Lets clear the 
-	; screen before we continue on...
+	; screen and set our sceen mode
+	; before we continue on...
 	call clear_sceen
-	
-	; .. now that the screen is clear
-	; lets set the screen mode we want
-	; to use for now (80:25:8x8)
 	call set_screen_mode
 	
 	; Add some color to the screen, see 
@@ -42,19 +39,16 @@ boot2_start:
 	; write it to the screen.
 	mov dx, ax
 	call write_hex
-	
-	; And back to this, add some 
 	call write_newline
 	call write_newline
 	
-	; TEST THAT BUFFER FILLED
-	; mov si, memoryMapBuffer
-	; mov cx, 20
-	; mov ax, 5
-	; call write_memory_range_contents_16
-	
-	; call write_newline
-	; call write_newline
+	; TEST: This mem should be 0'ed
+	mov si, memoryMapBuffer
+	mov cx, 20
+	mov ax, 5
+	call write_memory_range_contents_16
+	call write_newline
+	call write_newline
 	
 	; Now that we did some screen bookkeeping,
 	; its time to detect the system memory map
