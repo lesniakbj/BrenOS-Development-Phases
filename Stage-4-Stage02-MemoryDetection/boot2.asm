@@ -59,6 +59,11 @@ boot2_start:
 	
 	call write_newline
 	call write_newline
+	
+	call write_memory_range_contents
+	
+	call write_newline
+	call write_newline
 	call write_color_row
 	
 	; Bochs error check:

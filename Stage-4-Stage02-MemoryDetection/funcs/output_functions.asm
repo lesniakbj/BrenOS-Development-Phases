@@ -93,12 +93,44 @@ write_color_row:
 	pop cx
 	pop ax
 	ret
+	
+;-------------------;
+; FS:SI -> Start	;
+; 		   of range	;
+;					;
+; CX -> Count of 	;
+;		bytes to 	;
+;		display		;
+;-------------------;
+write_memory_range_contents:
+	dec cx
+	
+	mov dx, [si]
+	call write_hex
+	
+	push si
+	mov si, SPACE
+	pop si
+	
+	cmp cx, 0
+	je .end
+	
+	inc si
+	jmp write_memory_range_contents:
+
+.end:
+	push si
+	mov si, NEWLINE
+	pop si
+	ret
 
 ;==============================;
 ;		FUNCTIONS DATA		   ;
 ;==============================;
+; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
+SPACE			db ' '
 NEWLINE			db 0x0A, 0x0D, 0
 LINE_COLOR		db 0x70
 TEXT_COLOR		db 0x04
