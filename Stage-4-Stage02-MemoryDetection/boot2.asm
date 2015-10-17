@@ -87,7 +87,7 @@ fill_memory_info_buffer:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
-	jc memory_detect_error
+	jc .memory_detect_error
 	mov [memMapEntryCount], bp
 	
 	ret
