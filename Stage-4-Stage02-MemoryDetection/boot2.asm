@@ -44,8 +44,8 @@ boot2_start:
 	
 	; TEST: This mem should be 0'ed
 	mov si, memoryMapBuffer
-	mov cx, 20
-	mov ax, 5
+	mov cx, 32
+	mov ax, 8
 	call write_memory_range_contents_16
 	call write_newline
 	call write_newline
