@@ -19,21 +19,6 @@ write_string:
 	pop ax
 	ret
 
-;-------------------;
-; Func:				;
-;	write_char()	;
-; Params:			;
-;	al = Char		;
-;	cx = # of Times	;
-;-------------------;
-write_char:
-	mov ah, 0x09
-	mov bh, 0
-	
-	int 0x10
-	
-	ret
-	
 write_hex:
 	push bx
 	push si
@@ -71,6 +56,27 @@ write_hex:
 	pop si
 	pop bx
 	ret
+	
+;-------------------;
+; Func:				;
+;	write_char()	;
+; Params:			;
+;	al = Char		;
+;	cx = # of Times	;
+;-------------------;
+write_char:
+	push ax
+	push bx
+	
+	mov ah, 0x09
+	mov bh, 0
+	
+	int 0x10
+	
+	pop bx
+	pop ax
+	ret
+	
 
 ;=======================;
 ;	 HELPER FUNCTIONS	;
@@ -117,7 +123,9 @@ write_memory_range_contents:
 	dec cx
 	
 	mov dx, [si]
-	call write_hex
+	call write_hexs
+	
+	mov al, 
 		
 	cmp cx, 0
 	je .end
