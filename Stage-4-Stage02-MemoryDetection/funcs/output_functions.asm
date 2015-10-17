@@ -77,12 +77,9 @@ write_char:
 ;	 HELPER FUNCTIONS	;
 ;=======================;
 write_newline:
-	push si
-	
 	mov si, NEWLINE
 	call write_string
-	
-	pop si
+
 	ret
 	
 write_color_row:
@@ -115,20 +112,14 @@ write_color_row:
 write_memory_range_contents:
 
 .start:
-	dec cx
-	
 	mov dx, [si]
 	call write_hex
-	
-	push si
-	mov si, SPACE
-	call write_string
-	pop si
 	
 	cmp cx, 0
 	je .end
 	
 	inc si
+	dec cx
 	jmp .start
 	
 .end:
@@ -144,7 +135,7 @@ bytesPerRow		db 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
-HEX_OUT 		db '0x????', 0
+HEX_OUT 		db '0x???? ', 0
 SPACE			db ' '
 NEWLINE			db 0x0A, 0x0D, 0
 LINE_COLOR		db 0x70

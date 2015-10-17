@@ -64,7 +64,7 @@ boot2_start:
 	; function. Lets see if we can print
 	; our Stage01 boot code, or at least
 	; the first 16 bytes of it. 
-	; AX = Number of Bytes to Read
+	; CX = Number of Bytes to Read
 	; DX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
