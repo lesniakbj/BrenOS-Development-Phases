@@ -88,7 +88,7 @@ fill_memory_info_buffer:
 	mov di, memoryMapBuffer
 	call detect_memory_map
 	jc .memory_detect_error
-	mov [memMapEntryCount], bp
+	mov [memMapEntryCount], cl
 	
 	ret
 	
