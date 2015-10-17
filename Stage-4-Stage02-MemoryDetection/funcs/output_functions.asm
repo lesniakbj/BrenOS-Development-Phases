@@ -122,6 +122,8 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
+	mov ax, 0
+	
 .start:
 	inc ax
 	dec cx
