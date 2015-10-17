@@ -77,19 +77,25 @@ write_hex:
 ;	 HELPER FUNCTIONS	;
 ;=======================;
 write_newline:
+	push si
+	
 	mov si, NEWLINE
 	call write_string
+	
+	pop si
 	ret
 	
 write_color_row:
 	push ax
 	push cx
+	push bl
 	
 	mov al, ' '
 	mov cx, [SCREEN_WIDTH]
 	mov bl, [LINE_COLOR]
 	call write_char
 	
+	pop bl
 	pop cx
 	pop ax
 	ret
@@ -107,6 +113,10 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
+	push si
+	push cx
+	push dx
+	
 	mov [bytesPerRow], dx
 	
 .start:
@@ -138,6 +148,10 @@ write_memory_range_contents:
 	
 .end:
 	call write_newline
+	
+	pop dx
+	pop cx
+	pop si
 	ret
 
 ;==============================;
