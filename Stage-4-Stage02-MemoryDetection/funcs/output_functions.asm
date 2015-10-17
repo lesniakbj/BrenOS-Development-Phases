@@ -148,6 +148,9 @@ write_memory_range_contents:
 ;==============================;
 ;		FUNCTIONS DATA		   ;
 ;==============================;
+; Working data
+bytesPerRow		db 0
+
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT 		db '0x????', 0
