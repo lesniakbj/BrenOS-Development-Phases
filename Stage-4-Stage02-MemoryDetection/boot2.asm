@@ -125,8 +125,6 @@ memoryMapStruct:
 	extAttributes	dd 0
 
 memoryMapBuffer:
-	
-	baseAddress		dq 0	
 
 ; NOTE:
 ; ======================
