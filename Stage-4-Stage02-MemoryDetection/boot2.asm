@@ -52,7 +52,8 @@ boot2_start:
 	; and put it into a buffer for us to use.
 	; Check the carry flag, as it will be set
 	; if there is an error. 
-	mov es:di, 0x0000:memoryMapBuffer
+	; ES:DI -> Buffer Location
+	mov di, memoryMapBuffer
 	call detect_memory_map
 	; mov [memMapEntryCount], bp
 	
