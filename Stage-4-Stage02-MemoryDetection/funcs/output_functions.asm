@@ -83,9 +83,12 @@ write_newline:
 	ret
 	
 write_space:
+	push si
+	
 	mov si, SPACE
 	call write_string
 
+	pop si
 	ret
 	
 write_color_row:
