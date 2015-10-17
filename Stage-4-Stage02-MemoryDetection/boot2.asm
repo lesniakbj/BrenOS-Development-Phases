@@ -50,9 +50,9 @@ boot2_start:
 	; Now that we did some screen bookkeeping,
 	; its time to detect the system memory map
 	; and put it into a buffer for us to use.
-	; Inputs: es:di -> destination buffer for 24 byte entries
-	; Outputs: bp = entry count, trashes all registers except esi
-	; mov di, memoryMapBuffer
+	; Check the carry flag, as it will be set
+	; if there is an error. 
+	mov es:di, 0x0000:memoryMapBuffer
 	call detect_memory_map
 	; mov [memMapEntryCount], bp
 	
