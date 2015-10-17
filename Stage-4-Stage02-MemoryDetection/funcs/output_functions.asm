@@ -154,7 +154,11 @@ write_memory_range_contents_16:
 	
 	mov ax, [bytesPerRow]
 	mov [initialLocMem], si
-	add [offsetLoc], [ax * 2]
+	
+	mul ax, 2
+	add [offsetLoc], ax
+	
+	mov ax, [bytesPerRow]
 	jmp .start
 	
 	
