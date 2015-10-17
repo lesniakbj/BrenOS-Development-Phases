@@ -124,7 +124,7 @@ write_color_row:
 write_memory_range_contents_16:
 	mov [bytesPerRow], ax
 	mov [initialLocMem], si
-	mov [iterationCnt], 0
+	mov word [iterationCnt], 0
 	mov word [offsetLoc], 0
 	
 .start:
@@ -147,7 +147,7 @@ write_memory_range_contents_16:
 	; we are printing 16 bit (2
 	; byte) values.
 	add si, 2
-	inc [iterationCnt]
+	inc word [iterationCnt]
 	jmp .start
 	
 .newline:
@@ -196,7 +196,7 @@ write_memory_range_contents_16:
 	call write_string
 	
 	mov dx, [initialLocMem]
-	cmp [iterationCnt], 0
+	cmp word [iterationCnt], 0
 	je .over_adjust
 	add dx, 2
 
