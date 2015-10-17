@@ -170,14 +170,14 @@ write_memory_range_contents_16:
 	; This part does the absolute
 	; section of the address.
 	call write_space
-	mov si, PIPE_STRING
-	call write_string
+	;mov si, PIPE_STRING
+	;call write_string
 	call write_space
 	
 	; < INSERT RELATIVE CODE HERE>
 	
-	mov si, COLON_STRING
-	call write_string
+	;mov si, COLON_STRING
+	;call write_string
 	call write_space
 	
 	mov dx, [initialLocMem]
