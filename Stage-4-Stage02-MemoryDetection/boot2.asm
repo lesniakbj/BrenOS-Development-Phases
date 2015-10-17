@@ -78,8 +78,8 @@ boot2_start:
 	call write_color_row
 	
 	; Bochs error check:
-	; mov ax, memMapEntryCount
-	; mov bx, [memMapEntryCount]
+	mov ax, memMapEntryCount
+	mov bx, [memMapEntryCount]
 	 
 	jmp $
 	
@@ -87,8 +87,8 @@ fill_memory_info_buffer:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
-	; jc memory_detect_error
-	; mov [memMapEntryCount], bp
+	jc memory_detect_error
+	mov [memMapEntryCount], bp
 	
 	ret
 	
