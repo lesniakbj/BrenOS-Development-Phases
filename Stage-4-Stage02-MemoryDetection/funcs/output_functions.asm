@@ -121,8 +121,9 @@ write_color_row:
 ;		bytes per   ;
 ;		row.		;
 ;-------------------;
-write_memory_range_contents:
+write_memory_range_contents_16:
 	mov [bytesPerRow], ax
+	mov [locationOfMem], si
 	
 .start:
 	dec ax
@@ -139,14 +140,24 @@ write_memory_range_contents:
 	cmp ax, 0
 	je .newline
 	
-	inc si
-	inc si
+	; Add 2 to SI before we jump
+	; back to the start, because
+	; we are printing 16 bit (2
+	; byte) values.
+	add si, 2
 	jmp .start
 	
 .newline:
+	mov si, ' | '
+	call write_string
+	
+	mov dx, [locationOfMem]
+	call write_hex
+	
 	call write_newline
 	
 	mov ax, [bytesPerRow]
+	mov [locationOfMem], si
 	jmp .start
 	
 	
@@ -159,6 +170,7 @@ write_memory_range_contents:
 ;==============================;
 ; Working data
 bytesPerRow		dw 0
+locationOfMem	dw 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
