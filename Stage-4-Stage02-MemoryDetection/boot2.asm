@@ -57,8 +57,8 @@ boot2_start:
 	
 	; TEST THAT BUFFER FILLED
 	mov si, memoryMapBuffer
-	mov cx, 40
-	mov ax, 8
+	mov cx, 12							; After 1 call, the buffer fills with 24 bytes
+	mov ax, 6
 	call write_memory_range_contents_16
 	
 	
