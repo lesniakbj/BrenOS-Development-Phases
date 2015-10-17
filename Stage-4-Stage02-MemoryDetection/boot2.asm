@@ -60,8 +60,16 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
+	; Test of the memory range print
+	; function. Lets see if we can print
+	; our Stage01 boot code, or at least
+	; the first 16 bytes of it. 
+	; CX = Number of Bytes to Read
+	; DX = Entries per Row (to Display)
+	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
-	mov cx, 20
+	mov cx, 16
+	mov dx, 8
 	call write_memory_range_contents
 	
 	call write_newline
