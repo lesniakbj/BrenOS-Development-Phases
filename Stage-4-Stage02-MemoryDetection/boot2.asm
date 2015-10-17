@@ -70,7 +70,7 @@ boot2_start:
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
 	mov si, 0x7C00
-	mov cx, 40
+	mov cx, 256									; Read the whole sector
 	mov ax, 8
 	call write_memory_range_contents_16
 	

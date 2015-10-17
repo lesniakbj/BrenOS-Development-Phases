@@ -139,6 +139,7 @@ write_memory_range_contents_16:
 	
 	mov dx, [si]
 	call write_hex
+	add si, 2
 	
 	cmp cx, 0
 	je .end
@@ -149,8 +150,7 @@ write_memory_range_contents_16:
 	; Add 2 to SI before we jump
 	; back to the start, because
 	; we are printing 16 bit (2
-	; byte) values.
-	add si, 2
+	; byte) values.	
 	jmp .start
 	
 .newline:
