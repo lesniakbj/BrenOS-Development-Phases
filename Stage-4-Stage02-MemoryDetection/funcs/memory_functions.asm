@@ -13,6 +13,7 @@ detect_low_memory:
 	
 ; Use the INT 0x15, eax= 0xE820 BIOS function to get a memory map
 detect_memory_map:
+	pusha
 	xor ebx, ebx				; ebx must be 0 to start
 	xor bp, bp					; keep an entry count in bp
 	mov edx, 0x0534D4150		; Place "SMAP" into edx
@@ -53,9 +54,11 @@ detect_memory_map:
 	mov [memMapEntry], bp		; store the entry count
 	clc							; there is "jc" on end of list to this point, 
 								; so the carry must be cleared
+	popa
 	ret
 .failed:
 	stc							; "function unsupported" error exit
+	popa
 	ret
 	
 ;=======================;
