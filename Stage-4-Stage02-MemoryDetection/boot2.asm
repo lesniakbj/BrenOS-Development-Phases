@@ -55,7 +55,7 @@ boot2_start:
 	; and put it into a buffer for us to use.
 	; Check the carry flag, as it will be set
 	; if there is an error. 
-	call fill_memory_info_buffer
+	; call fill_memory_info_buffer
 	
 	; TEST THAT BUFFER FILLED
 	; mov si, memoryMapBuffer
