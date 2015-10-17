@@ -46,24 +46,6 @@ detect_memory_map:
 	call write_string
 	stc
 	ret
-	
-write_string:
-	push ax
-	push si
-	
-.string_loop:
-	lodsb
-	cmp al, 0
-	je .string_end
-		
-	mov ah, 0x0E
-	int 0x10
-	jmp .string_loop
-	
-.string_end:
-	pop si
-	pop ax
-	ret
 ;=======================;
 ;		   DATA			;
 ;=======================;
