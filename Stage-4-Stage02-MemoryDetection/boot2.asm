@@ -44,8 +44,8 @@ boot2_start:
 	
 	; TEST: This mem should be 0'ed
 	mov si, memoryMapBuffer
-	mov cx, 40
-	mov ax, 8
+	mov cx, 12
+	mov ax, 6
 	call write_memory_range_contents_16
 
 	; Now that we did some screen bookkeeping,
@@ -55,13 +55,6 @@ boot2_start:
 	; if there is an error. 
 	call fill_memory_info_buffer
 	
-	; TEST THAT BUFFER FILLED
-	mov si, memoryMapBuffer
-	mov cx, 12							; After 1 call, the buffer fills with 24 bytes
-	mov ax, 6
-	call write_memory_range_contents_16
-	
-	
 	; Test of the memory range print
 	; function. Lets see if we can print
 	; our Stage01 boot code, or at least
@@ -69,11 +62,18 @@ boot2_start:
 	; CX = Number of Words to Read
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
-	mov si, 0x7C00
-	mov cx, 256									; Read the whole sector
-	mov ax, 8
+	mov si, memoryMapBuffer
+	mov cx, 12							; After 1 call, the buffer fills with 24 bytes
+	mov ax, 6
 	call write_memory_range_contents_16
 	
+	
+	; Fun Experiment: Read the entire
+	; bootsector code and offset.
+	; mov si, 0x7C00
+	; mov cx, 256									; Read the whole sector
+	; mov ax, 8
+	; call write_memory_range_contents_16
 	
 	call write_color_row
 	
