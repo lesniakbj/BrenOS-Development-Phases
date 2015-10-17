@@ -41,6 +41,8 @@ boot2_start:
 	call write_hex
 	call write_newline
 	call write_newline
+	call write_newline
+	call write_newline
 	
 	mov si, HIGH_MEM_CALL_1_MSG
 	call write_string
