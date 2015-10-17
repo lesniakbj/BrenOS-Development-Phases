@@ -126,7 +126,7 @@ write_memory_range_contents:
 .start:
 	; Stupid... But we don't want
 	; to be against the left side.
-	call write_space
+	; call write_space
 	
 	dec cx
 	dec byte [bytesPerRow]
