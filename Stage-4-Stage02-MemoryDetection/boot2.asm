@@ -46,7 +46,23 @@ boot2_start:
 	; And back to this, add some 
 	call write_newline
 	call write_newline
+	
+	; Now that we did some screen bookkeeping,
+	; its time to detect the system memory map
+	; and put it into a buffer for us to use.
+	; Inputs: es:di -> destination buffer for 24 byte entries
+	; Outputs: bp = entry count, trashes all registers except esi
+	mov si, memoryMapBuffer
+	call detect_memory_map
+	mov [memMapEntryCount], bp
+	
+	call write_newline
+	call write_newline
 	call write_color_row
+	
+	; Bochs error check:
+	mov ax, memMapEntryCount
+	mov bx, [memMapEntryCount]
 	
 	jmp $
 
@@ -55,9 +71,17 @@ boot2_start:
 %include 'funcs/memory_functions.asm'
 %include 'funcs/output_functions.asm'
 
+;===============================;
+;		BOOT 2 - DATA			;
+;===============================;
 MEM_DET_MSG		db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG		db ' =================================', 0
+
+; Buffer & count for memory map structure
+memMapEntryCount db 0
+memoryMapBuffer:
+	resb 128
 
 ; NOTE:
 ; ======================

@@ -9,6 +9,7 @@ clear_sceen:
 	
 set_screen_mode:
 	; Lets set 80x25 mode...
+	mov ah, 0x00
 	mov al, 0x03
 	int 0x10
 	
