@@ -47,6 +47,15 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
+	; TEST THAT BUFFER FILLED
+	mov si, memoryMapBuffer
+	mov cx, 20
+	mov ax, 5
+	call write_memory_range_contents_16
+	
+	call write_newline
+	call write_newline
+	
 	; Now that we did some screen bookkeeping,
 	; its time to detect the system memory map
 	; and put it into a buffer for us to use.
@@ -57,6 +66,7 @@ boot2_start:
 	call detect_memory_map
 	mov [memMapEntryCount], bp
 	
+	; TEST THAT BUFFER FILLED
 	mov si, memoryMapBuffer
 	mov cx, 20
 	mov ax, 5
@@ -103,7 +113,7 @@ DIVIDER_MSG		db ' =================================', 0
 
 ; Buffer & count for memory map structure
 memMapEntryCount	db 0
-memoryMapBuffer		resb 0
+memoryMapBuffer		resb 128
 
 ; NOTE:
 ; ======================
