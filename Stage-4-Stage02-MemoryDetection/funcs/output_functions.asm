@@ -113,15 +113,11 @@ write_memory_range_contents:
 	dec cx
 	dec dx
 	
-	push si
 	mov dx, [si]
 	call write_hex
-	pop si
 	
-	push si
 	mov si, SPACE
 	call write_string
-	pop si
 	
 	cmp cx, 0
 	je .end
@@ -134,19 +130,14 @@ write_memory_range_contents:
 
 	
 .new_row:
-	push si
-	call write_newline
-	pop si
-	
+	call write_newline	
 	mov dx, [bytesPerRow]
 	
 	inc si
 	jmp .start
 	
 .end:
-	push si
 	call write_newline
-	pop si
 	ret
 
 ;==============================;
