@@ -65,16 +65,11 @@ write_hex:
 ;	cx = # of Times	;
 ;-------------------;
 write_char:
-	push ax
-	push bx
-	
 	mov ah, 0x09
 	mov bh, 0
 	
 	int 0x10
 	
-	pop bx
-	pop ax
 	ret
 	
 
@@ -125,8 +120,8 @@ write_memory_range_contents:
 	mov dx, [si]
 	call write_hex
 	
-	mov al, ' ' 
-	call write_char
+	mov si, SPACE
+	call write_string
 		
 	cmp cx, 0
 	je .end
