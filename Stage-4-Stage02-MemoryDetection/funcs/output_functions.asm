@@ -77,21 +77,15 @@ write_char:
 ;	 HELPER FUNCTIONS	;
 ;=======================;
 write_newline:
-	push si
-	
 	mov si, NEWLINE
 	call write_string
 
-	pop si
 	ret
 	
 write_space:
-	push si
-	
 	mov si, SPACE
 	call write_string
-	
-	pop si
+
 	ret
 	
 write_color_row:
@@ -123,10 +117,12 @@ write_color_row:
 ;-------------------;
 write_memory_range_contents:
 	mov byte [bytesPerRow], 4
+	mov [saveSI], si
 .start:
 	; Stupid... But we don't want
 	; to be against the left side.
-	; call write_space
+	call write_space
+	mov si, [saveSI]
 	
 	dec cx
 	dec byte [bytesPerRow]
@@ -141,6 +137,7 @@ write_memory_range_contents:
 	je .newline
 	
 	inc si
+	mov [saveSI], si
 	jmp .start
 	
 .newline:
