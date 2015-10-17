@@ -45,6 +45,7 @@ boot2_start:
 	mov si, HIGH_MEM_CALL_1_MSG
 	call write_string
 	call write_newline
+	call write_newline
 	mov si, BYTES_DET_MSG
 	call write_string
 	; TEST: This mem should be 0'ed
