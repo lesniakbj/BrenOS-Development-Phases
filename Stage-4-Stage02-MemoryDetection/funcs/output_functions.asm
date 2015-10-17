@@ -140,6 +140,7 @@ write_memory_range_contents:
 	je .newline
 	
 	inc si
+	inc si
 	jmp .start
 	
 .newline:
