@@ -47,16 +47,14 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
-	%comment
-	
 	; TEST THAT BUFFER FILLED
-	mov si, memoryMapBuffer
-	mov cx, 20
-	mov ax, 5
-	call write_memory_range_contents_16
+	; mov si, memoryMapBuffer
+	; mov cx, 20
+	; mov ax, 5
+	; call write_memory_range_contents_16
 	
-	call write_newline
-	call write_newline
+	; call write_newline
+	; call write_newline
 	
 	; Now that we did some screen bookkeeping,
 	; its time to detect the system memory map
@@ -64,21 +62,20 @@ boot2_start:
 	; Check the carry flag, as it will be set
 	; if there is an error. 
 	; ES:DI -> Buffer Location
-	mov di, memoryMapBuffer
-	call detect_memory_map
+	; mov di, memoryMapBuffer
+	; call detect_memory_map
 	; jc memory_detect_error
-	mov [memMapEntryCount], bp
+	; mov [memMapEntryCount], bp
 	
 	; TEST THAT BUFFER FILLED
-	mov si, memoryMapBuffer
-	mov cx, 20
-	mov ax, 5
-	call write_memory_range_contents_16
+	; mov si, memoryMapBuffer
+	; mov cx, 20
+	; mov ax, 5
+	; call write_memory_range_contents_16
 	
-	call write_newline
-	call write_newline
+	; call write_newline
+	; call write_newline
 	
-	%endcomment
 	
 	; Test of the memory range print
 	; function. Lets see if we can print
