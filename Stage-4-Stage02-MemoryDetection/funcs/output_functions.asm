@@ -117,6 +117,7 @@ write_color_row:
 ;-------------------;
 write_memory_range_contents:
 .start:
+	inc ax
 	dec cx
 	
 	mov dx, [si]
@@ -125,8 +126,19 @@ write_memory_range_contents:
 	cmp cx, 0
 	je .end
 	
+	cmp ax, 8
+	je .newline
+	
 	inc si
 	jmp .start
+	
+.newline:
+	mov al, 0x0A
+	call write_char
+	
+	mov ax, 0
+	jmp .start
+	
 	
 .end:
 	call write_newline
