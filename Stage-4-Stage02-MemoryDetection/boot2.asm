@@ -64,6 +64,7 @@ boot2_start:
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
+	jc memory_detect_error
 	mov [memMapEntryCount], bp
 	
 	; TEST THAT BUFFER FILLED
@@ -99,6 +100,15 @@ boot2_start:
 	 
 	jmp $
 
+	
+memory_detect_error:
+	mov si, HIGHMEMERR_MSG
+	call write_string
+	
+.hlt:
+	cli
+	hlt
+	jmp .hlt
 
 %include 'funcs/screen_functions.asm'
 %include 'funcs/memory_functions.asm'
@@ -110,6 +120,7 @@ boot2_start:
 MEM_DET_MSG		db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG		db ' =================================', 0
+HIGHMEMERR_MSG	db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
 memMapEntryCount	db 0
