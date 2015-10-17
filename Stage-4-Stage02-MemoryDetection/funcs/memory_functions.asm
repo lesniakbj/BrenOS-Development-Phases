@@ -50,10 +50,15 @@ detect_memory_map:
 	test ebx, ebx				; if ebx resets to 0, list is complete
 	jne short .e820lp
 .e820f:
-	mov [mmap_ent], bp			; store the entry count
+	mov [memMapEntry], bp		; store the entry count
 	clc							; there is "jc" on end of list to this point, 
 								; so the carry must be cleared
 	ret
 .failed:
 	stc							; "function unsupported" error exit
 	ret
+	
+;=======================;
+;		   DATA			;
+;=======================;
+memMapEntry db 0 
