@@ -193,7 +193,7 @@ write_memory_range_contents_16:
 	mov si, COLON_STRING
 	call write_string
 	
-	mov dx, initialLocMem
+	mov dx, [initialLocMem]
 	call write_hex
 	
 	pop dx
