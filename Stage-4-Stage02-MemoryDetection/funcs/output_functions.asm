@@ -113,11 +113,9 @@ write_color_row:
 ;		row.		;
 ;-------------------;
 write_memory_range_contents:
-	mov [bytesPerRow], ax
-	
+
 .start:
 	dec cx
-	dec ax
 	
 	mov dx, [si]
 	call write_hex
@@ -127,17 +125,6 @@ write_memory_range_contents:
 	
 	cmp cx, 0
 	je .end
-	
-	cmp ax, 0
-	jmp .new_row
-	
-	inc si
-	jmp .start
-
-	
-.new_row:
-	call write_newline	
-	mov ax, [bytesPerRow]
 	
 	inc si
 	jmp .start
