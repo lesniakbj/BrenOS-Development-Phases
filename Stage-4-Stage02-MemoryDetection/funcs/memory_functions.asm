@@ -30,7 +30,7 @@ detect_memory_map:
 	; the carry flag will be clear if
 	; there is no error. 
 	cmp eax, 0x534D4150
-	je .error_exit
+	jne .error_exit
 	jc .error_exit
 	
 	; Save ebx as it needs to be preserved,
