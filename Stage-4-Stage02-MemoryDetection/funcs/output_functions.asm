@@ -148,6 +148,20 @@ write_memory_range_contents_16:
 	jmp .start
 	
 .newline:
+	call .print_addresses
+	call write_newline
+	
+	mov ax, [bytesPerRow]
+	mov [locationOfMem], si
+	jmp .start
+	
+	
+.end:
+	jmp .print_addresses
+	call write_newline
+	ret
+
+.print_addresses:
 	; We want to print something
 	; like this at the end of 
 	; every line:
@@ -169,16 +183,6 @@ write_memory_range_contents_16:
 	mov dx, [locationOfMem]
 	call write_hex
 	
-	
-	call write_newline
-	
-	mov ax, [bytesPerRow]
-	mov [locationOfMem], si
-	jmp .start
-	
-	
-.end:
-	call write_newline
 	ret
 
 ;==============================;
