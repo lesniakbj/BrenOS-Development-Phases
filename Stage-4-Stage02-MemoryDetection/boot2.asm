@@ -124,8 +124,7 @@ HIGHMEMERR_MSG	db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
 memMapEntryCount	db 0
-memoryMapBuffer:
-	TIMES 128 db 0
+memoryMapBuffer		resb 128
 
 ; NOTE:
 ; ======================
