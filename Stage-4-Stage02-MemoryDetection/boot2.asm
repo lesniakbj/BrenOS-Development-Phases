@@ -44,6 +44,9 @@ boot2_start:
 	
 	mov si, HIGH_MEM_CALL_1_MSG
 	call write_string
+	call write_newline
+	mov si, BYTES_DET_MSG
+	call write_string
 	; TEST: This mem should be 0'ed
 	; mov si, memoryMapBuffer
 	; mov cx, 12
@@ -121,7 +124,8 @@ fill_memory_info_buffer:
 MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG			db ' =================================', 0
-HIGH_MEM_CALL_1_MSG db ' Calling E820 (1st Call). Bytes Stored: ', 0
+HIGH_MEM_CALL_1_MSG db ' Calling E820 (1st Call): ', 0
+BYTES_DET_MSG		db ' Bytes Stored (0x): ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
