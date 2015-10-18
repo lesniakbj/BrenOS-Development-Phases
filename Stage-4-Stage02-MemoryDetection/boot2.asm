@@ -68,7 +68,7 @@ boot2_start:
 	; if there is an error. 
 	call fill_memory_info_buffer
 	
-	mov dx, [memMapEntryCount]
+	mov dx, [mMapBytesPerEntry]
 	call write_hex_8
 	call write_newline
 	call write_newline
@@ -108,8 +108,8 @@ boot2_start:
 	
 	; Bochs error check:
 	xor eax, eax
-	mov ax, memMapEntryCount
-	mov bx, [memMapEntryCount]
+	mov ax, mMapBytesPerEntry
+	mov bx, [mMapBytesPerEntry]
 	 
 	jmp $
 	
@@ -118,7 +118,7 @@ fill_memory_info_buffer:
 	mov di, memoryMapBuffer
 	call detect_memory_map
 	jc .memory_detect_error
-	mov [memMapEntryCount], cl
+	mov [mMapBytesPerEntry], cl
 	
 	ret
 	
@@ -147,7 +147,7 @@ BYTES_DET_MSG		db ' Bytes Stored (0x): ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
 ; Buffer & count for memory map structure
-memMapEntryCount	db 0
+mMapBytesPerEntry	db 0
 
 memoryMapStruct:
 	baseAddress		dq 0
