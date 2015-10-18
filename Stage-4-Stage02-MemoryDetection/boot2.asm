@@ -94,10 +94,15 @@ boot2_start:
 	
 	; Fun Experiment: Read the entire
 	; bootsector code and offset.
-	; mov si, 0x7C00
-	; mov cx, 256									; Read the whole sector
-	; mov ax, 8
-	; call write_memory_range_16
+	mov si, 0x7C00
+	mov cx, 10
+	mov ax, 5
+	call write_memory_range_16
+	
+	mov si, 0x7C00
+	mov cx, 20
+	mov ax, 10
+	call write_memory_range_8
 	
 	call write_color_row
 	
