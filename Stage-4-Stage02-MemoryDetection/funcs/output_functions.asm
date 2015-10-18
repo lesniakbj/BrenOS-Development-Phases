@@ -143,7 +143,7 @@ write_memory_range_8:
 	push si
 	
 	mov [bytesPerRow8], ax
-	mov [initialLocMem8], si
+	mov [initialLocMem16], si
 	mov byte [offsetLoc8], 0
 	
 .start:
@@ -170,17 +170,17 @@ write_memory_range_8:
 	jmp .start
 
 .newline:
-	; call .print_addresses
+	call .print_addresses
 	call write_newline
 	
 	mov ax, [bytesPerRow8]
-	mov [initialLocMem8], si
+	mov [initialLocMem16], si
 	add [offsetLoc8], ax
 	
 	jmp .start
 	
 .end:
-	; call .print_addresses
+	call .print_addresses
 	call write_newline
 	call write_newline
 	call write_newline
@@ -189,6 +189,36 @@ write_memory_range_8:
 	pop dx
 	pop cx
 	pop ax
+	ret
+
+.print_addresses:
+	; We want to print something
+	; like this at the end of 
+	; every line:
+	;	<relative> : <absolute>
+	
+	; This part does the absolute
+	; section of the address.
+	push si
+	push dx
+	
+	call write_space
+	
+	mov si, PIPE_STRING
+	call write_string
+	call write_space
+	
+	mov dl, [offsetLoc8]
+	call write_hex_16
+	
+	mov si, COLON_STRING
+	call write_string
+	
+	mov dx, [initialLocMem16]
+	call write_hex_16
+	
+	pop dx
+	pop si
 	ret
 	
 ;-------------------;
@@ -236,7 +266,7 @@ write_memory_range_16:
 	; Add 2 to SI before we jump back to the 
 	; start, because we are printing 16 bit (2
 	; byte) values.	
-	add si, 1
+	add si, 2
 	
 	; Have we finished displaying all the words...?
 	cmp cx, 0
