@@ -16,6 +16,7 @@ detect_low_memory:
 detect_memory_map:
 	xor ebx, ebx
 	xor ecx, ecx
+	xor bp, bp
 	
 	; Move the magic number into edx
 	; before the BIOS call. 

@@ -116,8 +116,7 @@ boot2_start:
 	jmp $
 	
 fill_memory_info_buffer:
-	push bp
-	push di
+	pusha
 	
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
@@ -125,8 +124,7 @@ fill_memory_info_buffer:
 	jc .memory_detect_error
 	mov [memMapEntryCount], bp
 	
-	pop di
-	pop bp
+	popa
 	ret
 	
 .memory_detect_error:
