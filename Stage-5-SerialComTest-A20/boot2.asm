@@ -32,6 +32,14 @@ boot2_start:
 	; for LOGGING!!! :D
 	call configure_com_port_1
 	
+	; LOOP FOR WRITING THE DATA
+	.check_status_loop:
+		call check_com_transmit_queue_empty
+		mov ax, [queueStatus]
+		cmp ax, 0
+		je .check_status_loop
+		
+	; Line is ready, write the data...	
 	mov dx, COM_1_PORT
 	mov al, 0x0A
 	out dx, al
