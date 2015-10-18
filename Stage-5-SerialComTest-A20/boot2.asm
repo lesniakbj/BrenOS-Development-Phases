@@ -32,6 +32,12 @@ boot2_start:
 	; for LOGGING!!! :D
 	call configure_com_port_1
 	
+	mov si, TELL_TEST_MSG
+	call write_string
+	
+	mov si, COM_TEST_MSG
+	call write_string_serial
+	
 	call write_newline
 	call write_newline
 	call write_color_row
@@ -252,6 +258,7 @@ write_string_serial:
 queueStatus			dw 0
 
 ; COM Test Messages
+TELL_TEST_MSG		db ' Testing Serial COMs...', 0
 COM_TEST_MSG		db 'Test this string!', 0
 
 ; Memory Messages
