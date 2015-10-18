@@ -104,7 +104,7 @@ boot2_start:
 	; mov ax, 16
 	; call write_memory_range_8
 	
-	; call write_color_row
+	call write_color_row
 	
 	; Bochs error check:
 	xor eax, eax
