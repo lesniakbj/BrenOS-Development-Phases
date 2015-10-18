@@ -1,6 +1,12 @@
 [BITS 16]
 [ORG 0x7E00]
 
+jmp boot2_start
+
+%define COM_1_PORT						0x03F8
+%define SERIAL_LINE_ENABLE_DLAB         0x80
+%define SERIAL_DATA_PORT(base)			(base)
+
 boot2_start:
 	; Ok, we made it. Lets clear the 
 	; screen and set our sceen mode
@@ -41,10 +47,6 @@ boot2_start:
 ;===========================;
 ;		COM FUNCTIONS		;
 ;===========================;
-%define COM_1_PORT						0x03F8
-%define SERIAL_LINE_ENABLE_DLAB         0x80
-%define SERIAL_DATA_PORT(base)			(base)
-
 %macro	SERIAL_FIFO_COMMAND_PORT 1 
 	mov dx, %1 
 	add dx, 2
