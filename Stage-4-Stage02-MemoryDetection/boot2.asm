@@ -13,11 +13,6 @@ boot2_start:
 	; screen.
 	call write_color_row
 	call write_newline
-	mov dx, [0x7C00 + 511]
-	call write_hex_8
-	call write_newline
-	mov dx, [0x7C00 + 510]
-	call write_hex_8
 	call write_newline
 	
 	; Tell the user that we are now
@@ -48,6 +43,7 @@ boot2_start:
 	call write_newline
 	call write_newline
 	call write_newline
+	call write_newline
 	
 	mov si, HIGH_MEM_CALL_1_MSG
 	call write_string
@@ -72,6 +68,8 @@ boot2_start:
 	call write_hex_8
 	call write_newline
 	call write_newline
+	call write_newline
+	call write_newline
 	
 	; Test of the memory range print
 	; function. Lets see if we can print
@@ -80,11 +78,11 @@ boot2_start:
 	; CX = Number of Words to Read
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
-	; mov si, memoryMapBuffer
-	; mov cx, 10						; After 1 call, the buffer fills with 20-24 bytes.
-										; Typically 20, so we will use that.
-	; mov ax, 5
-	; call write_memory_range_16
+	mov si, memoryMapBuffer
+	mov cx, 10						; After 1 call, the buffer fills with 20-24 bytes.
+									; Typically 20, so we will use that.
+	mov ax, 5
+	call write_memory_range_16
 	
 	
 	; mov si, memoryMapBuffer
