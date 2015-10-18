@@ -32,18 +32,6 @@ boot2_start:
 	; for LOGGING!!! :D
 	call configure_com_port_1
 	
-	; LOOP FOR WRITING THE DATA
-	.check_status_loop:
-		call check_com_transmit_queue_empty
-		mov ax, [queueStatus]
-		cmp ax, 0
-		je .check_status_loop
-		
-	; Line is ready, write the data...	
-	mov dx, COM_1_PORT
-	mov al, 0x0A
-	out dx, al
-	
 	call write_newline
 	call write_newline
 	call write_color_row
@@ -223,11 +211,48 @@ check_com_transmit_queue_empty:
 	pop bx
 	pop dx
 	ret
+	
+; SI is the source index for the data
+; we are going to write
+write_string_serial:
+	push ax
+	push si
+	
+.write_loop:
+	; Load the character at SI to AL
+	lodsb
+	cmp al, 0
+	je .write_end
+	
+; Serial OUT loop...
+.check_status_loop:
+	call check_com_transmit_queue_empty
+	mov ax, [queueStatus]
+	cmp ax, 0
+	je .check_status_loop
+		
+	; Line is ready, write the data...	
+	mov dx, COM_1_PORT
+	mov al, 0x0A
+	out dx, al
+	
+	inc si
+	
+	jmp .write_loop
+
+.write_end:
+	pop si
+	pop ax
+	ret
+	
 ;===============================;
 ;		BOOT 2 - DATA			;
 ;===============================;
 ; Working Data - COM
 queueStatus			dw 0
+
+; COM Test Messages
+COM_TEST_MSG		db 'Test this string!', 0
 
 ; Memory Messages
 MEM_DET_MSG			db ' Detecting Memory Map', 0
