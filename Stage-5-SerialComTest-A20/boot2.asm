@@ -60,7 +60,7 @@ boot2_start:
 %macro	SERIAL_LINE_STATUS_PORT 1
 	mov ax, %1
 	add ax, 5
-
+%endmacro
 
 configure_com_port_1:
 	push ax
