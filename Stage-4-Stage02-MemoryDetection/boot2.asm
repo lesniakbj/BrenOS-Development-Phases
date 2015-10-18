@@ -66,6 +66,8 @@ boot2_start:
 	; and put it into a buffer for us to use.
 	; Check the carry flag, as it will be set
 	; if there is an error. 
+	; In this case, the count of entries is 
+	; in bp, mem_map_entries, and memMapEntryCount
 	call fill_memory_info_buffer
 	
 	mov dx, [memMapEntryCount]
@@ -80,31 +82,31 @@ boot2_start:
 	; CX = Number of Words to Read
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
-	mov si, memoryMapBuffer
-	mov cx, 10							; After 1 call, the buffer fills with 20-24 bytes.
+	; mov si, memoryMapBuffer
+	; mov cx, 10						; After 1 call, the buffer fills with 20-24 bytes.
 										; Typically 20, so we will use that.
-	mov ax, 5
-	call write_memory_range_16
+	; mov ax, 5
+	; call write_memory_range_16
 	
 	
-	mov si, memoryMapBuffer
-	mov cx, 20
-	mov ax, 10
-	call write_memory_range_8
+	; mov si, memoryMapBuffer
+	; mov cx, 20
+	; mov ax, 10
+	; call write_memory_range_8
 	
 	; Fun Experiment: Read the entire
-	; bootsector code and offset.
-	mov si, 0x7C00
-	mov cx, 10
-	mov ax, 5
-	call write_memory_range_16
+	; bootsector1 code and addresses.
+	; mov si, 0x7C00
+	; mov cx, 256
+	; mov ax, 8
+	; call write_memory_range_16
 	
-	mov si, 0x7C00
-	mov cx, 20
-	mov ax, 10
-	call write_memory_range_8
+	; mov si, 0x7C00
+	; mov cx, 512
+	; mov ax, 16
+	; call write_memory_range_8
 	
-	call write_color_row
+	; call write_color_row
 	
 	; Bochs error check:
 	xor eax, eax
@@ -118,7 +120,7 @@ fill_memory_info_buffer:
 	mov di, memoryMapBuffer
 	call detect_memory_map
 	jc .memory_detect_error
-	mov [memMapEntryCount], cl
+	mov [memMapEntryCount], bp
 	
 	ret
 	
