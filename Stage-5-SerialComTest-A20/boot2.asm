@@ -42,7 +42,9 @@ boot2_start:
 ;		COM FUNCTIONS		;
 ;===========================;
 %define COM_1_PORT						0x03F8
+%define SERIAL_LINE_ENABLE_DLAB         0x80
 %define SERIAL_DATA_PORT(base)			(base)
+
 %macro	SERIAL_FIFO_COMMAND_PORT 1 
 	mov ax, %1 
 	add ax, 2
@@ -51,10 +53,14 @@ boot2_start:
 	mov ax, %1
 	add ax, 3
 %endmacro
-%define SERIAL_MODEM_COMMAND_PORT(base) (base + 4)
-%define SERIAL_LINE_STATUS_PORT(base)   (base + 5)
+%macro	SERIAL_MODEM_COMMAND_PORT 1
+	mov ax, %1
+	add ax, 4
+%endmacro
+%macro	SERIAL_LINE_STATUS_PORT 1
+	mov ax, %1
+	add ax, 5
 
-%define SERIAL_LINE_ENABLE_DLAB         0x80
 
 configure_com_port_1:
 	push ax
@@ -133,7 +139,8 @@ configure_com_line_bits:
 	; bits. This resolves to the 8 bits that mean we are 
 	; sending a data length of 8 bits, no parity bits, and
 	; no stop bits. 
-	mov dx, SERIAL_LINE_COMMAND_PORT(ax)
+	SERIAL_LINE_COMMAND_PORT ax
+	mov dx, ax
 	out dx, 0x03
 	
 	pop dx
@@ -154,7 +161,8 @@ configure_com_buffer:
 	; we want it to. This: Enables FIFO queing, clears
 	; both send and recieve queues, and sets the queue
 	; size to 14 bytes. 
-	mov dx, SERIAL_FIFO_COMMAND_PORT(ax)
+	SERIAL_FIFO_COMMAND_PORT ax
+	mov dx, ax
 	out dx, 0xC7
 	
 	pop dx
@@ -174,7 +182,8 @@ configure_com_modem:
 	; Ready to Transmit (RTS) and Data Terminal
 	; Ready (DTR), and keep interrupts off asm
 	; we are not using coms for input.
-	mov dx, SERIAL_MODEM_COMMAND_PORT(ax)
+	SERIAL_MODEM_COMMAND_PORT ax
+	mov dx, ax
 	out dx, 0x03
 	
 	pop dx
@@ -195,7 +204,8 @@ check_com_transmit_queue_empty:
 	; Now we want to check to see if the line
 	; is empty and ready to be used. 0x20 checks
 	; to see if the 5th bit is set. Or... test..
-	mov dx, SERIAL_LINE_STATUS_PORT(ax)
+	SERIAL_LINE_STATUS_PORT ax
+	mov dx, ax
 	in bl, dx
 	and bx, 0x0020
 	
