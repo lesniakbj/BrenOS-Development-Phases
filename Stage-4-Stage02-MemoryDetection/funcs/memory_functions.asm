@@ -16,7 +16,6 @@ detect_low_memory:
 detect_memory_map:
 	xor ebx, ebx
 	xor ecx, ecx
-	xor bp, bp
 	
 	; Move the magic number into edx
 	; before the BIOS call. 
@@ -54,51 +53,6 @@ detect_memory_map:
 	je .error_exit
 	
 	; REMOVE THIS LATER
-	ret
-	jmp .check_entry
-	
-.loop:
-	; Time to make the call again...
-	mov eax, 0xE820
-	mov [di + 20], dword 1
-	mov ecx, 24
-	
-	jc .loop_failure
-	mov edx, 0x534D4150
-	
-.check_entry:
-	; Skip 0 length entries
-	jcxz .skip_empty
-	
-	; Was the first entry <= a 20 byte entry...?
-	cmp cl, 20
-	jbe .no_extension
-	
-	; If its a 24 byte entry, is the ignore bit
-	; set...?
-	test byte [di + 20], 1
-	je .skip_empty
-	
-.skip_empty:
-	; If ebx = 0, then we are done getting the memory
-	; list. 
-	test ebx, ebx
-	jne .loop
-
-.no_extension:
-	; Check for a 0 length region
-	mov ecx, [di + 8]
-	or ecx, [di + 12]
-	jz .skip_empty
-	
-	; Ok, we now inc the entry count, and
-	; incrememnt where we store the next entry.
-	inc bp
-	add di, 24
-
-.loop_failure:
-	mov [mem_map_entries], bp
-	clc
 	ret
 	
 .error_exit:
