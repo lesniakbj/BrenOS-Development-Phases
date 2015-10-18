@@ -50,27 +50,27 @@ write_hex_16:
 	push si
 	
 	mov bx, dx
-	shr bx, 12
+	shr bx, 4
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
 	mov [HEX_OUT_16], bl
 	
 	mov bx, dx
-	shr bx, 8
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
 	mov [HEX_OUT_16 + 1], bl
 	
 	mov bx, dx
-	shr bx, 4
+	shr bx, 12
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
 	mov [HEX_OUT_16 + 2], bl
 	
 	mov bx, dx
+	shr bx, 8
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
