@@ -81,7 +81,6 @@ boot2_start:
 	mov ax, 5
 	call write_memory_range_16
 	call write_newline
-	call write_newline
 	
 	; mov si, memoryMapBuffer
 	; mov cx, 20

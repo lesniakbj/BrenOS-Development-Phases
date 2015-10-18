@@ -3,12 +3,9 @@
 
 boot2_start:
 	; Ok, we made it. Lets clear the 
-	; screen before we continue on...
+	; screen and set our sceen mode
+	; before we continue on...
 	call clear_sceen
-	
-	; .. now that the screen is clear
-	; lets set the screen mode we want
-	; to use for now (80:25:8x8)
 	call set_screen_mode
 	
 	; Add some color to the screen, see 
@@ -18,85 +15,191 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
-	; Tell the user that we are now
-	; detecting memory in their system.
-	mov si, MEM_DET_MSG
-	call write_string
-	call write_newline
-	mov si, DIVIDER_MSG
-	call write_string
-	call write_newline
-	call write_newline
+	;===========================;
+	; 	MEM FUNCS IN STAGE-4	;
+	;===========================;
 	
-	; Now we should write what we are 
-	; are doing, for record keeping.
-	mov si, LOW_MEM_DET_MSG
-	call write_string
+	; Time to start some communication with
+	; external COM ports. We use these not
+	; because we want to communicate with 
+	; legacy devices, rather, we use these
+	; for LOGGING!!! :D
+	call configure_com_port_1
 	
-	; Lets now detect the total amount
-	; of low memory.
-	call detect_low_memory
-	
-	; Now that we have the low memory in
-	; AX, lets put it in DX so we can
-	; write it to the screen.
-	mov dx, ax
-	call write_hex
-	
-	; And back to this, add some 
-	call write_newline
-	call write_newline
-	
-	; Now that we did some screen bookkeeping,
-	; its time to detect the system memory map
-	; and put it into a buffer for us to use.
-	; Check the carry flag, as it will be set
-	; if there is an error. 
-	; ES:DI -> Buffer Location
-	mov di, memoryMapBuffer
-	call detect_memory_map
-	; mov [memMapEntryCount], bp
-	
-	call write_newline
-	call write_newline
-	
-	; Test of the memory range print
-	; function. Lets see if we can print
-	; our Stage01 boot code, or at least
-	; the first 16 bytes of it. 
-	; CX = Number of Bytes to Read
-	; AX = Entries per Row (to Display)
-	; ES:SI -> Buffer to read from
-	mov si, 0x7C00
-	mov cx, 32
-	mov ax, 8
-	call write_memory_range_contents_16
+	out DAT_PORT(COM_1_PORT), 0x0A
 	
 	call write_newline
 	call write_newline
 	call write_color_row
 	
-	; Bochs error check:
-	; mov ax, memMapEntryCount
-	; mov bx, [memMapEntryCount]
-	 
 	jmp $
-
 
 %include 'funcs/screen_functions.asm'
 %include 'funcs/memory_functions.asm'
 %include 'funcs/output_functions.asm'
 
+;===========================;
+;		COM FUNCTIONS		;
+;===========================;
+%define COM_1_PORT						0x03F8
+%define DATA_PORT(base)					(base)
+%define SERIAL_FIFO_COMMAND_PORT(base)  (base + 2)
+%define SERIAL_LINE_COMMAND_PORT(base)  (base + 3)
+%define SERIAL_MODEM_COMMAND_PORT(base) (base + 4)
+%define SERIAL_LINE_STATUS_PORT(base)   (base + 5)
+
+%define SERIAL_LINE_ENABLE_DLAB         0x80
+
+configure_com_port_1:
+	push ax
+	push bx
+	
+	mov ax, COM_1_PORT
+	mov bx, 4
+	
+	call configure_com_baud_rate
+	call configure_com_line_bits
+	call configure_com_buffer
+	call configure_com_modem
+	
+	pop bx
+	pop ax
+	ret
+;-----------------------;
+; ax - com port to 		;
+; send the baud rate	;
+; data to.				;
+;						;
+; bx - divisor			;
+;-----------------------;
+configure_com_baud_rate:
+	push ax
+	push bx
+	push cx
+	
+	; First, we must tell the serial com that we
+	; are going to be sending the highest 8 bits
+	; followed by the lowest 8 for all coms.
+	out SERIAL_LINE_COMMAND_PORT(ax), SERIAL_LINE_ENABLE_DLAB
+	
+	; Now we need to send the speed that we want
+	; to communicate with the device with. Really,
+	; we send a divisor for the normal com clock
+	; of 115200Hz. First we send the top half of
+	; the divisor...
+	mov cx, bx
+	shr bx, 8
+	and bx, 0x00FF
+	out DATA_PORT(ax), bx
+	mov bx, cx
+	
+	; ... and onto the bottom.
+	and bx, 0x00FF
+	out DATA_PORT(ax), bx
+	
+	
+	pop cx
+	pop bx
+	pop ax
+	ret
+
+;-----------------------;
+; ax - com port to 		;
+; send the line bits	;
+; data to.				;
+;-----------------------;
+configure_com_line_bits:
+	push ax
+	
+	; Here we send the desired, and standard, configuration
+	; bits. This resolves to the 8 bits that mean we are 
+	; sending a data length of 8 bits, no parity bits, and
+	; no stop bits. 
+	out SERIAL_LINE_COMMAND_PORT(ax), 0x03
+	
+	pop ax
+	ret
+	
+;-----------------------;
+; ax - com port to 		;
+; send the buffer info	;
+; data to.				;
+;-----------------------;
+configure_com_buffer:
+	push ax
+	
+	; Like the line bits, we need to send a special value
+	; so that the com device communicates in the way that
+	; we want it to. This: Enables FIFO queing, clears
+	; both send and recieve queues, and sets the queue
+	; size to 14 bytes. 
+	out SERIAL_FIFO_COMMAND_PORT(ax), 0xC7
+	
+	pop ax
+	ret
+
+;-----------------------;
+; ax - com port to 		;
+; send the modem info	;
+; data to.				;
+;-----------------------;
+configure_com_modem:
+	push ax
+	
+	; We now want to tell the com device to use
+	; Ready to Transmit (RTS) and Data Terminal
+	; Ready (DTR), and keep interrupts off asm
+	; we are not using coms for input.
+	out SERIAL_MODEM_COMMAND_PORT(ax), 0x03
+	
+	pop ax
+	ret
+	
+;-----------------------;
+; ax - com to check info;
+; on.					;
+;						;
+; Returns, CX, status	;
+;-----------------------;
+check_com_transmit_queue_empty:
+	push ax
+	
+	; Now we want to check to see if the line
+	; is empty and ready to be used. 0x20 checks
+	; to see if the 5th bit is set. Or... test..
+	in al, SERIAL_LINE_STATUS_PORT(ax)
+	and ax, 0x0020
+	
+	mov cx, ax
+	
+	pop ax
+	ret
 ;===============================;
 ;		BOOT 2 - DATA			;
 ;===============================;
-MEM_DET_MSG		db ' Detecting Memory Map', 0
-LOW_MEM_DET_MSG db ' Detecting Low Memory (KB): ', 0
-DIVIDER_MSG		db ' =================================', 0
+; Memory Messages
+MEM_DET_MSG			db ' Detecting Memory Map', 0
+LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
+DIVIDER_MSG			db ' =================================', 0
+HIGH_MEM_MSG 		db ' Detecting High Memory: ', 0
+BYTES_DET_MSG		db ' Bytes Stored (0x): ', 0
+HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
+
+; COM/Serial Port Messages
+CONF_SERIAL_MSG		db ' Configuring Serial Ports', 0
+SEND_BYTE_MSG		db ' Sending Byte: ', 0
+
 
 ; Buffer & count for memory map structure
-memMapEntryCount	db 0
-memoryMapBuffer		resb 0
+mMapBytesPerEntry	db 0
+
+memoryMapStruct:
+	baseAddress		dq 0
+	lengthOfRegion	dq 0
+	regionType		dd 0
+	extAttributes	dd 0
+
+memoryMapBuffer:
 
 ; NOTE:
 ; ======================

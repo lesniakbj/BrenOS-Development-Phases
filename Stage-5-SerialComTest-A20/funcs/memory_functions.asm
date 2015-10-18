@@ -15,13 +15,14 @@ detect_low_memory:
 ; location for the memory map.
 detect_memory_map:
 	xor ebx, ebx
+	xor ecx, ecx
 	
 	; Move the magic number into edx
 	; before the BIOS call. 
 	mov edx, 0x534D4150
 	; Set the function call here
 	mov eax, 0xE820
-	mov ecx, 24
+	mov ecx, 24	
 	; ... and BIOS call
 	int 0x15
 	
@@ -29,24 +30,20 @@ detect_memory_map:
 	; contain the magic number, and
 	; the carry flag will be clear if
 	; there is no error. 
-	cmp eax, 0x534D4150
-	je .error_exit
 	jc .error_exit
 	
 	; Save ebx as it needs to be preserved,
 	; along with cl, which contains the number
 	; of bytes now stored at ES:DI
-	mov [memCallOneEBX], ebx
-	mov [memCallOneCL], cl
-	
-	ret
+	mov [preserveEBX], ebx
 
+	ret
+	
 .error_exit:
 	stc
 	ret
 ;=======================;
 ;		   DATA			;
 ;=======================;
-memCallOneEBX	dd 0	; Need to preserve
-memCallOneCL	db 0	; Number of bytes in call 1
-memMapEntry 	db 0 
+preserveEBX		dd 0	; Need to preserve
+mem_map_entries	dd 0
