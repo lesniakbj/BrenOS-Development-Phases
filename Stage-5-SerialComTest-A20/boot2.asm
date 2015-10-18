@@ -236,21 +236,17 @@ write_string_serial:
 	
 ; Serial OUT loop...
 .check_status_loop:
+	push ax
 	call check_com_transmit_queue_empty
 	mov bx, [queueStatus]
 	cmp bx, 0
+	pop ax
 	je .check_status_loop
 		
 	; Line is ready, write the data...	
 	mov dx, COM_1_PORT
 	out dx, al
-	
-	shr ax, 8
-	and ax, 0x00FF
-	out dx, al
-	
-	inc si
-	
+
 	jmp .write_loop
 
 .write_end:
