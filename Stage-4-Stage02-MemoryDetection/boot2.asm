@@ -43,9 +43,8 @@ boot2_start:
 	call write_newline
 	call write_newline
 	call write_newline
-	call write_newline
 	
-	mov si, HIGH_MEM_CALL_1_MSG
+	mov si, HIGH_MEM_MSG
 	call write_string
 	call write_newline
 	call write_newline
@@ -83,7 +82,8 @@ boot2_start:
 									; Typically 20, so we will use that.
 	mov ax, 5
 	call write_memory_range_16
-	
+	call write_newline
+	call write_newline
 	
 	; mov si, memoryMapBuffer
 	; mov cx, 20
@@ -140,7 +140,7 @@ fill_memory_info_buffer:
 MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG			db ' =================================', 0
-HIGH_MEM_CALL_1_MSG db ' Calling E820 (1st Call): ', 0
+HIGH_MEM_MSG 		db ' Detecting High Memory: ', 0
 BYTES_DET_MSG		db ' Bytes Stored (0x): ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
