@@ -236,7 +236,7 @@ write_memory_range_16:
 	; Add 2 to SI before we jump back to the 
 	; start, because we are printing 16 bit (2
 	; byte) values.	
-	add si, 2
+	add si, 1
 	
 	; Have we finished displaying all the words...?
 	cmp cx, 0
