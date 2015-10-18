@@ -18,6 +18,30 @@ write_string:
 	pop si
 	pop ax
 	ret
+	
+write_hex_8:
+	push bx
+	push si
+	
+	mov bx, dx
+	shr bx, 12
+	and bx, 0x0F
+	add bx, HEX_CHARS
+	mov bl, [bx]
+	mov [HEX_OUT_8], bl
+	
+	mov bx, dx
+	shr bx, 8
+	and bx, 0x0F
+	add bx, HEX_CHARS
+	mov bl, [bx]
+	mov [HEX_OUT_8 + 1], bl
+	
+	mov si, HEX_OUT_8
+	call write_string
+	
+	pop si
+	pop b
 
 write_hex_16:
 	push bx
@@ -28,29 +52,29 @@ write_hex_16:
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT], bl
+	mov [HEX_OUT_16], bl
 	
 	mov bx, dx
 	shr bx, 8
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 1], bl
+	mov [HEX_OUT_16 + 1], bl
 	
 	mov bx, dx
 	shr bx, 4
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 2], bl
+	mov [HEX_OUT_16 + 2], bl
 	
 	mov bx, dx
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 3], bl
+	mov [HEX_OUT_16 + 3], bl
 	
-	mov si, HEX_OUT
+	mov si, HEX_OUT_16
 	call write_string
 	
 	pop si
@@ -221,7 +245,8 @@ firstLine 		db 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
-HEX_OUT 		db '????', 0
+HEX_OUT_8 		db '??', 0
+HEX_OUT_16 		db '????', 0
 SPACE			db ' ', 0
 PIPE_STRING		db '|', 0
 COLON_STRING	db ':', 0

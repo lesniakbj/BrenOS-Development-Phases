@@ -64,7 +64,7 @@ boot2_start:
 	call fill_memory_info_buffer
 	
 	mov dx, [memMapEntryCount]
-	call write_hex_16
+	call write_hex_8
 	call write_newline
 	call write_newline
 	
