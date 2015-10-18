@@ -81,7 +81,8 @@ configure_com_baud_rate:
 	; First, we must tell the serial com that we
 	; are going to be sending the highest 8 bits
 	; followed by the lowest 8 for all coms.
-	mov dx, [ax + 3]
+	add ax, 3
+	mov dx, ax
 	; mov dx, word SERIAL_LINE_COMMAND_PORT(ax)
 	mov cl, SERIAL_LINE_ENABLE_DLAB	
 	out dx, cl
