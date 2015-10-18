@@ -171,4 +171,4 @@ memoryMapBuffer:
 ; true of all sectors we read in some 
 ; emulators. Thus, the last sector of every
 ; code segment must be padded.
-TIMES 512 db 0
+TIMES 1024 db 0
