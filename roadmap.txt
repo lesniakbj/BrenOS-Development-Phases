@@ -12,8 +12,7 @@ Phase 2:
 2. Data vs. Code in Binary files..
 3. Defining data in ASM
 4. Introduction to Interrupts & BIOS calls
-
-<Where does setting up the stack go? Before or after reading from BIOS?>
+5. Stack
 
 Phase 3:
 ========
@@ -21,11 +20,52 @@ Phase 3:
 2. Understanding Memory addressing and limitations.
 3. Defining a memory map for the inital bootloader and Kernel
 4. Using BIOS to read data from a disk to disk buffer
-5. Reading that new sector (FAT Filesystem?)
+5. Reading that new sector
 
 Phase 4:
 ========
-1. Setting BIOS in VBE Mode. Other BIOS Video Modes.
-2. Setting up the A20 line for the kernel.
-3. GDT
-4. Boot02 detecting memory map from BIOS
+1. Get stage02 loaded from the disk and successfully jump to it
+2. After we get there, detect low memory that is available
+3. Then multiple calls to e820 for high memory. 
+4. ....
+
+Phase 5:
+========
+1. Writing to a file in Bochs/Qemu. 
+2. Setting up the serial ports.
+3. Writing bytes to the serial port in a single call.
+4. Constructing a serial_print_string method. 
+5. Enabling the A20 line to prepare for PMode.
+
+Phase 6:
+========
+1. Taking a step back. Difference between HDD and FDisk.
+2. Reading a sector from a HDD.
+3. CHS and LBA
+4. Combining all of this to the new Stage01 loader (will load
+   both HDD and Fdisk, choosing correctly and storing drive).
+
+Phase 7:
+========
+1. Using the Stack to call functions in ASM.
+2. Difference between register and stack calling.
+3. Refactoring bootsector (1 and 2) to use stack. 
+4. Setting up the GDT for PMode.
+
+Phase 8:
+========
+1. Loading the Kernel from disk to memory (stage02).
+2. Setting up PMode for the kernel.
+3. Jump to kernel.    
+
+;===========================================================================;
+;	Note for FINAL VERSION of BOOTLOADER:									;
+;	It's common for the loader to keep interrupts 							;
+;	disabled (the kernel will enable them later when an IDT is properly 	;
+;	set up).																;
+;																			;
+;	Take time to think about whether or not you'll enable paging here. 		;
+;	Keep in mind that debugging paging initialization code without the help ;
+;	of exception handlers may quickly become a nightmare!					;
+;===========================================================================;
+	
