@@ -236,6 +236,8 @@ write_string_serial:
 	
 ; Serial OUT loop...
 .check_status_loop:
+	; Our charcter is stored in AX, we
+	; don't want to trash it. 
 	push ax
 	call check_com_transmit_queue_empty
 	mov bx, [queueStatus]
@@ -264,7 +266,7 @@ queueStatus			dw 0
 
 ; COM Test Messages
 TELL_TEST_MSG		db ' Testing Serial COMs...', 0
-COM_TEST_MSG		db 'Test this string!', 0
+COM_TEST_MSG		db 'Test this string!', 0x0A, 0x0D, 0
 
 ; Memory Messages
 MEM_DET_MSG			db ' Detecting Memory Map', 0
