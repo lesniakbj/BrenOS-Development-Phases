@@ -26,7 +26,7 @@ boot2_start:
 	; for LOGGING!!! :D
 	call configure_com_port_1
 	
-	out DAT_PORT(COM_1_PORT), 0x0A
+	out DATA_PORT(COM_1_PORT), 0x0A
 	
 	call write_newline
 	call write_newline
