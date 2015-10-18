@@ -26,7 +26,7 @@ boot2_start:
 	; for LOGGING!!! :D
 	call configure_com_port_1
 	
-	out DATA_PORT(COM_1_PORT), 0x0A
+	out COM_1_PORT, 0x0A
 	
 	call write_newline
 	call write_newline
@@ -80,7 +80,8 @@ configure_com_baud_rate:
 	; First, we must tell the serial com that we
 	; are going to be sending the highest 8 bits
 	; followed by the lowest 8 for all coms.
-	out SERIAL_LINE_COMMAND_PORT(ax), SERIAL_LINE_ENABLE_DLAB
+	; out SERIAL_LINE_COMMAND_PORT(ax), SERIAL_LINE_ENABLE_DLAB
+	out ax + 3, 0x80
 	
 	; Now we need to send the speed that we want
 	; to communicate with the device with. Really,
@@ -90,12 +91,12 @@ configure_com_baud_rate:
 	mov cx, bx
 	shr bx, 8
 	and bx, 0x00FF
-	out DATA_PORT(ax), bx
+	out ax, bx
 	mov bx, cx
 	
 	; ... and onto the bottom.
 	and bx, 0x00FF
-	out DATA_PORT(ax), bx
+	out ax, bx
 	
 	
 	pop cx
@@ -115,7 +116,8 @@ configure_com_line_bits:
 	; bits. This resolves to the 8 bits that mean we are 
 	; sending a data length of 8 bits, no parity bits, and
 	; no stop bits. 
-	out SERIAL_LINE_COMMAND_PORT(ax), 0x03
+	; out SERIAL_LINE_COMMAND_PORT(ax), 0x03
+	out ax + 3, 0x03
 	
 	pop ax
 	ret
@@ -133,7 +135,8 @@ configure_com_buffer:
 	; we want it to. This: Enables FIFO queing, clears
 	; both send and recieve queues, and sets the queue
 	; size to 14 bytes. 
-	out SERIAL_FIFO_COMMAND_PORT(ax), 0xC7
+	; out SERIAL_FIFO_COMMAND_PORT(ax), 0xC7
+	out ax + 2, 0xC7
 	
 	pop ax
 	ret
@@ -150,7 +153,8 @@ configure_com_modem:
 	; Ready to Transmit (RTS) and Data Terminal
 	; Ready (DTR), and keep interrupts off asm
 	; we are not using coms for input.
-	out SERIAL_MODEM_COMMAND_PORT(ax), 0x03
+	; out SERIAL_MODEM_COMMAND_PORT(ax), 0x03
+	mov ax + 4, 0x03
 	
 	pop ax
 	ret
@@ -159,24 +163,30 @@ configure_com_modem:
 ; ax - com to check info;
 ; on.					;
 ;						;
-; Returns, CX, status	;
+; Returns, [queueStatus];
 ;-----------------------;
 check_com_transmit_queue_empty:
 	push ax
+	push bx
 	
 	; Now we want to check to see if the line
 	; is empty and ready to be used. 0x20 checks
 	; to see if the 5th bit is set. Or... test..
-	in al, SERIAL_LINE_STATUS_PORT(ax)
-	and ax, 0x0020
+	; in bl, SERIAL_LINE_STATUS_PORT(ax)
+	in bl, ax + 5
+	and bx, 0x0020
 	
-	mov cx, ax
+	mov [queueStatus], bx
 	
+	pop bx
 	pop ax
 	ret
 ;===============================;
 ;		BOOT 2 - DATA			;
 ;===============================;
+; Working Data - COM
+queueStatus			dw 0
+
 ; Memory Messages
 MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
