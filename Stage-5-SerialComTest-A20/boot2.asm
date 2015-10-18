@@ -239,7 +239,6 @@ write_string_serial:
 		
 	; Line is ready, write the data...	
 	mov dx, COM_1_PORT
-	mov al, 0x0A
 	out dx, al
 	
 	inc si
