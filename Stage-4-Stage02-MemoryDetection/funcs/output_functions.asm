@@ -292,13 +292,13 @@ write_memory_range_16:
 	call write_string
 	call write_space
 	
-	mov dx, [offsetLoc]
+	mov dx, [offsetLoc16]
 	call write_hex_16
 	
 	mov si, COLON_STRING
 	call write_string
 	
-	mov dx, [initialLocMem]
+	mov dx, [initialLocMem16]
 	call write_hex_16
 	
 	pop dx
