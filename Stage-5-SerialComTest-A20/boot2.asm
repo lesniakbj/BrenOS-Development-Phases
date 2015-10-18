@@ -42,7 +42,7 @@ boot2_start:
 ;		COM FUNCTIONS		;
 ;===========================;
 %define COM_1_PORT						0x03F8
-%define DATA_PORT(base)					(base)
+%define SERIAL_DATA_PORT(base)					(base)
 %define SERIAL_FIFO_COMMAND_PORT(base)  (base + 2)
 %define SERIAL_LINE_COMMAND_PORT(base)  (base + 3)
 %define SERIAL_MODEM_COMMAND_PORT(base) (base + 4)
@@ -76,29 +76,38 @@ configure_com_baud_rate:
 	push ax
 	push bx
 	push cx
+	push dx
 	
 	; First, we must tell the serial com that we
 	; are going to be sending the highest 8 bits
 	; followed by the lowest 8 for all coms.
-	; out SERIAL_LINE_COMMAND_PORT(ax), SERIAL_LINE_ENABLE_DLAB
-	out ax + 3, 0x80
+	mov dx, SERIAL_LINE_COMMAND_PORT(ax)
+	mov cl, SERIAL_LINE_ENABLE_DLAB	
+	out dx, cl
 	
 	; Now we need to send the speed that we want
 	; to communicate with the device with. Really,
 	; we send a divisor for the normal com clock
 	; of 115200Hz. First we send the top half of
 	; the divisor...
+	
+	; Set the port we are writing to.
+	mov dx, SERIAL_DATA_PORT(ax)
+	; Move the divisor into CX
 	mov cx, bx
-	shr bx, 8
-	and bx, 0x00FF
-	out ax, bx
-	mov bx, cx
+	; Send the high byte of CX
+	shr cx, 8
+	and cx, 0x00FF
+	out dx, cl
 	
 	; ... and onto the bottom.
-	and bx, 0x00FF
-	out ax, bx
+	mov dx, SERIAL_DATA_PORT(ax)
+	mov cx, bx
+	and cx, 0x00FF
+	out dx, cl
 	
 	
+	pop dx
 	pop cx
 	pop bx
 	pop ax
@@ -111,14 +120,16 @@ configure_com_baud_rate:
 ;-----------------------;
 configure_com_line_bits:
 	push ax
+	push dx
 	
 	; Here we send the desired, and standard, configuration
 	; bits. This resolves to the 8 bits that mean we are 
 	; sending a data length of 8 bits, no parity bits, and
 	; no stop bits. 
-	; out SERIAL_LINE_COMMAND_PORT(ax), 0x03
-	out ax + 3, 0x03
+	mov dx, SERIAL_LINE_COMMAND_PORT(ax)
+	out dx, 0x03
 	
+	pop dx
 	pop ax
 	ret
 	
@@ -129,15 +140,17 @@ configure_com_line_bits:
 ;-----------------------;
 configure_com_buffer:
 	push ax
+	push dx
 	
 	; Like the line bits, we need to send a special value
 	; so that the com device communicates in the way that
 	; we want it to. This: Enables FIFO queing, clears
 	; both send and recieve queues, and sets the queue
 	; size to 14 bytes. 
-	; out SERIAL_FIFO_COMMAND_PORT(ax), 0xC7
-	out ax + 2, 0xC7
+	mov dx, SERIAL_FIFO_COMMAND_PORT(ax)
+	out dx, 0xC7
 	
+	pop dx
 	pop ax
 	ret
 
@@ -148,14 +161,16 @@ configure_com_buffer:
 ;-----------------------;
 configure_com_modem:
 	push ax
+	push dx
 	
 	; We now want to tell the com device to use
 	; Ready to Transmit (RTS) and Data Terminal
 	; Ready (DTR), and keep interrupts off asm
 	; we are not using coms for input.
-	; out SERIAL_MODEM_COMMAND_PORT(ax), 0x03
-	mov ax + 4, 0x03
+	mov dx, SERIAL_MODEM_COMMAND_PORT(ax)
+	out dx, 0x03
 	
+	pop dx
 	pop ax
 	ret
 	
@@ -168,16 +183,18 @@ configure_com_modem:
 check_com_transmit_queue_empty:
 	push ax
 	push bx
+	push dx
 	
 	; Now we want to check to see if the line
 	; is empty and ready to be used. 0x20 checks
 	; to see if the 5th bit is set. Or... test..
-	; in bl, SERIAL_LINE_STATUS_PORT(ax)
-	in bl, ax + 5
+	mov dx, SERIAL_LINE_STATUS_PORT(ax)
+	in bl, dx
 	and bx, 0x0020
 	
 	mov [queueStatus], bx
 	
+	pop dx
 	pop bx
 	pop ax
 	ret
