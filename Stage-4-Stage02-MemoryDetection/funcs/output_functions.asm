@@ -19,6 +19,7 @@ write_string:
 	pop ax
 	ret
 	
+	
 write_hex_8:
 	push bx
 	push si
@@ -43,6 +44,7 @@ write_hex_8:
 	pop bx
 	ret
 
+	
 write_hex_16:
 	push bx
 	push si
@@ -150,7 +152,7 @@ write_memory_range_8:
 	
 	call write_space
 	
-	mov dx, [si]
+	mov dl, [si]
 	call write_hex_8
 	; Add 1 to SI before we jump
 	; back to the start, because
