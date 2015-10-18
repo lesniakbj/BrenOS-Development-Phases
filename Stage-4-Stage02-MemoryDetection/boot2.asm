@@ -116,15 +116,12 @@ boot2_start:
 	jmp $
 	
 fill_memory_info_buffer:
-	pusha
-	
 	; ES:DI -> Buffer Location
 	mov di, memoryMapBuffer
 	call detect_memory_map
 	jc .memory_detect_error
-	mov [memMapEntryCount], bp
+	; mov [memMapEntryCount], bp
 	
-	popa
 	ret
 	
 .memory_detect_error:
@@ -171,4 +168,4 @@ memoryMapBuffer:
 ; true of all sectors we read in some 
 ; emulators. Thus, the last sector of every
 ; code segment must be padded.
-TIMES 1024 db 0
+TIMES 512 db 0

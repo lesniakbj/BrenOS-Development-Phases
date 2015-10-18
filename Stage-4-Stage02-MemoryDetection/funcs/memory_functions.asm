@@ -53,6 +53,8 @@ detect_memory_map:
 	test ebx, ebx
 	je .error_exit
 	
+	; REMOVE THIS LATER
+	ret
 	jmp .check_entry
 	
 .loop:
