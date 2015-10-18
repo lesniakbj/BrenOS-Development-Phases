@@ -66,9 +66,7 @@ boot2_start:
 	; and put it into a buffer for us to use.
 	; Check the carry flag, as it will be set
 	; if there is an error. 
-	; In this case, the count of entries is 
-	; in bp, mem_map_entries, and memMapEntryCount
-	; call fill_memory_info_buffer
+	call fill_memory_info_buffer
 	
 	mov dx, [memMapEntryCount]
 	call write_hex_8
@@ -120,7 +118,7 @@ fill_memory_info_buffer:
 	mov di, memoryMapBuffer
 	call detect_memory_map
 	jc .memory_detect_error
-	mov [memMapEntryCount], [bp]
+	mov [memMapEntryCount], cl
 	
 	ret
 	
