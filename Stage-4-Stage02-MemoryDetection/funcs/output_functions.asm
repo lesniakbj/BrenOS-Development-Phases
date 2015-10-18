@@ -41,7 +41,8 @@ write_hex_8:
 	call write_string
 	
 	pop si
-	pop b
+	pop bx
+	ret
 
 write_hex_16:
 	push bx
