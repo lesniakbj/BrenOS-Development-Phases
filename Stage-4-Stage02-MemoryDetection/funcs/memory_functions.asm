@@ -63,7 +63,7 @@ detect_memory_map:
 	jc .loop_failure
 	mov edx, 0x534D4150
 	
-.check_start:
+.check_entry:
 	; Skip 0 length entries
 	jcxz .skip_empty
 	
