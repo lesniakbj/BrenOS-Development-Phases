@@ -16,6 +16,9 @@ boot2_start:
 	mov dx, [0x7C00 + 511]
 	call write_hex_8
 	call write_newline
+	mov dx, [0x7C00 + 510]
+	call write_hex_8
+	call write_newline
 	
 	; Tell the user that we are now
 	; detecting memory in their system.
