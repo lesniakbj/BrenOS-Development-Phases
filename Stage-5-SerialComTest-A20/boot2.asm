@@ -222,6 +222,8 @@ check_com_transmit_queue_empty:
 ; we are going to write
 write_string_serial:
 	push ax
+	push bx
+	push dx
 	push si
 	
 .write_loop:
@@ -233,8 +235,8 @@ write_string_serial:
 ; Serial OUT loop...
 .check_status_loop:
 	call check_com_transmit_queue_empty
-	mov ax, [queueStatus]
-	cmp ax, 0
+	mov bx, [queueStatus]
+	cmp bx, 0
 	je .check_status_loop
 		
 	; Line is ready, write the data...	
@@ -247,6 +249,8 @@ write_string_serial:
 
 .write_end:
 	pop si
+	pop dx
+	pop bx
 	pop ax
 	ret
 	
