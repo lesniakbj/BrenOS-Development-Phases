@@ -24,14 +24,13 @@ write_hex_8:
 	push si
 	
 	mov bx, dx
-	shr bx, 12
+	shr bx, 4
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
 	mov [HEX_OUT_8], bl
 	
 	mov bx, dx
-	shr bx, 8
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
