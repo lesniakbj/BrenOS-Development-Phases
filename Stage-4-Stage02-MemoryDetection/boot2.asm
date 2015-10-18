@@ -79,15 +79,20 @@ boot2_start:
 	mov cx, 10							; After 1 call, the buffer fills with 20-24 bytes.
 										; Typically 20, so we will use that.
 	mov ax, 5
-	call write_memory_range_contents_16
+	call write_memory_range_16
 	
+	
+	mov si, memoryMapBuffer
+	mov cx, 20
+	mov ax, 10
+	call write_memory_range_8
 	
 	; Fun Experiment: Read the entire
 	; bootsector code and offset.
 	; mov si, 0x7C00
 	; mov cx, 256									; Read the whole sector
 	; mov ax, 8
-	; call write_memory_range_contents_16
+	; call write_memory_range_16
 	
 	call write_color_row
 	

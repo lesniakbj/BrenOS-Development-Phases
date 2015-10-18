@@ -132,6 +132,62 @@ write_color_row:
 	pop cx
 	pop ax
 	ret
+
+	
+write_memory_range_8:
+	push ax
+	push cx
+	push dx
+	push si
+	
+	mov [bytesPerRow8], ax
+	mov [initialLocMem8], si
+	mov byte [offsetLoc8], 0
+	
+.start:
+	dec ax
+	dec cx
+	
+	call write_space
+	
+	mov dx, [si]
+	call write_hex_8
+	; Add 1 to SI before we jump
+	; back to the start, because
+	; we are printing 8 bit (1
+	; byte) values.	
+	add si, 1
+	
+	cmp cx, 0
+	je .end
+	
+	cmp ax, 0
+	je .newline
+	
+	
+	jmp .start
+
+.newline:
+	; call .print_addresses
+	call write_newline
+	
+	mov ax, [bytesPerRow8]
+	mov [initialLocMem8], si
+	add [offsetLoc8], ax
+	
+	jmp .start
+	
+.end:
+	; call .print_addresses
+	call write_newline
+	call write_newline
+	call write_newline
+	
+	pop si
+	pop dx
+	pop cx
+	pop ax
+	ret
 	
 ;-------------------;
 ; FS:SI -> Start	;
@@ -145,48 +201,63 @@ write_color_row:
 ;		bytes per   ;
 ;		row.		;
 ;-------------------;
-write_memory_range_contents_16:
+write_memory_range_16:
 	push ax
 	push cx
 	push dx
 	push si
 	
-	mov [bytesPerRow], ax
-	mov [initialLocMem], si
-	mov word [offsetLoc], 0
+	; Setup some scratch work variables
+	; for us that we will need to use.
+	mov [bytesPerRow16], ax
+	mov [initialLocMem16], si
+	mov word [offsetLoc16], 0
 	
 .start:
+	; We're starting an interation of the
+	; print loop, so decrement both the
+	; number of bytes to print and the number
+	; drawn on that row. 
 	dec ax
 	dec cx
 	
+	; Start off by padding the table with some
+	; space.
 	call write_space
 	
+	; To write the value at si (our memory buffer)
+	; we need to move the data into dx. Then print
+	; it.
 	mov dx, [si]
 	call write_hex_16
+	
+	; Add 2 to SI before we jump back to the 
+	; start, because we are printing 16 bit (2
+	; byte) values.	
 	add si, 2
 	
+	; Have we finished displaying all the words...?
 	cmp cx, 0
 	je .end
 	
+	; Have we finished all the words on this line...?
 	cmp ax, 0
 	je .newline
 	
-	; Add 2 to SI before we jump
-	; back to the start, because
-	; we are printing 16 bit (2
-	; byte) values.	
+	; ... nope, lets print another character from the 
+	; buffer.
 	jmp .start
 	
 .newline:
 	call .print_addresses
 	call write_newline
 	
-	mov ax, [bytesPerRow]
-	mov [initialLocMem], si
+	mov ax, [bytesPerRow16]
+	mov [initialLocMem16], si
 	
 	push ax
 	shl ax, 1
-	add [offsetLoc], ax
+	add [offsetLoc16], ax
 	pop ax
 	
 	jmp .start
@@ -237,11 +308,18 @@ write_memory_range_contents_16:
 ;==============================;
 ;		FUNCTIONS DATA		   ;
 ;==============================;
-; Working data
-bytesPerRow		dw 0
-initialLocMem	dw 0
-offsetLoc		dw 0
-firstLine 		db 0
+; NOTE: I can probably just use
+; the same scratch data for each
+; function?
+; Working Data - Print Hex 8
+bytesPerRow8	db 0
+initialLocMem8	db 0
+offsetLoc8		db 0
+
+; Working data - Print Hex 16
+bytesPerRow16	dw 0
+initialLocMem16	dw 0
+offsetLoc16		dw 0
 
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
