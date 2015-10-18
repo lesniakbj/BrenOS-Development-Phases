@@ -46,27 +46,27 @@ boot2_start:
 %define SERIAL_DATA_PORT(base)			(base)
 
 %macro	SERIAL_FIFO_COMMAND_PORT 1 
-	mov ax, %1 
-	add ax, 2
+	mov dx, %1 
+	add dx, 2
 %endmacro
 %macro SERIAL_LINE_COMMAND_PORT 1
-	mov ax, %1
-	add ax, 3
+	mov dx, %1
+	add dx, 3
 %endmacro
 %macro	SERIAL_MODEM_COMMAND_PORT 1
-	mov ax, %1
-	add ax, 4
+	mov dx, %1
+	add dx, 4
 %endmacro
 %macro	SERIAL_LINE_STATUS_PORT 1
-	mov ax, %1
-	add ax, 5
+	mov dx, %1
+	add dx, 5
 %endmacro
 
 configure_com_port_1:
-	push ax
+	push dx
 	push bx
 	
-	mov ax, COM_1_PORT
+	mov dx, COM_1_PORT
 	mov bx, 4
 	
 	call configure_com_baud_rate
@@ -75,28 +75,26 @@ configure_com_port_1:
 	call configure_com_modem
 	
 	pop bx
-	pop ax
+	pop dx
 	ret
 ;-----------------------;
-; ax - com port to 		;
+; dx - com port to 		;
 ; send the baud rate	;
 ; data to.				;
 ;						;
 ; bx - divisor			;
 ;-----------------------;
 configure_com_baud_rate:
-	push ax
-	push bx
-	push cx
 	push dx
+	push bx
+	push ax
 	
 	; First, we must tell the serial com that we
 	; are going to be sending the highest 8 bits
 	; followed by the lowest 8 for all coms.
-	SERIAL_LINE_COMMAND_PORT ax
-	mov dx, ax
-	mov cl, SERIAL_LINE_ENABLE_DLAB	
-	out dx, cl
+	SERIAL_LINE_COMMAND_PORT dx
+	mov al, SERIAL_LINE_ENABLE_DLAB	
+	out dx, al
 	
 	; Now we need to send the speed that we want
 	; to communicate with the device with. Really,
@@ -105,68 +103,67 @@ configure_com_baud_rate:
 	; the divisor...
 	
 	; Set the port we are writing to.
-	mov dx, SERIAL_DATA_PORT(ax)
+	mov dx, SERIAL_DATA_PORT(dx)
 	; Move the divisor into CX
-	mov cx, bx
+	mov ax, bx
 	; Send the high byte of CX
-	shr cx, 8
-	and cx, 0x00FF
-	out dx, cl
+	shr ax, 8
+	and ax, 0x00FF
+	out dx, al
 	
 	; ... and onto the bottom.
-	mov dx, SERIAL_DATA_PORT(ax)
-	mov cx, bx
-	and cx, 0x00FF
-	out dx, cl
+	mov dx, SERIAL_DATA_PORT(dx)
+	mov ax, bx
+	and ax, 0x00FF
+	out dx, al
 	
 	
-	pop dx
-	pop cx
-	pop bx
 	pop ax
+	pop bx
+	pop dx
 	ret
 
 ;-----------------------;
-; ax - com port to 		;
+; dx - com port to 		;
 ; send the line bits	;
 ; data to.				;
 ;-----------------------;
 configure_com_line_bits:
-	push ax
 	push dx
+	push ax
 	
 	; Here we send the desired, and standard, configuration
 	; bits. This resolves to the 8 bits that mean we are 
 	; sending a data length of 8 bits, no parity bits, and
 	; no stop bits. 
-	SERIAL_LINE_COMMAND_PORT ax
-	mov dx, ax
-	out dx, 0x03
+	SERIAL_LINE_COMMAND_PORT dx
+	mov al, 0x03
+	out dx, al
 	
-	pop dx
 	pop ax
+	pop dx
 	ret
 	
 ;-----------------------;
-; ax - com port to 		;
+; dx - com port to 		;
 ; send the buffer info	;
 ; data to.				;
 ;-----------------------;
 configure_com_buffer:
-	push ax
 	push dx
+	push ax
 	
 	; Like the line bits, we need to send a special value
 	; so that the com device communicates in the way that
 	; we want it to. This: Enables FIFO queing, clears
 	; both send and recieve queues, and sets the queue
 	; size to 14 bytes. 
-	SERIAL_FIFO_COMMAND_PORT ax
-	mov dx, ax
-	out dx, 0xC7
+	SERIAL_FIFO_COMMAND_PORT dx
+	mov al, 0xC7
+	out dx, al
 	
-	pop dx
 	pop ax
+	pop dx
 	ret
 
 ;-----------------------;
@@ -175,19 +172,19 @@ configure_com_buffer:
 ; data to.				;
 ;-----------------------;
 configure_com_modem:
-	push ax
 	push dx
+	push ax
 	
 	; We now want to tell the com device to use
 	; Ready to Transmit (RTS) and Data Terminal
 	; Ready (DTR), and keep interrupts off asm
 	; we are not using coms for input.
-	SERIAL_MODEM_COMMAND_PORT ax
-	mov dx, ax
-	out dx, 0x03
+	SERIAL_MODEM_COMMAND_PORT dx
+	mov al, 0x03
+	out dx, al
 	
-	pop dx
 	pop ax
+	pop dx
 	ret
 	
 ;-----------------------;
@@ -197,23 +194,22 @@ configure_com_modem:
 ; Returns, [queueStatus];
 ;-----------------------;
 check_com_transmit_queue_empty:
-	push ax
-	push bx
 	push dx
+	push bx
+	push ax
 	
 	; Now we want to check to see if the line
 	; is empty and ready to be used. 0x20 checks
 	; to see if the 5th bit is set. Or... test..
-	SERIAL_LINE_STATUS_PORT ax
-	mov dx, ax
+	SERIAL_LINE_STATUS_PORT dx
 	in bl, dx
 	and bx, 0x0020
 	
 	mov [queueStatus], bx
 	
-	pop dx
-	pop bx
 	pop ax
+	pop bx
+	pop dx
 	ret
 ;===============================;
 ;		BOOT 2 - DATA			;
