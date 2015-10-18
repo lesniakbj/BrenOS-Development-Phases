@@ -13,6 +13,8 @@ boot2_start:
 	; screen.
 	call write_color_row
 	call write_newline
+	mov dx, [0x7C00 + 511]
+	call write_hex_8
 	call write_newline
 	
 	; Tell the user that we are now
