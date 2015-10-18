@@ -22,11 +22,7 @@ detect_memory_map:
 	mov edx, 0x534D4150
 	; Set the function call here
 	mov eax, 0xE820
-	mov ecx, 24
-	; Add a valid entry as
-	; there most likely won'the
-	; be one.
-	mov [di + 20], dword 1		
+	mov ecx, 24	
 	; ... and BIOS call
 	int 0x15
 	
@@ -40,19 +36,7 @@ detect_memory_map:
 	; along with cl, which contains the number
 	; of bytes now stored at ES:DI
 	mov [preserveEBX], ebx
-	
-	; Time to reset edx as it will sometimes get 
-	; trashed...
-	mov edx, 0x534D4150
-	; On success, eax should have been set...
-	cmp eax, edx
-	jne .error_exit
-	
-	; If = 0, then the list is only 1 entry long
-	test ebx, ebx
-	je .error_exit
-	
-	; REMOVE THIS LATER
+
 	ret
 	
 .error_exit:
