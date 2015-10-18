@@ -32,7 +32,9 @@ boot2_start:
 	; for LOGGING!!! :D
 	call configure_com_port_1
 	
-	out COM_1_PORT, 0x0A
+	mov dx, COM_1_PORT
+	mov al, 0x0A
+	out dx, al
 	
 	call write_newline
 	call write_newline
