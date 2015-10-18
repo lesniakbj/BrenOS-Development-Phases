@@ -243,6 +243,10 @@ write_string_serial:
 	mov dx, COM_1_PORT
 	out dx, al
 	
+	shr ax, 8
+	and ax, 0x00FF
+	out dx, al
+	
 	inc si
 	
 	jmp .write_loop
