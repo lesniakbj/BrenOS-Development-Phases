@@ -171,7 +171,7 @@ configure_com_buffer:
 	ret
 
 ;-----------------------;
-; ax - com port to 		;
+; dx - com port to 		;
 ; send the modem info	;
 ; data to.				;
 ;-----------------------;
@@ -192,7 +192,7 @@ configure_com_modem:
 	ret
 	
 ;-----------------------;
-; ax - com to check info;
+; dx - com to check info;
 ; on.					;
 ;						;
 ; Returns, [queueStatus];
@@ -206,10 +206,10 @@ check_com_transmit_queue_empty:
 	; is empty and ready to be used. 0x20 checks
 	; to see if the 5th bit is set. Or... test..
 	SERIAL_LINE_STATUS_PORT dx
-	in bl, dx
-	and bx, 0x0020
+	in al, dx
+	and ax, 0x0020
 	
-	mov [queueStatus], bx
+	mov [queueStatus], ax
 	
 	pop ax
 	pop bx
