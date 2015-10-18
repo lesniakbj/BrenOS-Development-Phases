@@ -19,7 +19,7 @@ write_string:
 	pop ax
 	ret
 
-write_hex:
+write_hex_16:
 	push bx
 	push si
 	
@@ -138,7 +138,7 @@ write_memory_range_contents_16:
 	call write_space
 	
 	mov dx, [si]
-	call write_hex
+	call write_hex_16
 	add si, 2
 	
 	cmp cx, 0
@@ -198,7 +198,7 @@ write_memory_range_contents_16:
 	call write_space
 	
 	mov dx, [offsetLoc]
-	call write_hex
+	call write_hex_16
 	
 	mov si, COLON_STRING
 	call write_string

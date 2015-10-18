@@ -74,11 +74,11 @@ boot1_start:
 	mov si, READ_TO_MSG
 	call write_string
 	mov dx, [readSegment]
-	call write_hex
+	call write_hex_16
 	mov si, OFFSET_CHAR
 	call write_string
 	mov dx, [readOffset]
-	call write_hex
+	call write_hex_16
 	mov si, NEW_LINE
 	call write_string
 	
@@ -160,7 +160,7 @@ write_string:
 	ret
 
 	
-write_hex:
+write_hex_16:
 	push bx
 	push si
 	
@@ -169,27 +169,27 @@ write_hex:
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 2], bl
+	mov [HEX_OUT], bl
 	
 	mov bx, dx
 	shr bx, 8
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 3], bl
+	mov [HEX_OUT + 1], bl
 	
 	mov bx, dx
 	shr bx, 4
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 4], bl
+	mov [HEX_OUT + 2], bl
 	
 	mov bx, dx
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT + 5], bl
+	mov [HEX_OUT + 3], bl
 	
 	mov si, HEX_OUT
 	call write_string
@@ -208,7 +208,7 @@ CNTRL_MSG	db 'Handing off control...', 0
 OFFSET_CHAR	db ':', 0
 NEW_LINE	db 0x0A, 0x0D, 0
 HEX_CHARS	db '0123456789ABCDEF', 0
-HEX_OUT 	db '0x????', 0
+HEX_OUT 	db '????', 0
 
 ; Other Data
 diskNumber	db 0

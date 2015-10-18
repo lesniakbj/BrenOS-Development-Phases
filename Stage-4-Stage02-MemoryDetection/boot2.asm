@@ -38,7 +38,7 @@ boot2_start:
 	; AX, lets put it in DX so we can
 	; write it to the screen.
 	mov dx, ax
-	call write_hex
+	call write_hex_16
 	call write_newline
 	call write_newline
 	call write_newline
@@ -64,7 +64,7 @@ boot2_start:
 	call fill_memory_info_buffer
 	
 	mov dx, [memMapEntryCount]
-	call write_hex
+	call write_hex_16
 	call write_newline
 	call write_newline
 	
