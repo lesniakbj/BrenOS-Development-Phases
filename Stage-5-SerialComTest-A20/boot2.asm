@@ -42,7 +42,7 @@ boot2_start:
 ;		COM FUNCTIONS		;
 ;===========================;
 %define COM_1_PORT						0x03F8
-%define SERIAL_DATA_PORT(base)					(base)
+%define SERIAL_DATA_PORT(base)			(base)
 %define SERIAL_FIFO_COMMAND_PORT(base)  (base + 2)
 %define SERIAL_LINE_COMMAND_PORT(base)  (base + 3)
 %define SERIAL_MODEM_COMMAND_PORT(base) (base + 4)
@@ -81,7 +81,7 @@ configure_com_baud_rate:
 	; First, we must tell the serial com that we
 	; are going to be sending the highest 8 bits
 	; followed by the lowest 8 for all coms.
-	mov dx, SERIAL_LINE_COMMAND_PORT(ax)
+	mov dx, word SERIAL_LINE_COMMAND_PORT(ax)
 	mov cl, SERIAL_LINE_ENABLE_DLAB	
 	out dx, cl
 	
