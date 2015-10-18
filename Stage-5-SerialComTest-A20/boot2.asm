@@ -220,6 +220,8 @@ check_com_transmit_queue_empty:
 	
 ; SI is the source index for the data
 ; we are going to write
+
+; IN PROGRESS
 write_string_serial:
 	push ax
 	push bx
