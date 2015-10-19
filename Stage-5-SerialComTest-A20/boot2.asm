@@ -38,16 +38,13 @@ boot2_start:
 	mov si, COM_TEST_MSG
 	call write_string_serial
 	
-	mov dl, 0x0A
-	call write_hex_nl_8_serial
-	
 	; These are some tests of the COMs...
 	; I am working on sending Hexideciamal
 	; characters, so I can debug the registers,
 	; rather than relying on reading the file's
 	; hex.
-	; mov ax, 0xE801
-	; int 0x15
+	mov ax, 0xE801
+	int 0x15
 	
 	; mov [axOut], ax
 	; mov [bxOut], bx
@@ -55,15 +52,19 @@ boot2_start:
 	; mov [dxOut], dx
 	
 	; mov dx, COM_1_PORT
-	; mov ax, [axOut]
-	; shr ax, 8
-	; and ax, 0x00FF
-	; out dx, al
-	
+	mov ax, [axOut]
+	shr ax, 8
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_8_serial
 	; mov dx, COM_1_PORT
 	; mov ax, [axOut]
 	; and ax, 0x00FF
 	; out dx, al
+	mov ax, [axOut]
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_nl_8_serial
 	
 	call write_newline
 	call write_newline
@@ -283,6 +284,30 @@ write_string_serial:
 	pop dx
 	pop bx
 	pop ax
+	ret
+	
+write_hex_8_serial:
+	push bx
+	push si
+	
+	mov bx, dx
+	shr bx, 4
+	and bx, 0x0F
+	add bx, HEX_CHARS
+	mov bl, [bx]
+	mov [HEX_OUT_8], bl
+	
+	mov bx, dx
+	and bx, 0x0F
+	add bx, HEX_CHARS
+	mov bl, [bx]
+	mov [HEX_OUT_8 + 1], bl
+	
+	mov si, HEX_OUT_8
+	call write_string_serial
+	
+	pop si
+	pop bx
 	ret
 	
 write_hex_nl_8_serial:
