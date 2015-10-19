@@ -46,22 +46,29 @@ boot2_start:
 	mov ax, 0xE801
 	int 0x15
 	
-	; mov [axOut], ax
+	mov [axOut], ax
 	; mov [bxOut], bx
-	; mov [cxOut], cx
+	mov [cxOut], cx
 	; mov [dxOut], dx
 	
-	; mov dx, COM_1_PORT
 	mov ax, [axOut]
 	shr ax, 8
 	and ax, 0x00FF
 	mov dl, al
 	call write_hex_8_serial
-	; mov dx, COM_1_PORT
-	; mov ax, [axOut]
-	; and ax, 0x00FF
-	; out dx, al
+
 	mov ax, [axOut]
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_nl_8_serial
+	
+	mov ax, [cxOut]
+	shr ax, 8
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_8_serial
+
+	mov ax, [cxOut]
 	and ax, 0x00FF
 	mov dl, al
 	call write_hex_nl_8_serial
@@ -338,10 +345,10 @@ write_hex_nl_8_serial:
 ;		BOOT 2 - DATA			;
 ;===============================;
 ; Output test data:
-axOut	db 0
-bxOut	db 0
-cxOut	db 0
-dxOut	db 0
+axOut	dw 0
+bxOut	dw 0
+cxOut	dw 0
+dxOut	dw 0
 
 ; Working Data - COM
 queueStatus			dw 0
