@@ -1,7 +1,14 @@
+ASMC=nasm
+ASMFLAGS= -f bin -o
+
 binary: boot1.asm boot2.asm
-	nasm boot1.asm -f bin -o b1.bin
-	nasm boot2.asm -f bin -o b2.bin
+	$(ASMC) boot1.asm $(ASMFLAGS) b1.bin
+	$(ASMC) boot2.asm $(ASMFLAGS) b2.bin
 	cat b1.bin b2.bin > bootloader.bin
+	
+iso: binary	
+	truncate bootloader.bin -s 1440k
+	mkisofs -o 
 
 clean:
 	rm *.bin
