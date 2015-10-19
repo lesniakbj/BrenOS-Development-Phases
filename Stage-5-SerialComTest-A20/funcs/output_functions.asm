@@ -356,6 +356,7 @@ offsetLoc16		dw 0
 ; Output and Consts.
 HEX_CHARS 		db '0123456789ABCDEF'
 HEX_OUT_8 		db '??', 0
+HEX_OUT_NL_8	db '??', 0x0A, 0x0D, 0
 HEX_OUT_16 		db '????', 0
 SPACE			db ' ', 0
 PIPE_STRING		db '|', 0

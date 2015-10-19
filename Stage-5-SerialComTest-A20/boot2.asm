@@ -285,7 +285,7 @@ write_string_serial:
 	pop ax
 	ret
 	
-write_hex_8_serial:
+write_hex_nl_8_serial:
 	push bx
 	push si
 	
@@ -294,15 +294,15 @@ write_hex_8_serial:
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT_8], bl
+	mov [HEX_OUT_NL_8], bl
 	
 	mov bx, dx
 	and bx, 0x0F
 	add bx, HEX_CHARS
 	mov bl, [bx]
-	mov [HEX_OUT_8 + 1], bl
+	mov [HEX_OUT_NL_8 + 1], bl
 	
-	mov si, HEX_OUT_8
+	mov si, HEX_OUT_NL_8
 	call write_string_serial
 	
 	pop si
