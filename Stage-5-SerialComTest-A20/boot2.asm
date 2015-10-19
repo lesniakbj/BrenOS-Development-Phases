@@ -39,7 +39,7 @@ boot2_start:
 	call write_string_serial
 	
 	mov dl, 0x0A
-	call write_hex_8_serial
+	call write_hex_nl_8_serial
 	
 	; These are some tests of the COMs...
 	; I am working on sending Hexideciamal
