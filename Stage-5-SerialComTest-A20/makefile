@@ -21,4 +21,3 @@ clean:
 	mkdir -p log
 	rm *.bin
 	rm iso/*.iso
-	rm log/*.log
