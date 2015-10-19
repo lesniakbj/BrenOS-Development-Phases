@@ -9,8 +9,16 @@ binary: boot1.asm boot2.asm
 iso: binary	
 	truncate bootloader.bin -s 1440k
 	mkisofs -o iso/bootloader.iso -b bootloader.bin ./
+	
+qemu: clean binary
+	qemu-system-x86_64 -fda bootloader.bin -serial file:log/qCOM1.log
 
+bochs: clean iso
+	bochs
+	
 clean:
+	mkdir -p iso
+	mkdir -p log
 	rm *.bin
 	rm iso/*.iso
 	rm log/*.log
