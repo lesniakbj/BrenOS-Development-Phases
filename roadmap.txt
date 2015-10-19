@@ -77,3 +77,8 @@ Once in Kernel Mode:
 	a. ISA
 	b. ATA
 	c. PCI
+4. One day, add Network Stack support and try adding NE2000 support
+5. IRQ's:
+	a. one should refrain from having interrupts of different types coming 
+	in on the same vector. Common practice is to leave the first 32 vectors 
+	for exceptions, as mandated by Intel.
