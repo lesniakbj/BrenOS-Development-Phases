@@ -36,6 +36,11 @@ Phase 5:
 3. Writing bytes to the serial port in a single call.
 4. Constructing a serial_print_string method. 
 5. Enabling the A20 line to prepare for PMode.
+6. F800:7FFF = 0xFFFFF -> Highest memory achievable without A20 
+   line, where F800:8000 = 0x100000. 
+   
+   Log2(AddressLines) = Max. Addressable Space
+   Log2(20) = 1048576 = 0x100000
 
 Phase 6:
 ========
@@ -72,13 +77,22 @@ Phase 8:
 Once in Kernel Mode:
 ====================
 1. Establish a memory environment and create memory map.
-2. Implement a Kernel Mode file system.
-3. Start working on device drivers, specifically:
-	a. ISA
-	b. ATA
-	c. PCI
-4. One day, add Network Stack support and try adding NE2000 support
-5. IRQ's:
+2. IDT && GDT
+3. IRQ's:
 	a. one should refrain from having interrupts of different types coming 
 	in on the same vector. Common practice is to leave the first 32 vectors 
 	for exceptions, as mandated by Intel.
+4. Implement a Kernel Mode file system.
+5. Start working on device drivers, specifically:
+	a. ISA
+	b. ATA
+	c. PCI
+6. One day, add Network Stack support and try adding NE2000 support
+
+NOTE:
+"Ok, here is the situation: until now, I developed a kernel that supports protected mode, 
+using a gdt with 5 entries (null, kernel code, kernel data, user code, user data), all spanning the 
+full memory range. The IDT has been implemented, the pic and pit have been initialized. A made 
+my own version of the buddy system for physical page management (yes, I use paging and this works, 
+that is, my kernel doesn't crash on page allocation and page mapping). Kernel memory (kernel heap) 
+is being managed using a variation on Dougs Lea allocator."
