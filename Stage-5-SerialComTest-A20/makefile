@@ -19,5 +19,5 @@ bochs: clean iso
 clean:
 	mkdir -p iso
 	mkdir -p log
-	rm *.bin
-	rm iso/*.iso
+	rm -f *.bin
+	rm -f iso/*.iso
