@@ -47,10 +47,12 @@ boot2_start:
 	int 0x15
 	
 	mov [axOut], ax
-	; mov [bxOut], bx
+	mov [bxOut], bx
 	mov [cxOut], cx
-	; mov [dxOut], dx
+	mov [dxOut], dx
 	
+	; Extended memory between 1M and 16M, 
+	; in KB (max 3C00h = 15MB)
 	mov ax, [axOut]
 	shr ax, 8
 	and ax, 0x00FF
@@ -69,6 +71,30 @@ boot2_start:
 	call write_hex_8_serial
 
 	mov ax, [cxOut]
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_nl_8_serial
+	
+	; Extended memory above 16M, in 
+	; 64K blocks
+	mov ax, [bxOut]
+	shr ax, 8
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_8_serial
+
+	mov ax, [bxOut]
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_nl_8_serial
+	
+	mov ax, [dxOut]
+	shr ax, 8
+	and ax, 0x00FF
+	mov dl, al
+	call write_hex_8_serial
+
+	mov ax, [dxOut]
 	and ax, 0x00FF
 	mov dl, al
 	call write_hex_nl_8_serial
