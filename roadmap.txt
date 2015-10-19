@@ -69,3 +69,11 @@ Phase 8:
 ;	of exception handlers may quickly become a nightmare!					;
 ;===========================================================================;
 	
+Once in Kernel Mode:
+====================
+1. Establish a memory environment and create memory map.
+2. Implement a Kernel Mode file system.
+3. Start working on device drivers, specifically:
+	a. ISA
+	b. ATA
+	c. PCI
