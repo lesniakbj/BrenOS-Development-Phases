@@ -25,6 +25,7 @@ boot2_start:
 	; 	MEM FUNCS IN STAGE-4	;
 	;===========================;
 	
+	
 	; Time to start some communication with
 	; external COM ports. We use these not
 	; because we want to communicate with 
@@ -37,6 +38,25 @@ boot2_start:
 	
 	mov si, COM_TEST_MSG
 	call write_string_serial
+	
+	mov ax, 0xE801
+	int 0x15
+	
+	mov [axOut], ax
+	mov [bxOut], bx
+	mov [cxOut], cx
+	mov [dxOut], dx
+	
+	mov dx, COM_1_PORT
+	mov ax, [axOut]
+	shr ax, 8
+	and ax, 0x00FF
+	out dx, al
+	
+	mov dx, COM_1_PORT
+	mov ax, [axOut]
+	and ax, 0x00FF
+	out dx, al
 	
 	call write_newline
 	call write_newline
@@ -261,6 +281,12 @@ write_string_serial:
 ;===============================;
 ;		BOOT 2 - DATA			;
 ;===============================;
+; Output test data:
+axOut	db 0
+bxOut	db 0
+cxOut	db 0
+dxOut	db 0
+
 ; Working Data - COM
 queueStatus			dw 0
 
