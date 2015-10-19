@@ -8,7 +8,7 @@ binary: boot1.asm boot2.asm
 	
 iso: binary	
 	truncate bootloader.bin -s 1440k
-	mkisofs -o 
+	mkisofs -o iso/bootloader.iso -b bootloader.bin ./
 
 clean:
 	rm *.bin
