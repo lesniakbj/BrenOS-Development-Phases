@@ -1,0 +1,5 @@
+1. What calling convention should I use when calling assembly functions?
+		a. Is _cdecl the standard to use if using GCC?
+		b. What happens in the event of VARARGS in the parameter list?
+		c. Register based calling seems the quickest, while stack based calling seems
+		   to be the most robust, which context is each of these appropriate in?
