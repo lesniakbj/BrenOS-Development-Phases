@@ -82,7 +82,6 @@ boot2_start:
 
 ; We will use FS/GS as our Extra Segement.
 check_A20_enabled:
-	push ax
 	push bx
 	push cx
 	push fs
@@ -90,18 +89,19 @@ check_A20_enabled:
 	
 	; Setup a segment:offset pair...
 	; for 0000:7DFE to get the bootsector byte.
-	xor ax, ax
-	mov fs, ax
-	mov ax, 0x7DFE
+	xor bx, bx
+	mov fs, bx
+	mov bx, 0x7DFE
+	
+	xor cx, cx
+	mov cl, byte [fs:bx]
+	mov [cxOut], cx
+	call serial_write_test
 	
 	mov bx, 0xFFFF
 	mov gs, bx
-	mov bx, 0x7E0E
-	
-	xor cx, cx
-	mov cl, byte [fs:ax]
-	mov [cxOut], cx
-	call serial_write_test
+	mov bx, 0x7E0E	
+		
 	mov cl, byte [gs:bx]
 	mov [cxOut], cx
 	call serial_write_test
@@ -110,7 +110,6 @@ check_A20_enabled:
 	pop fs
 	pop cx
 	pop bx
-	pop ax
 	ret
 	
 serial_write_test:
