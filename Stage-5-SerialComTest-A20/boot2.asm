@@ -46,11 +46,76 @@ boot2_start:
 	mov ax, 0xE801
 	int 0x15
 	
+	; Lets test the routine out and verify that 
+	; everything is working correctly. 
 	mov [axOut], ax
 	mov [bxOut], bx
 	mov [cxOut], cx
 	mov [dxOut], dx
+	call serial_write_test
 	
+	; Now.. onto the A20 line. We used BIOS to 
+	; determine how much memory we have, but without
+	; enabling the A20 line, we cannot address more
+	; than 1MB due to the behavior of real mode 
+	; adderssing and compatibility reasons. 
+	
+	; First, lets check to see if the A20 line is
+	; already enabled. 
+	mov byte [a20Enabled], 0
+	call check_A20_enabled
+	
+	call write_newline
+	call write_newline
+	call write_color_row
+	
+	jmp $
+
+%include 'funcs/screen_functions.asm'
+%include 'funcs/memory_functions.asm'
+%include 'funcs/output_functions.asm'
+
+; To check if the A20 line is enabled, we
+; will compare a known value (boot01 magic
+; value) to the equivalent wrap around address.
+; If they are equal, the A20 is disabled.
+
+; We will use FS/GS as our Extra Segement.
+check_A20_enabled:
+	push ax
+	push bx
+	push cx
+	push fs
+	push gs
+	
+	; Setup a segment:offset pair...
+	; for 0000:7DFE to get the bootsector byte.
+	xor ax, ax
+	mov fs, ax
+	mov ax, 0x7DFE
+	
+	mov bx, 0xFFFF
+	mov gs, bx
+	mov bx, 0x7E0E
+	
+	mov cx, word [fs:ax]
+	mov [cxOut], cx
+	call serial_write_test
+	mov cx, word [gs:bx]
+	mov [cxOut], cx
+	call serial_write_test
+
+	pop gs
+	pop fs
+	pop cx
+	pop bx
+	pop ax
+	ret
+	
+serial_write_test:
+	push ax
+	push dx
+
 	; Extended memory between 1M and 16M, 
 	; in KB (max 3C00h = 15MB)
 	mov ax, [axOut]
@@ -99,16 +164,9 @@ boot2_start:
 	mov dl, al
 	call write_hex_nl_8_serial
 	
-	call write_newline
-	call write_newline
-	call write_color_row
-	
-	jmp $
-
-%include 'funcs/screen_functions.asm'
-%include 'funcs/memory_functions.asm'
-%include 'funcs/output_functions.asm'
-
+	pop dx
+	pop ax
+	ret
 ;===========================;
 ;		COM FUNCTIONS		;
 ;===========================;
@@ -378,6 +436,9 @@ dxOut	dw 0
 
 ; Working Data - COM
 queueStatus			dw 0
+
+; Working Data - A20
+a20Enabled			db 0
 
 ; COM Test Messages
 TELL_TEST_MSG		db ' Testing Serial COMs...', 0
