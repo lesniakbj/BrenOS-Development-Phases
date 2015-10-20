@@ -98,10 +98,11 @@ check_A20_enabled:
 	mov gs, bx
 	mov bx, 0x7E0E
 	
-	mov cx, byte [fs:ax]
+	xor cx, cx
+	mov cl, byte [fs:ax]
 	mov [cxOut], cx
 	call serial_write_test
-	mov cx, byte [gs:bx]
+	mov cl, byte [gs:bx]
 	mov [cxOut], cx
 	call serial_write_test
 
