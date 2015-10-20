@@ -57,6 +57,12 @@ Phase 7:
 3. Refactoring bootsector (1 and 2) to use stack. 
 4. Setting up the GDT for PMode.
 
+<IN BETWEEN>
+Work on relocating code using REP and MOVSD/SB/SW
+so that we can move the kernel code to the higher half
+after it is loaded into the disk buffer by BIOS
+</IN BETWEEN>
+
 Phase 8:
 ========
 1. Loading the Kernel from disk to memory (stage02).
