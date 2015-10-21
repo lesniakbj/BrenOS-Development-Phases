@@ -28,6 +28,8 @@ Phase 4:
 2. After we get there, detect low memory that is available
 3. Then multiple calls to e820 for high memory. 
 4. ....
+5. THIS PHASE STILL HAS A LOT OF WORK TO BE DONE IF I WANT 
+   TO DO IT CORRECTLY...
 
 Phase 5:
 ========
