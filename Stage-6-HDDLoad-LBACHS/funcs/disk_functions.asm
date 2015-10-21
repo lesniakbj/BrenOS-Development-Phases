@@ -3,31 +3,7 @@
 ;=======================;
 get_drive_parameters:
 	pusha
-	
-	mov ah, 0x08
-	mov dl, [diskNumber]
-	int 0x13
-	jc .disk_error
-	
-	mov byte [numberOfDrives], dl
-	mov byte [numberOfHeads], dh
-	
-	; This will get us the number of
-	; sectors.
-	push cx
-	and cl, 0x3F
-	mov byte [numberOfSectors], cl
-	pop cx
-	
-	; And this should get us the number
-	; of cylinders.... I think...
-	; CH = Low 8 Bits
-	; CL = High 2 bits (10 bit value)
-	; LLLLLLLLHH or HHLLLLLLLL ?
-	mov byte [numberOfCylinders], ch
-	and cl, 0xC0
-	mov byte [numberOfCylinders + 1], cl
-	
+
 	popa
 	ret
 	
@@ -72,30 +48,7 @@ read_sector_hdd:
 ;		CX - Length						;
 ;---------------------------------------;
 read_sector_fd:
-	; a32 pusha
-	
-.read_next_sector:
-	; call .read_single_sector_fd
-	
-	; Next sector location. 
-	; add bx, 512
-	; inc eax
-	
-	; Loop will decrement cx
-	; loop .read_next_sector
 
-.done:
-	; a32 popa
-	; ret
-	
-.read_single_sector_fd:
-	; a32 pusha
-	; call .get_chs_values
-	; a32 popa
-	; ret
-	
-.get_chs_values:
-	; xor edx, edx
 	
 read_sector:
 	jmp [readFunction]

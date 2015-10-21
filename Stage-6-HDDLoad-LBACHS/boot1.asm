@@ -59,7 +59,6 @@ boot1_start:
 	; Save the disk that we are
 	; booted from.
 	mov [diskNumber], dl
-	; call get_drive_parameters
 	
 	; Test to see if the HDD bit is set
 	test dl, 0x80
