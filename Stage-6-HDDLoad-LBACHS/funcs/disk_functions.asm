@@ -43,12 +43,30 @@ read_sector_hdd:
 
 ;---------------------------------------;
 ; read_sector_fd(sector, dest*, length)	;
-;		EAX - Sector to Read - 1		;
+;		EAX - Sector to Read 			;
 ;		ES:BX - Destination				;
 ;		CX - Length						;
 ;---------------------------------------;
 read_sector_fd:
+	; Read Sector Function
+	mov ah, 0x02
+	
+	; Setup the function defining where
+	; we are reading from...
+	mov al, 8				; Number of Sectors to Read
+	mov dl, [driveNumber]	; Use the 1st (C:) Drive. HDD.
+	mov ch, 0				; Use the 1st Cylinder/Track
+	mov dh, 0				; Use the 1st Read/Write Head
+	mov cl, 2				; Read the 2nd Sector
+	int 0x13
+	
+	jc .disk_read_error
+	ret 
 
+.disk_read_error:
+	mov si, READ_ERROR
+	call write_string
+	jmp $
 	
 read_sector:
 	jmp [readFunction]
