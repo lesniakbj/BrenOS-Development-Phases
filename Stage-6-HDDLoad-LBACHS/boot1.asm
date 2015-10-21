@@ -66,7 +66,7 @@ boot1_start:
 	; drive we will do the following
 	; functions:
 	call reset_disk
-	call read_floppy:
+	call read_floppy
 	
 	mov si, BOOT_MSG
 	call write_string
