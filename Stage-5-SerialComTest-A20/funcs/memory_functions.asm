@@ -42,8 +42,87 @@ detect_memory_map:
 .error_exit:
 	stc
 	ret
+	
+; To check if the A20 line is enabled, we
+; will compare a known value (boot01 magic
+; value) to the equivalent wrap around address.
+; If they are equal, the A20 is disabled.
+
+; We will use FS/GS as our Extra Segement.
+check_A20_enabled:
+	push bx
+	push cx
+	push fs
+	push gs
+	
+	; Clear the carry flag, we will be returning
+	; the carry flag if the A20 line is already
+	; enabled. 
+	clc
+	; Setup a segment:offset pair...
+	; for 0000:7DFE to get the bootsector byte.
+	xor bx, bx
+	mov fs, bx
+	mov bx, 0x7DFE
+	
+	; Clear CX, then move the word at
+	; 0000:7DFE (55AA) into cx. Push cx
+	; so we can use it again. 
+	xor cx, cx
+	mov cx, word [fs:bx]
+	push cx
+	
+	; Setup a segment:offset pair...
+	; for FFFF:7DFE to check if this byte
+	; is the same as the inital byte. 
+	mov bx, 0xFFFF
+	mov gs, bx
+	mov bx, 0x7E0E	
+	
+	; Again, clear CX, then move the word
+	; at FFFF:7E0E into CX. Copy that from 
+	; CX into BX, then pop CX back to the 
+	; pushed value from before. 
+	xor cx, cx
+	mov cx, word [gs:bx]
+	mov bx, cx
+	pop cx
+	
+	cmp bx, cx
+	je .A20_disabled_sanity_check
+
+	stc
+	mov byte [A20Enabled], 1
+	
+	pop gs
+	pop fs
+	pop cx
+	pop bx
+	ret
+	
+.A20_disabled_sanity_check:
+	mov byte [A20Enabled], 0
+	
+	pop gs
+	pop fs
+	pop cx
+	pop bx
+	ret
+
 ;=======================;
 ;		   DATA			;
 ;=======================;
-preserveEBX		dd 0	; Need to preserve
-mem_map_entries	dd 0
+preserveEBX			dd 0	; Need to preserve
+mem_map_entries		dd 0
+
+; Working Data - A20
+A20Enabled			db 0
+
+; Working Data - E820
+mMapBytesPerEntry	db 0
+
+memoryMapStruct:
+	baseAddress		dq 0
+	lengthOfRegion	dq 0
+	regionType		dd 0
+	extAttributes	dd 0
