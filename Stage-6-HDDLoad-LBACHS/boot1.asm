@@ -79,6 +79,7 @@ boot1_start:
 	jmp 0x0000:stage02_load
 
 .hdd_boot:
+	call reset_disk
 	; Since we are booting from a hard
 	; drive, we are going to need to know
 	; a few things about the drive geometry. 
