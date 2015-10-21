@@ -34,6 +34,7 @@ boot2_start:
 	
 	mov si, TELL_TEST_MSG
 	call write_string
+	call write_newline
 	
 	mov si, COM_TEST_MSG
 	call write_string_serial
