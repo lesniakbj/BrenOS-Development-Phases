@@ -65,10 +65,10 @@ boot2_start:
 	; already enabled. 
 	mov byte [A20Enabled], 0
 	call check_A20_enabled
-	jc .A20_enabled
+	; jc .A20_enabled
 	
 	;		OR
-	; je [a20Enabled], 1
+	je [a20Enabled], 1
 	
 	
 	call write_newline
