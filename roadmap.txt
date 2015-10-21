@@ -57,7 +57,9 @@ Phase 7:
 1. Using the Stack to call functions in ASM.
 2. Difference between register and stack calling.
 3. Refactoring bootsector (1 and 2) to use stack. 
-4. Setting up the GDT for PMode.
+4. https://gcc.gnu.org/onlinedocs/gcc/x86-Function-Attributes.html#x86-Function-Attributes
+		a) Setup different calling modes
+5. Setting up the GDT for PMode.
 
 <IN BETWEEN>
 Work on relocating code using REP and MOVSD/SB/SW
