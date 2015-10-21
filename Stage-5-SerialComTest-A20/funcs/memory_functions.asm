@@ -92,8 +92,7 @@ check_A20_enabled:
 	je .A20_disabled_sanity_check
 
 	stc
-	mov byte [A20Enabled], 1
-	
+	mov byte [A20Enabled], 1	
 	pop gs
 	pop fs
 	pop cx
@@ -101,14 +100,32 @@ check_A20_enabled:
 	ret
 	
 .A20_disabled_sanity_check:
-	mov byte [A20Enabled], 0
+	xor bx, bx
+	mov fs, bx
+	mov bx, 0x7DFE
 	
+	mov word [fs:bx], 0xBE05
+	mov bx, 0xFFFF
+	mov gs, bx
+	mov bx, 0x7E0E
+	cmp word [gs:bx], 0xBE05
+	jne .A20_enabled
+
+	mov byte [A20Enabled], 0	
 	pop gs
 	pop fs
 	pop cx
 	pop bx
 	ret
-
+	
+.A20_enabled
+	stc
+	mov byte [A20Enabled], 1
+	pop gs
+	pop fs
+	pop cx
+	pop bx
+	ret
 ;=======================;
 ;		   DATA			;
 ;=======================;
