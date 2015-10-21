@@ -9,7 +9,9 @@ boot2_start:
 	
 	mov si, BOOT2_MSG
 	call write_string
-
+	
+	jmp $
+	
 .boot_fd_msg:
 	mov si, BOOT2_FD_MSG
 	call write_string
