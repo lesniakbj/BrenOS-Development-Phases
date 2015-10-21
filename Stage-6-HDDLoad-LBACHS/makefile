@@ -9,8 +9,12 @@ TFLAGS= -s 1440k
 ISOFLAGS= -o iso/bootloader.iso -b
 
 # QEMU Flags
+QHIGHMEMFLAGS= -m 8G
+QALLFLAGS= -full-screen
 QFLOPFLAGS= -fda bootloader.bin
+QHDDFLAGS= -hda bootloader.bin
 QCOMFLAGS= -serial file:log/qCOM1.log
+QUSBFLAGS= -usb 
 
 binary: boot1.asm boot2.asm
 	$(ASMC) boot1.asm $(ASMFLAGS) b1.bin
@@ -22,8 +26,11 @@ iso: binary
 	mkisofs $(ISOFLAGS) bootloader.bin ./
 	
 qemu: clean binary
-	qemu-system-x86_64 $(QFLOPFLAGS) $(QCOMFLAGS)
+	qemu-system-x86_64 $(QFLOPFLAGS) $(QCOMFLAGS) $(QALLFLAGS)
 
+qemu-hdd: clean binary
+	qemu-system-x86_64 $(QHDDFLAGS) $(QCOMFLAGS) $(QALLFLAGS)
+	
 bochs: clean iso
 	bochs
 	
