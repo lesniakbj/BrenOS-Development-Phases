@@ -39,7 +39,7 @@ write_string:
 ;===============================;
 ; String Data
 BOOT2_MSG		db 'We loaded from HDD!', 0x0A, 0x0D, 0
-BOOT2_FD_MSGMSG	db 'We loaded from FD!', 0x0A, 0x0D, 0
+BOOT2_FD_MSG	db 'We loaded from FD!', 0x0A, 0x0D, 0
 ; NOTE:
 ; ======================
 ; Some emulators and disk drives will
