@@ -60,7 +60,7 @@ boot2_start:
 	; than 1MB due to the behavior of real mode 
 	; adderssing and compatibility reasons. 
 	mov si, A20_TEST_MSG
-	call write_string_serial
+	call write_string
 	; First, lets check to see if the A20 line is
 	; already enabled. 
 	mov byte [A20Enabled], 0
