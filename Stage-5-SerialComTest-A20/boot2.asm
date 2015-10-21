@@ -34,7 +34,6 @@ boot2_start:
 	
 	mov si, TELL_TEST_MSG
 	call write_string
-	call write_newline
 	
 	mov si, COM_TEST_MSG
 	call write_string_serial
@@ -60,12 +59,14 @@ boot2_start:
 	; enabling the A20 line, we cannot address more
 	; than 1MB due to the behavior of real mode 
 	; adderssing and compatibility reasons. 
-	
+	mov si, A20_TEST_MSG
+	call write_string_serial
 	; First, lets check to see if the A20 line is
 	; already enabled. 
 	mov byte [A20Enabled], 0
 	call check_A20_enabled
 	jc .A20_enabled
+	
 	;		OR
 	; je [a20Enabled], 1
 	
@@ -485,7 +486,7 @@ queueStatus			dw 0
 A20Enabled			db 0
 
 ; COM Test Messages
-TELL_TEST_MSG		db ' Testing Serial COMs...', 0
+TELL_TEST_MSG		db ' Testing Serial COMs...', 0x0A, 0x0D, 0
 COM_TEST_MSG		db 'Test this string!', 0x0A, 0x0D, 0
 
 ; Memory Messages
@@ -501,6 +502,7 @@ CONF_SERIAL_MSG		db ' Configuring Serial Ports', 0
 SEND_BYTE_MSG		db ' Sending Byte: ', 0
 
 ; A20 Messages
+A20_TEST_MSG		db ' Testing the A20 Line...', 0x0A, 0x0D, 0
 A20_ENABLED			db ' A20 Line is Enabled!', 0
 
 
