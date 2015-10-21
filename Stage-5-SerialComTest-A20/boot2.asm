@@ -64,6 +64,20 @@ boot2_start:
 	; already enabled. 
 	mov byte [a20Enabled], 0
 	call check_A20_enabled
+	jc .A20_enabled
+	;		OR
+	; je [a20Enabled], 1
+	
+	
+	call write_newline
+	call write_newline
+	call write_color_row
+	
+	jmp $
+
+.A20_enabled:
+	mov si, A20_ENABLED
+	call write_string
 	
 	call write_newline
 	call write_newline
@@ -87,26 +101,54 @@ check_A20_enabled:
 	push fs
 	push gs
 	
+	; Clear the carry flag, we will be returning
+	; the carry flag if the A20 line is already
+	; enabled. 
+	clc
 	; Setup a segment:offset pair...
 	; for 0000:7DFE to get the bootsector byte.
 	xor bx, bx
 	mov fs, bx
 	mov bx, 0x7DFE
 	
+	; Clear CX, then move the word at
+	; 0000:7DFE (55AA) into cx. Push cx
+	; so we can use it again. 
 	xor cx, cx
 	mov cx, word [fs:bx]
-	mov [cxOut], cx
-	call serial_write_test
+	push cx
 	
+	; Setup a segment:offset pair...
+	; for FFFF:7DFE to check if this byte
+	; is the same as the inital byte. 
 	mov bx, 0xFFFF
 	mov gs, bx
 	mov bx, 0x7E0E	
 	
-	xor cx, cx	
+	; Again, clear CX, then move the word
+	; at FFFF:7E0E into CX. Copy that from 
+	; CX into BX, then pop CX back to the 
+	; pushed value from before. 
+	xor cx, cx
 	mov cx, word [gs:bx]
-	mov [cxOut], cx
-	call serial_write_test
+	mov bx, cx
+	pop cx
+	
+	cmp bx, cx
+	je .a20_disabled_sanity_check
 
+	stc
+	mov byte [A20Enabled], 1
+	
+	pop gs
+	pop fs
+	pop cx
+	pop bx
+	ret
+	
+.A20_disabled_sanity_check:
+	mov byte [a20Enabled], 0
+	
 	pop gs
 	pop fs
 	pop cx
@@ -456,6 +498,9 @@ HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 ; COM/Serial Port Messages
 CONF_SERIAL_MSG		db ' Configuring Serial Ports', 0
 SEND_BYTE_MSG		db ' Sending Byte: ', 0
+
+; A20 Messages
+A20_ENABLED			db ' A20 Line is Enabled!', 0
 
 
 ; Buffer & count for memory map structure
