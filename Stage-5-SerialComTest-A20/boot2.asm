@@ -54,6 +54,24 @@ boot2_start:
 	mov [dxOut], dx
 	call serial_write_test
 	
+	
+	;====================================================;
+	;====================================================;
+	
+	
+	; A20 Order of Operations:
+	;	1) Check if enabled, if not, continue
+	;	2) Try BIOS, int 0x15, ax 0x2401
+	;	3) Check if enabled, if not, continue
+	;	4) Enable through the keyboard controller
+	;	5) Check if enabled in a loop with a time
+	;		out as this method may be slow, if 
+	;		not, continue
+	;	6) Fast A20
+	;	7) Check if enabled in a loop with a time
+	;		out as this method may be slow, if 
+	;		not, shit...
+	
 	; Now.. onto the A20 line. We used BIOS to 
 	; determine how much memory we have, but without
 	; enabling the A20 line, we cannot address more
@@ -71,6 +89,8 @@ boot2_start:
 	cmp byte [A20Enabled], 1
 	je .A20_enabled
 	
+	; ... skipping some operations for now ...
+	call enable_A20_fast
 	
 	call write_newline
 	call write_newline

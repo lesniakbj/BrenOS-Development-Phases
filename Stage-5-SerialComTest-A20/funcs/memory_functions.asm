@@ -126,6 +126,32 @@ check_A20_enabled:
 	pop cx
 	pop bx
 	ret
+	
+; This is the quickest and easiest way
+; to enable the A20 line... simple... easy...
+; And, only do the write if necissary
+enable_A20_fast:
+	; Read from system control port A
+	in al, 0x92
+	; Test the 2nd bit of byte we just read,
+	; 0 - A20 Disabled, 1 - Enabled
+	test al, 2
+	jnz .A20_enabled
+	
+	; Set the A20 bit...
+	or al, 2
+	
+	; Note:
+	; "Since bit 0 sometimes is write-only, 
+	; and writing a 1 there causes a reset, 
+	; ..." ... don't write a 1 to bit 0. 
+	and al, 0xFE
+	
+	; ... now enable the A20 Line
+	out al, 0x92
+	
+	ret
+	
 ;=======================;
 ;		   DATA			;
 ;=======================;
