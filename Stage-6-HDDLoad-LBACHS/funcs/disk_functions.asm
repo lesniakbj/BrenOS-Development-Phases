@@ -1,7 +1,17 @@
 ;=======================;
 ;	PRIMARY FUNCTIONS	;
 ;=======================;
-read_from_disk:
+reset_disk:
+	mov ah, 0x00			; Move 0 into AH, the function we want to call
+							; 0 = reset floppy function
+	mov dl, [diskNumber]	; dl = drive number
+	int 0x13				; Call BIOS reset function
+	jc reset_disk			; If the carry was set there was an error
+							; resetting the disk, try again.
+	ret
+	
+
+read_floppy:
 	mov ah, 0x02	; Read Sector Function
 	
 	mov al, 1		; Number of Sectors to Read
