@@ -113,7 +113,8 @@ boot_hdd:
 	; partition.
 	mov ebx, [eax + 8]
 	mov [diskPartitionLBA], ebx
-
+	jmp load_second_stage
+	
 load_second_stage:
 	mov eax, 1
 	mov bx, 0x7E00

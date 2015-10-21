@@ -1,19 +1,6 @@
 ;=======================;
 ;	PRIMARY FUNCTIONS	;
 ;=======================;
-reset_drive:
-	pusha
-	
-.retry:
-	mov ax, 0
-	mov dl, [diskNumber]
-	int 0x13
-	
-	jc .retry
-	
-	popa
-	ret
-
 read_sector:
 	jmp [readFunction]
 
@@ -109,6 +96,19 @@ get_chs_values:
    shl ah, 6
    or  cl, ah
    ret
+   
+reset_drive:
+	pusha
+	
+.retry:
+	mov ax, 0
+	mov dl, [diskNumber]
+	int 0x13
+	
+	jc .retry
+	
+	popa
+	ret
 	
 ;=======================;
 ;		DISK DATA		;
