@@ -72,30 +72,30 @@ read_sector_hdd:
 ;		CX - Length						;
 ;---------------------------------------;
 read_sector_fd:
-	a32 pusha
+	; a32 pusha
 	
 .read_next_sector:
-	call .read_single_sector_fd
+	; call .read_single_sector_fd
 	
 	; Next sector location. 
-	add bx, 512
-	inc eax
+	; add bx, 512
+	; inc eax
 	
 	; Loop will decrement cx
-	loop .read_next_sector
+	; loop .read_next_sector
 
 .done:
-	a32 popa
-	ret
+	; a32 popa
+	; ret
 	
 .read_single_sector_fd:
-	a32 pusha
-	call .get_chs_values
-	a32 popa
-	ret
+	; a32 pusha
+	; call .get_chs_values
+	; a32 popa
+	; ret
 	
 .get_chs_values:
-	xor edx, edx
+	; xor edx, edx
 	
 read_sector:
 	jmp [readFunction]
