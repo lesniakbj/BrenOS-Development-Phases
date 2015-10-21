@@ -60,59 +60,72 @@ boot1_start:
 	; booted from.
 	mov [diskNumber], dl
 	
-	cmp byte [diskNumber], 0x80
-	je .hdd_boot
-	cmp byte [diskNumber], 0x81
-	je .hdd_boot
+	; Test to see if the HDD bit is set
+	test dl, 0x80
+	jnz boot_hdd
 	
-	; If we are booting from a floppy
-	; drive we will do the following
-	; functions:
-	call reset_disk
-	call read_floppy
+	; Ok, we are using a floppy dive, lets
+	; save that so it can be used. 
+	mov dword [readFunction], read_sector_fd
+	jmp boot_floppy
 	
-	mov si, BOOT_MSG
-	call write_string
+boot_hdd:
+	mov dword [readFunction], read_sector_hdd
 	
-	xor si, si
-	xor di, di
-	jmp 0x0000:stage02_load
+	; Read the MBR: 
+	;	Sector 0
+	;	To Address 0x0000:0x1000 -> So we can put
+	;								our code elsewhere. 
+	;	Read 1 sector
+	mov eax, 0
+	xor es, es
+	mov bx, 0x1000
+	mov cx, 1
+	call read_sector
+	
+	xor ecx, ecx
+	; Offset to the MBR table
+	mov eax, 0x1000 + 446
 
-.hdd_boot:
-	call reset_disk
-	; Since we are booting from a hard
-	; drive, we are going to need to know
-	; a few things about the drive geometry. 
-	; We will ask BIOS for that information.
-	call get_drive_geometry
+.check_next_sector:
+	; If we find a 0 byte, 
+	; then we have not found our boot
+	; partition. If it's not 0, we have
+	; not.
+	cmp byte [eax], 0
+	jne .found_boot_partition
 	
-	; Now we will see if we can use the extensions
-	; to load our data from HDD, otherwise we are
-	; stuck using CHS addressing.
-	call get_address_extensions
-	jc .chs_addressing_mode
+	; We are going to search 4, 16 byte 
+	; blocks for the MBR.
+	inc cx
+	cmp cx, 4
+	je .boot_mbr_not_found
 	
-	mov si, HDD_BOOT_MSG
-	call write_string
+	add eax, 16
+	jmp .check_next_sector
 	
-	mov word [sectorsToGet], 32
-	mov word [transferSeg], 0x0000
-	mov word [transferOffset], 0x7C00
-	mov dword [startLBA], 0
-	call read_hard_drive
+.found_boot_partition:
+	; The partition booted from will be
+	; in cl once we find it. 
+	mov [bootPartition], cl
 	
-	xor si, si
-	xor di, di
+	; Lets grab the LBA of the disk
+	; partition.
+	mov ebx, [eax + 8]
+	mov [diskPartitionLBA], ebx
+
+.boot_mbr_not_found:
+	mov eax, 1
+	mov bx, 0x7E00
+	mov cx, 4
+	call read_sector
 	jmp 0x0000:stage02_load
 	
-.chs_addressing_mode:
-	mov si, HDD_BOOT_CHS_MSG
-	call write_string
+boot_floppy:
 	
-	xor si, si
-	xor di, di
-	jmp 0x0000:stage02_load
 	
+%include "funcs/disk_functions.asm"
+
 write_string:
 	push ax
 	push si
@@ -132,8 +145,6 @@ write_string:
 	pop ax
 	ret
 	
-%include "funcs/disk_functions.asm"
-
 ;========================;
 ;		BOOT-1 DATA		 ;
 ;========================;
@@ -143,34 +154,10 @@ HDD_BOOT_MSG		db 'Loading stage 2 from HDD...', 0x0A, 0x0D, 0
 HDD_BOOT_CHS_MSG	db 'Loading stage 2 from HDD-CHS...', 0x0A, 0x0D, 0
 READ_ERROR			db 'Err read from Disk!', 0x0A, 0x0D, 0
 READ_ERROR_HDD		db 'Err read from HDD!', 0x0A, 0x0D, 0
-
-; Other Data
-diskNumber		db 0
-numberOfHeads	dw 0
-sectorsPerTrack dw 0
-
-lbaAddress			dw 0
-absoluteSector		db 0
-absoluteHead		db 0
-absoluteCylnider	db 0
-
-; LBA Addressing Packet
-diskPacket:
-	; Size of the packet
-	sizeOfPacket	db 0x10
-	; Always 0
-	alwaysZero		db 0x00
-	; # of sectors to retrieve
-	sectorsToGet	dw 0
-	; Where to put them (segment:offset)
-	transferOffset	dw 0
-	transferSeg		dw 0
-	startLBA		dd 0
-	extraBitLBA		dd 0
 	
 ; Error Checking Data
-readSegment	dw 0
-readOffset	dw 0
+readSegment			dw 0
+readOffset			dw 0
 	
 TIMES 510 - ($ - $$) db 0 
 dw 0xAA55
