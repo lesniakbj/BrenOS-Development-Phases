@@ -78,7 +78,7 @@ boot_hdd:
 	;								our code elsewhere. 
 	;	Read 1 sector
 	mov eax, 0
-	xor es, es
+	mov es, ax
 	mov bx, 0x1000
 	mov cx, 1
 	call read_sector
