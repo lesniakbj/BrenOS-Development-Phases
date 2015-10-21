@@ -62,7 +62,7 @@ boot2_start:
 	
 	; First, lets check to see if the A20 line is
 	; already enabled. 
-	mov byte [a20Enabled], 0
+	mov byte [A20Enabled], 0
 	call check_A20_enabled
 	jc .A20_enabled
 	;		OR
@@ -135,7 +135,7 @@ check_A20_enabled:
 	pop cx
 	
 	cmp bx, cx
-	je .a20_disabled_sanity_check
+	je .A20_disabled_sanity_check
 
 	stc
 	mov byte [A20Enabled], 1
@@ -147,7 +147,7 @@ check_A20_enabled:
 	ret
 	
 .A20_disabled_sanity_check:
-	mov byte [a20Enabled], 0
+	mov byte [A20Enabled], 0
 	
 	pop gs
 	pop fs
@@ -481,7 +481,7 @@ dxOut	dw 0
 queueStatus			dw 0
 
 ; Working Data - A20
-a20Enabled			db 0
+A20Enabled			db 0
 
 ; COM Test Messages
 TELL_TEST_MSG		db ' Testing Serial COMs...', 0
