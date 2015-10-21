@@ -148,8 +148,11 @@ enable_A20_fast:
 	and al, 0xFE
 	
 	; ... now enable the A20 Line
-	out al, 0x92
+	out 0x92, al
 	
+	ret
+
+.A20_enabled:
 	ret
 	
 ;=======================;
