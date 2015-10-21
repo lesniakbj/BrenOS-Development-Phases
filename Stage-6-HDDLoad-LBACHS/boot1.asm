@@ -148,6 +148,7 @@ write_string:
 ;========================;
 ; String Data
 BOOT_MSG	db 'Loading stage 2 loader...', 0x0A, 0x0D, 0
+READ_ERROR	db 'Error reading from Disk!', 0x0A, 0x0D, 0
 
 ; Other Data
 diskNumber	db 0
