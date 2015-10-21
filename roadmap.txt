@@ -93,6 +93,7 @@ Once in Kernel Mode:
 	a. ISA
 	b. ATA
 	c. PCI
+	d. IDE
 6. One day, add Network Stack support and try adding NE2000 support
 
 NOTE:
