@@ -60,11 +60,11 @@ boot1_start:
 	; booted from.
 	mov [diskNumber], dl
 	
-	; DL contains the drive number,
-	; which is conviently where we
-	; put the parameter for the 
-	; write_hex(dl) function.
-	; call write_hex
+	cmp byte [diskNumber], 0x80
+	je .hdd_boot
+	; If we are booting from a floppy
+	; drive we will do the following
+	; functions:
 	call reset_disk
 	call read_from_disk
 	
@@ -75,55 +75,15 @@ boot1_start:
 	xor di, di
 	jmp 0x0000:stage02_load
 	jmp $
-	
-; Note: These can't be included due to the
-; fact that they use variables defined here.
-; Thus, they are are simply included as 
-; functions here.
-; %include "funcs/disk_functions.asm"
-; %include "funcs/output_functions.asm"
 
-reset_disk:
-	mov ah, 0				; Reset disk function
-	mov dl, [diskNumber]	; This will only be run if on Floppy
-	int 0x13
-	jc reset_disk
-	
-	ret
-	
-read_from_disk:
-	; Read Sector Function
-	mov ah, 0x02
-	
-	; Setup the function defining where
-	; we are reading from...
-	mov al, 8				; Number of Sectors to Read
-	mov dl, [driveNumber]	; Use the 1st (C:) Drive. HDD.
-	mov ch, 0				; Use the 1st Cylinder/Track
-	mov dh, 0				; Use the 1st Read/Write Head
-	mov cl, 2				; Read the 2nd Sector
-	
-	; Where to buffer the disk read to...
-	; ES:BX -> 0x0000:0x7E00
-	mov bx, 0
-	mov es, bx
-	mov bx, stage02_load
-	
-	; ERROR CHECKING...	
-	mov [readSegment], es
-	mov [readOffset], bx
-	
-	int 0x13
-	
-	jc .disk_read_error
-	ret 
-
-.disk_read_error:
-	mov si, READ_ERROR
+.hdd_boot:
+	mov si, HDD_BOOT_MSG
 	call write_string
-	jmp $
 	
-
+	xor si, si
+	xor di, di
+	jmp 0x0000:stage02_load
+	jmp $
 write_string:
 	push ax
 	push si
@@ -142,13 +102,16 @@ write_string:
 	pop si
 	pop ax
 	ret
+	
+%include "funcs/disk_functions.asm"
 
 ;========================;
 ;		BOOT-1 DATA		 ;
 ;========================;
 ; String Data
-BOOT_MSG	db 'Loading stage 2 loader...', 0x0A, 0x0D, 0
-READ_ERROR	db 'Error reading from Disk!', 0x0A, 0x0D, 0
+BOOT_MSG		db 'Loading stage 2 loader from floppy...', 0x0A, 0x0D, 0
+HDD_BOOT_MSG	db 'Loading stage 2 loader from HDD...', 0x0A, 0x0D, 0
+READ_ERROR		db 'Error reading from Disk!', 0x0A, 0x0D, 0
 
 ; Other Data
 diskNumber	db 0
