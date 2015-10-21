@@ -3,7 +3,7 @@ display_library: 	sdl
 romimage: 			file=/usr/share/bochs/BIOS-bochs-latest
 vgaromimage: 		file=/usr/share/bochs/VGABIOS-lgpl-latest
 ata0-master: 		type=cdrom, path=iso/bootloader.iso, status=inserted
-com1:				enabled=1, mode=file, dev=log/com1.log
+com1:				enabled=1, mode=file, dev=log/bCOM1.log
 boot: 				cdrom
 log: 				log/bochslog.log
 clock: 				sync=realtime, time0=local
