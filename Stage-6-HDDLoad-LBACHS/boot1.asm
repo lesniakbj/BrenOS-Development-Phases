@@ -94,10 +94,10 @@ boot1_start:
 	mov si, HDD_BOOT_MSG
 	call write_string
 	
-	mov word [sectorsToGet], 16
+	mov word [sectorsToGet], 32
 	mov word [transferSeg], 0x0000
 	mov word [transferOffset], 0x7C00
-	mov dword [startLBA], 1
+	mov dword [startLBA], 0
 	call read_hard_drive
 	
 	xor si, si
@@ -162,8 +162,8 @@ diskPacket:
 	; # of sectors to retrieve
 	sectorsToGet	dw 0
 	; Where to put them (segment:offset)
-	transferSeg		dw 0
 	transferOffset	dw 0
+	transferSeg		dw 0
 	startLBA		dd 0
 	extraBitLBA		dd 0
 	
