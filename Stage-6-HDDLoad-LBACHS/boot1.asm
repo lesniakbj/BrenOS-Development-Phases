@@ -67,7 +67,7 @@ boot1_start:
 	; Ok, we are using a floppy dive, lets
 	; save that so it can be used. 
 	mov dword [readFunction], read_sector_fd
-	jmp .load_second_stage
+	jmp boot_hdd.load_second_stage
 	
 boot_hdd:
 	mov dword [readFunction], read_sector_hdd
