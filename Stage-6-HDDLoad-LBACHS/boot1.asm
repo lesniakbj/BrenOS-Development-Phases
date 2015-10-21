@@ -120,6 +120,9 @@ boot_hdd:
 	mov bx, 0x7E00
 	mov cx, 4
 	call read_sector
+	
+	mov ax, [diskNumber]
+	push ax
 	jmp 0x0000:stage02_load
 	
 	

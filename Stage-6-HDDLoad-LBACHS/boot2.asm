@@ -2,9 +2,18 @@
 [ORG 0x7E00]
 
 boot2_start:
+	pop ax
+	
+	cmp ax, 0x00
+	je .boot_fd_msg
+	
 	mov si, BOOT2_MSG
 	call write_string
-	 
+
+.boot_fd_msg:
+	mov si, BOOT2_FD_MSG
+	call write_string
+	
 	jmp $
 	
 write_string:
@@ -29,8 +38,8 @@ write_string:
 ;		BOOT 2 - DATA			;
 ;===============================;
 ; String Data
-BOOT2_MSG	db 'We loaded from HDD - Again!!', 0x0A, 0x0D, 0
-
+BOOT2_MSG		db 'We loaded from HDD!', 0x0A, 0x0D, 0
+BOOT2_FD_MSGMSG	db 'We loaded from FD!', 0x0A, 0x0D, 0
 ; NOTE:
 ; ======================
 ; Some emulators and disk drives will
