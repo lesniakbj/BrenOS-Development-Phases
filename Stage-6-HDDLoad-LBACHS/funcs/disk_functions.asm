@@ -34,7 +34,7 @@ reset_disk:
 	
 read_hard_drive:
 	mov si, diskPacket
-	mov ah 0x42
+	mov ah, 0x42
 	mov dl, [diskNumber]
 	int 0x13
 	
