@@ -118,7 +118,7 @@ check_A20_enabled:
 	pop bx
 	ret
 	
-.A20_enabled
+.A20_enabled:
 	stc
 	mov byte [A20Enabled], 1
 	pop gs
