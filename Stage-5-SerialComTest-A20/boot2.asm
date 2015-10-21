@@ -68,7 +68,8 @@ boot2_start:
 	; jc .A20_enabled
 	
 	;		OR
-	je [a20Enabled], 1
+	cmp [a20Enabled], 1
+	je .A20_enabled
 	
 	
 	call write_newline
