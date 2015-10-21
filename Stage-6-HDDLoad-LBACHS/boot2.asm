@@ -29,7 +29,7 @@ write_string:
 ;		BOOT 2 - DATA			;
 ;===============================;
 ; String Data
-BOOT2_MSG	db 'We loaded from HDD!', 0x0A, 0x0D, 0
+BOOT2_MSG	db 'We loaded from HDD - Again!!', 0x0A, 0x0D, 0
 
 ; NOTE:
 ; ======================
