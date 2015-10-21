@@ -16,6 +16,9 @@ QHDDFLAGS= -hda bootloader.bin
 QCOMFLAGS= -serial file:log/qCOM1.log
 QUSBFLAGS= -usb 
 
+# BOCHS Flags
+BSMPFLAGS= --enable-smp -f bochsrc_smp.txt
+
 binary: boot1.asm boot2.asm
 	$(ASMC) boot1.asm $(ASMFLAGS) b1.bin
 	$(ASMC) boot2.asm $(ASMFLAGS) b2.bin
@@ -33,6 +36,9 @@ qemu-hdd: clean binary
 	
 bochs: clean iso
 	bochs
+
+bochs-smp: clean iso
+	bochs $(BSMPFLAGS)
 	
 clean:
 	mkdir -p iso

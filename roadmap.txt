@@ -94,8 +94,10 @@ Once in Kernel Mode:
 5. Start working on device drivers, specifically:
 	a. ISA
 	b. ATA
-	c. PCI
-	d. IDE
+	c. ACPI
+	d. PCI
+	e. IDE
+	f. SCSI
 6. One day, add Network Stack support and try adding NE2000 support
 
 NOTE:
@@ -105,3 +107,25 @@ full memory range. The IDT has been implemented, the pic and pit have been initi
 my own version of the buddy system for physical page management (yes, I use paging and this works, 
 that is, my kernel doesn't crash on page allocation and page mapping). Kernel memory (kernel heap) 
 is being managed using a variation on Dougs Lea allocator."
+
+;===============================================;
+; 		TEST ON THE FOLLOWING PLATFORMS			;
+;===============================================;
+1) Qemu
+2) Bochs
+3) Hyper-V
+4) VirtualBox
+5) Real Hardware?
+
+;===============================================;
+;			"NICE TO HAVE" FEATURES				;
+;===============================================;
+SMP Support:
+http://wiki.osdev.org/APIC
+http://wiki.osdev.org/Detecting_CPU_Speed#RDTSC_Instruction_Access
+
+http://bochs.sourceforge.net/doc/docbook/user/smp.html
+http://bochs.sourceforge.net/doc/docbook/user/bochsrc.html (Look @ CPU Section)
+
+Networking:
+http://bochs.sourceforge.net/doc/docbook/user/bochsrc.html (Look @ NE2k)
