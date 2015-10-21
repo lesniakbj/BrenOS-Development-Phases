@@ -68,7 +68,7 @@ boot2_start:
 	; jc .A20_enabled
 	
 	;		OR
-	cmp [A20Enabled], 1
+	cmp byte [A20Enabled], 1
 	je .A20_enabled
 	
 	
