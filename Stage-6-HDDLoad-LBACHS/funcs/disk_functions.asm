@@ -82,6 +82,7 @@ numberOfDrives		db 0
 numberOfHeads		db 0
 numberOfSectors		db 0
 numberOfCylinders	dw 0
+bytesPerSector		dw 512
 
 ; DISK INFORMATION
 diskNumber			db 0
