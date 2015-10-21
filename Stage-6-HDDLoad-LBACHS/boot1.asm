@@ -94,10 +94,10 @@ boot1_start:
 	mov si, HDD_BOOT_MSG
 	call write_string
 	
-	mov [sectorsToGet], 16
-	mov [transferOffset], 0x7C00
-	mov [transferSeg], 0x0000
-	mov [startLBA], 1
+	mov word [sectorsToGet], 16
+	mov word [transferOffset], 0x7C00
+	mov word [transferSeg], 0x0000
+	mov dword [startLBA], 1
 	call read_hard_drive
 	
 	xor si, si
