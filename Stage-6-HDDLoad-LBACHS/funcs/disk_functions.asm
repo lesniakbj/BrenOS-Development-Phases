@@ -34,9 +34,6 @@ get_drive_parameters:
 .disk_error:
 	popa
 	ret
-	
-read_sector:
-	jmp [readFunction]
 
 ;---------------------------------------;
 ; read_sector_hdd(sector, dest*, length);
@@ -87,7 +84,7 @@ read_sector_fd:
 	; Loop will decrement cx
 	loop .read_next_sector
 
-.done
+.done:
 	a32 popa
 	ret
 	
@@ -99,6 +96,9 @@ read_sector_fd:
 	
 .get_chs_values:
 	xor edx, edx
+	
+read_sector:
+	jmp [readFunction]
 	
 ;=======================;
 ;		DISK DATA		;
