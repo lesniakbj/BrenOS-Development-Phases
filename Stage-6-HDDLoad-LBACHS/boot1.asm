@@ -59,6 +59,7 @@ boot1_start:
 	; Save the disk that we are
 	; booted from.
 	mov [diskNumber], dl
+	call get_drive_parameters
 	
 	; Test to see if the HDD bit is set
 	test dl, 0x80
@@ -67,8 +68,10 @@ boot1_start:
 	; Ok, we are using a floppy dive, lets
 	; save that so it can be used. 
 	mov dword [readFunction], read_sector_fd
-	jmp boot_hdd.load_second_stage
+	jmp boot_hdd.no_mbr_found
 	
+; We're booting off of a HDD, so we need to find
+; the MBR to figure out our partition.
 boot_hdd:
 	mov dword [readFunction], read_sector_hdd
 	
@@ -87,6 +90,8 @@ boot_hdd:
 	; Offset to the MBR table
 	mov eax, 0x1000 + 446
 
+; Time to determine the boot partition + LBA 
+; offset. 
 .check_next_sector:
 	; If we find a 0 byte, 
 	; then we have not found our boot
@@ -99,11 +104,14 @@ boot_hdd:
 	; blocks for the MBR.
 	inc cx
 	cmp cx, 4
-	je .load_second_stage
+	je .no_mbr_found
 	
 	add eax, 16
 	jmp .check_next_sector
-	
+
+; Now that we found the partition, lets 
+; save the partition number and the LBA
+; offset. 	
 .found_boot_partition:
 	; The partition booted from will be
 	; in cl once we find it. 
@@ -113,9 +121,11 @@ boot_hdd:
 	; partition.
 	mov ebx, [eax + 8]
 	mov [diskPartitionLBA], ebx
-	jmp .load_second_stage
-	
-.load_second_stage:
+	jmp .no_mbr_found
+
+; Either way we need to load our 2nd stage, 
+; so lets do that. 	
+.no_mbr_found:
 	mov eax, 1
 	mov bx, 0x7E00
 	mov cx, 4

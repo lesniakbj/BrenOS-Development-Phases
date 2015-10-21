@@ -9,11 +9,11 @@ TFLAGS= -s 1440k
 ISOFLAGS= -o iso/bootloader.iso -b
 
 # QEMU Flags
-QHIGHMEMFLAGS= -m 8G
 QALLFLAGS= -full-screen
 QFLOPFLAGS= -fda bootloader.bin
 QHDDFLAGS= -hda bootloader.bin
 QCOMFLAGS= -serial file:log/qCOM1.log
+QMEMFLAGS= -m 8G
 QUSBFLAGS= -usb 
 
 binary: boot1.asm boot2.asm

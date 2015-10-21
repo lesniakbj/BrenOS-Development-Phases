@@ -1,6 +1,23 @@
 ;=======================;
 ;	PRIMARY FUNCTIONS	;
 ;=======================;
+get_drive_parameters:
+	pusha
+	
+	mov ah, 0x08
+	mov dl, [diskNumber]
+	int 0x13
+	jc .disk_error
+	
+	
+	
+	popa
+	ret
+	
+.disk_error:
+	popa
+	ret
+	
 read_sector:
 	jmp [readFunction]
 
@@ -42,30 +59,40 @@ read_sector_hdd:
 ;---------------------------------------;
 read_sector_fd:
 	a32 pusha
-	; Read Sector Function
-	mov ah, 0x02
 	
-	mov al, 8				; Number of Sectors to Read
-	mov dl, [diskNumber]	; Use the 1st (C:) Drive. HDD.
-	mov ch, 0				; Use the 1st Cylinder/Track
-	mov dh, 0				; Use the 1st Read/Write Head
-	mov cl, 2				; Read the 2nd Sector
-	int 0x13
+.read_next_sector:
+	call .read_single_sector_fd
 	
-	jc .disk_read_error
-	a32 popa
-	ret 
+	; Next sector location. 
+	add bx, 512
+	inc eax
+	
+	; Loop will decrement cx
+	loop .read_next_sector
 
-.disk_read_error:
-	mov si, READ_ERROR
-	call write_string
-	jmp $
+.done
+	a32 popa
+	ret
+	
+.read_single_sector_fd:
+	a32 pusha
+	call .get_chs_values
+	a32 popa
+	ret
+	
+.get_chs_values:
+	xor edx, edx
 	
 ;=======================;
 ;		DISK DATA		;
 ;=======================;
 ; DISK READ FUNCTION
 readFunction		dd 0
+
+; DISK PARAMETERS
+numberOfHeads		db 0
+numberOfSectors		db 0
+numberOfCylnders	db 0
 
 ; DISK INFORMATION
 diskNumber			db 0
