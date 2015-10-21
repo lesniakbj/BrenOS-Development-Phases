@@ -1,6 +1,28 @@
 ;=======================;
 ;	PRIMARY FUNCTIONS	;
 ;=======================;
+lba_to_chs:
+	mov [lbaAddress], ax
+
+.start:
+	; Divide dx:ax by sectorsPerTrack and add 1
+	; Sector = (LBA % (Sectors per Track)) + 1,
+	; then save it.
+	; Temp = LBA / (Sectors per Track)
+	xor dx, dx
+	div word [sectorsPerTrack]
+	inc dl
+	mov byte [absoluteSector], dl
+	
+	; Head = Temp % (Number of Heads)
+	; Cylinder = Temp / (Number of Heads)
+	xor dx, dx
+	div word [numberOfHeads]
+	mov byte [absoluteHead], dl
+	mov byte [absoluteCylnider], al
+	
+	ret 
+
 reset_disk:
 	mov ah, 0x00			; Move 0 into AH, the function we want to call
 							; 0 = reset floppy function
@@ -35,3 +57,36 @@ read_floppy:
 	mov si, READ_ERROR
 	call write_string
 	jmp $
+	
+
+get_drive_geometry:
+	xor ax, ax
+	mov ah, 0x08
+	mov dl, [diskNumber]
+	int 0x13
+	
+	; DH = Number of Heads
+	; The value returned in DH is the 
+	; "Number of Heads" -1
+	mov [numberOfHeads], dh
+	add dh, 1
+	
+	; CL and 0x3F = Sectors per Track
+	and cl, 0x3F
+	mov [sectorsPerTrack], cl
+	
+	ret
+	
+get_address_extensions:
+	clc
+	
+	; Check to see if the 
+	; extensions are supported. 
+	mov ah, 0x41
+	mov bx, 0x55AA
+	mov dl, 0x80
+	int 0x13
+	
+	; Carry will be set by the int
+	; if they are NOT supported
+	ret
