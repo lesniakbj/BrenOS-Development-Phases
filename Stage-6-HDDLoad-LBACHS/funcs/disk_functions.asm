@@ -32,7 +32,23 @@ reset_disk:
 							; resetting the disk, try again.
 	ret
 	
-
+read_hard_drive:
+	mov si, diskPacket
+	mov ah 0x42
+	mov dl, [diskNumber]
+	int 0x13
+	
+	; The carry flag will be set if there is any 
+	; error during the transfer. AH should be
+    ; set to 0 on success.
+	jc .disk_read_error
+	ret
+	
+.disk_read_error:
+	mov si, READ_ERROR_HDD
+	call write_string
+	jmp $	
+	
 read_floppy:
 	mov ah, 0x02	; Read Sector Function
 	

@@ -94,6 +94,12 @@ boot1_start:
 	mov si, HDD_BOOT_MSG
 	call write_string
 	
+	mov [sectorsToGet], 16
+	mov [transferOffset], 0x7C00
+	mov [transferSeg], 0x0000
+	mov [startLBA], 1
+	call read_hard_drive
+	
 	xor si, si
 	xor di, di
 	jmp 0x0000:stage02_load
@@ -135,6 +141,7 @@ BOOT_MSG			db 'Loading stage 2 loader from floppy...', 0x0A, 0x0D, 0
 HDD_BOOT_MSG		db 'Loading stage 2 loader from HDD...', 0x0A, 0x0D, 0
 HDD_BOOT_CHS_MSG	db 'Loading stage 2 loader from HDD using CHS...', 0x0A, 0x0D, 0
 READ_ERROR			db 'Error reading from Disk!', 0x0A, 0x0D, 0
+READ_ERROR_HDD		db 'Error reading from HDD!', 0x0A, 0x0D, 0
 
 ; Other Data
 diskNumber		db 0
@@ -154,8 +161,9 @@ diskPacket:
 	alwaysZero		db 0x00
 	; # of sectors to retrieve
 	sectorsToGet	dw 0
-	; Where to put them (offset:segment)
-	transferBuff	dd 0
+	; Where to put them (segment:offset)
+	transferOffset	dw 0
+	transferSeg		dw 0
 	startLBA		dd 0
 	extraBitLBA		dd 0
 	
