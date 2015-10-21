@@ -67,7 +67,7 @@ boot1_start:
 	; Ok, we are using a floppy dive, lets
 	; save that so it can be used. 
 	mov dword [readFunction], read_sector_fd
-	jmp boot_floppy
+	jmp load_second_stage
 	
 boot_hdd:
 	mov dword [readFunction], read_sector_hdd
@@ -99,7 +99,7 @@ boot_hdd:
 	; blocks for the MBR.
 	inc cx
 	cmp cx, 4
-	je .boot_mbr_not_found
+	je load_second_stage
 	
 	add eax, 16
 	jmp .check_next_sector
@@ -114,14 +114,12 @@ boot_hdd:
 	mov ebx, [eax + 8]
 	mov [diskPartitionLBA], ebx
 
-.boot_mbr_not_found:
+load_second_stage:
 	mov eax, 1
 	mov bx, 0x7E00
 	mov cx, 4
 	call read_sector
 	jmp 0x0000:stage02_load
-	
-boot_floppy:
 	
 	
 %include "funcs/disk_functions.asm"
