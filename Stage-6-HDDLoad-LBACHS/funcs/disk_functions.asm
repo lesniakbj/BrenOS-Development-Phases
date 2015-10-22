@@ -54,7 +54,7 @@ read_sector_fd:
 	; Setup the function defining where
 	; we are reading from...
 	mov al, 8				; Number of Sectors to Read
-	mov dl, [driveNumber]	; Use the 1st (C:) Drive. HDD.
+	mov dl, [diskNumber]	; Use the 1st (C:) Drive. HDD.
 	mov ch, 0				; Use the 1st Cylinder/Track
 	mov dh, 0				; Use the 1st Read/Write Head
 	mov cl, 2				; Read the 2nd Sector
