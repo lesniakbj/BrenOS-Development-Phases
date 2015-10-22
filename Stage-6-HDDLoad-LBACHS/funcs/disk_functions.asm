@@ -47,6 +47,12 @@ read_sector_hdd:
 ;		ES:BX - Destination				;
 ;		CX - Length						;
 ;---------------------------------------;
+
+
+
+; THIS IMPLEMENTATION "WORKS" - RIP OUT
+; EVERYTHING IF WE HAVE TO AND HARDCODE
+; THE SECTORS WE NEED TO READ.
 read_sector_fd:
 	; Read Sector Function
 	mov ah, 0x02
