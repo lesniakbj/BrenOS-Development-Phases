@@ -73,6 +73,15 @@ Phase 8:
 2. Setting up PMode for the kernel.
 3. Jump to kernel.    
 
+
+; SPECIAL NOTE:
+; The bootloader exercise was to get myself more familiar with 
+; being in real mode and working with assembly and other low level
+; constructs. Once I am able to get what I want out of this bootloader,
+; I will either use it boot my Kernel (make it production ready), or 
+; switch to using GRUB as my bootloader. 
+
+
 ;===========================================================================;
 ;	Note for FINAL VERSION of BOOTLOADER:									;
 ;	It's common for the loader to keep interrupts 							;
