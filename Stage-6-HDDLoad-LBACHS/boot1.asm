@@ -59,7 +59,6 @@ boot1_start:
 	; Save the disk that we are
 	; booted from.
 	mov [diskNumber], dl
-	mov [driveNumber], dl
 	
 	; Test to see if the HDD bit is set
 	test dl, 0x80
@@ -127,8 +126,8 @@ boot_hdd:
 ; so lets do that. 	
 .no_mbr_found:
 	mov eax, 1
-	mov bx, 0x7E00
-	mov cx, 4
+	mov bx, stage02_load
+	mov cx, 8
 	call read_sector
 	
 	mov ax, [diskNumber]
@@ -166,10 +165,6 @@ HDD_BOOT_MSG		db 'Loading stage 2 from HDD...', 0x0A, 0x0D, 0
 HDD_BOOT_CHS_MSG	db 'Loading stage 2 from HDD-CHS...', 0x0A, 0x0D, 0
 READ_ERROR			db 'Err read from Disk!', 0x0A, 0x0D, 0
 READ_ERROR_HDD		db 'Err read from HDD!', 0x0A, 0x0D, 0
-	
-; Error Checking Data
-readSegment			dw 0
-readOffset			dw 0
 	
 TIMES 510 - ($ - $$) db 0 
 dw 0xAA55
