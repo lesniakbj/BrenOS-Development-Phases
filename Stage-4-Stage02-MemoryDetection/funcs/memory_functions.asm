@@ -32,7 +32,7 @@ detect_memory_map_e820:
 	cmp ebx, 0
 	je .error_exit
 	
-	mov [es:di + 20], dword 1
+	mov [es:di + 24], dword 1
 	mov word [mMapEntries], 1
 	mov word [mMapBytesPerEntry], cx
 	
@@ -53,7 +53,7 @@ detect_memory_map_e820:
 	jmp .e820_loop
 
 .loop_end:
-	mov [es:di + 20], dword 1
+	mov [es:di + 24], dword 1
 	add word [mMapEntries], 1
 	ret
 	
