@@ -71,9 +71,9 @@ boot2_start:
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
 	mov si, mMapBuffer
-	; Number of entries x Bytes per Entry
+	; Number of entries x Entries Per Row
 	mov ax, [mMapEntries]
-	imul ax, 24
+	imul ax, 12
 	mov cx, ax						; After 1 call, the buffer fills with 20-24 bytes.
 									; Typically 20, so we will use that.
 	mov ax, 12
