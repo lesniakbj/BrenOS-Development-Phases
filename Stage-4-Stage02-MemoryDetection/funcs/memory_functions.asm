@@ -34,7 +34,7 @@ detect_memory_map_e820:
 	
 	mov [es:di + 20], dword 1
 	mov word [mMapEntries], 1
-	mov byte [mMapBytesPerEntry], ecx
+	mov byte [mMapBytesPerEntry], cx
 	
 .e820_loop:
 	add di, [mMapEntrySize]
@@ -49,12 +49,12 @@ detect_memory_map_e820:
 	
 	jc .loop_end_carry
 	
-	mov word [mMapEntries], 1
+	add word [mMapEntries], 1
 	jmp .e820_loop
 
 .loop_end:
 	mov [es:di + 20], dword 1
-	inc word [mMapEntries], 1
+	add word [mMapEntries], 1
 	ret
 	
 .loop_end_carry:
@@ -71,7 +71,7 @@ detect_memory_map_e820:
 ERR_MSG db 'Error E820!', 0
 
 mMapEntries			dd 0
-mMapBytesPerEntry	db 0
+mMapBytesPerEntry	dd 0
 mMapEntrySize		db 24
 
 mMapStruct:
