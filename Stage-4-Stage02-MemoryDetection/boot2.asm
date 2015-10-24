@@ -47,9 +47,6 @@ boot2_start:
 	mov si, HIGH_MEM_MSG
 	call write_string
 	call write_newline
-	call write_newline
-	mov si, BYTES_DET_MSG
-	call write_string
 	; TEST: This mem should be 0'ed
 	; mov si, memoryMapBuffer
 	; mov cx, 12
@@ -62,8 +59,8 @@ boot2_start:
 	; if there is an error. 
 	call detect_memory_map_e820
 	
-	mov si, mMapEntries
-	call write_memory_range_16
+	mov dx, [mMapEntries]
+	call write_hex_16
 	call write_newline
 	
 	; Test of the memory range print
