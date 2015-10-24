@@ -37,7 +37,7 @@ detect_memory_map_e820:
 	mov byte [mMapBytesPerEntry], ecx
 	
 .e820_loop:
-	add di, [mMapEntrySize]]
+	add di, [mMapEntrySize]
 	mov eax, 0xE820
 	mov edx, 0x534D4150
 	mov ecx, 20
