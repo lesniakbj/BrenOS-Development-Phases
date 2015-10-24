@@ -71,9 +71,9 @@ boot2_start:
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
 	mov si, mMapBuffer
-	mov cx, 32						; After 1 call, the buffer fills with 20-24 bytes.
+	mov cx, 96						; After 1 call, the buffer fills with 20-24 bytes.
 									; Typically 20, so we will use that.
-	mov ax, 8
+	mov ax, 12
 	call write_memory_range_16
 	call write_newline
 	
