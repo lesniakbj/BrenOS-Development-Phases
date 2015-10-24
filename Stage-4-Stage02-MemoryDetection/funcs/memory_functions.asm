@@ -13,7 +13,7 @@ detect_low_memory:
 	
 ; The calling function will set the buffer
 ; location for the memory map.
-detect_memory_map:
+detect_memory_map_e820:
 	xor ebx, ebx
 	xor ecx, ecx
 	
