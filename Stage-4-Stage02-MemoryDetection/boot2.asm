@@ -73,7 +73,7 @@ boot2_start:
 	mov si, mMapBuffer
 	; Number of entries x Bytes per Entry
 	mov ax, [mMapEntries]
-	mul ax, 24
+	imul ax, 24
 	mov cx, ax						; After 1 call, the buffer fills with 20-24 bytes.
 									; Typically 20, so we will use that.
 	mov ax, 12
