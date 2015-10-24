@@ -62,6 +62,10 @@ boot2_start:
 	; if there is an error. 
 	call detect_memory_map_e820
 	
+	mov si, mMapEntries
+	call write_memory_range_16
+	call write_newline
+	
 	; Test of the memory range print
 	; function. Lets see if we can print
 	; our Stage01 boot code, or at least
@@ -69,10 +73,10 @@ boot2_start:
 	; CX = Number of Words to Read
 	; AX = Entries per Row (to Display)
 	; ES:SI -> Buffer to read from
-	mov si, memoryMapBuffer
-	mov cx, 10						; After 1 call, the buffer fills with 20-24 bytes.
+	mov si, mMapBuffer
+	mov cx, 32						; After 1 call, the buffer fills with 20-24 bytes.
 									; Typically 20, so we will use that.
-	mov ax, 5
+	mov ax, 8
 	call write_memory_range_16
 	call write_newline
 	
@@ -116,16 +120,9 @@ HIGH_MEM_MSG 		db ' Detecting High Memory: ', 0
 BYTES_DET_MSG		db ' Bytes Stored (0x): ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
-; Buffer & count for memory map structure
-mMapBytesPerEntry	db 0
 
-memoryMapStruct:
-	baseAddress		dq 0
-	lengthOfRegion	dq 0
-	regionType		dd 0
-	extAttributes	dd 0
 
-memoryMapBuffer:
+mMapBuffer:
 
 ; NOTE:
 ; ======================
