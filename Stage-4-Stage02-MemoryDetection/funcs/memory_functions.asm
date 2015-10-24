@@ -40,7 +40,7 @@ detect_memory_map_e820:
 	add di, [mMapEntrySize]
 	mov eax, 0xE820
 	mov edx, 0x534D4150
-	mov ecx, 20
+	mov ecx, 24
 	
 	int 0x15
 	
