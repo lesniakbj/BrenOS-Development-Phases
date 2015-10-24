@@ -34,7 +34,7 @@ detect_memory_map_e820:
 	
 	mov [es:di + 20], dword 1
 	mov word [mMapEntries], 1
-	mov byte [mMapBytesPerEntry], cx
+	mov word [mMapBytesPerEntry], cx
 	
 .e820_loop:
 	add di, [mMapEntrySize]
