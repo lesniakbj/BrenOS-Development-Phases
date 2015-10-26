@@ -76,9 +76,13 @@ boot2_start:
 	mov ax, 12
 	call write_memory_range_16
 	call write_newline
-	mov si, DIVIDER_MSG
+	
+	
+	mov si, MEM_LAYOUT_MSG
 	call write_string
 	call write_newline
+	
+	call .display_mem_map_entry
 	; Fun Experiment: Read the entire
 	; bootsector1 code and addresses.
 	; mov si, 0x7C00
@@ -100,6 +104,10 @@ boot2_start:
 	 
 	jmp $
 
+
+.display_mem_map_entry:
+	ret
+
 %include 'funcs/screen_functions.asm'
 %include 'funcs/memory_functions.asm'
 %include 'funcs/output_functions.asm'
@@ -111,6 +119,7 @@ MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
 DIVIDER_MSG				db ' =================================', 0
 HIGH_MEM_MSG 			db ' Number of E820 Entries: ', 0
+MEM_LAYOUT_MSG		db 'Start		End			Type', 0
 BYTES_DET_MSG			db ' Bytes Stored (0x): ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
