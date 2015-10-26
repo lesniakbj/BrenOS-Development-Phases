@@ -1,5 +1,4 @@
-
-memory: 				guest=8192, host=256
+memory: 				guest=64, host=64
 display_library: 		sdl
 romimage: 			file=/usr/share/bochs/BIOS-bochs-latest
 vgaromimage: 		file=/usr/share/bochs/VGABIOS-lgpl-latest
