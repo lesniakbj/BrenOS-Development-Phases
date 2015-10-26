@@ -55,6 +55,10 @@ boot2_start:
 	mov dx, [mMapEntries]
 	call write_hex_16
 	call write_newline
+	mov si, DIVIDER_MSG
+	call write_string
+	call write_newline
+	call write_newline
 	
 	; Test of the memory range print
 	; function. Lets see if we can print
