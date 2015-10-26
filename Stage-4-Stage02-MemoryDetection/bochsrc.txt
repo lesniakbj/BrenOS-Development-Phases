@@ -1,3 +1,4 @@
+
 memory: 				guest=2048, host=256
 display_library: 		sdl
 romimage: 			file=/usr/share/bochs/BIOS-bochs-latest
