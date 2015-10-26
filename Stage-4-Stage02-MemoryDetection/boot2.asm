@@ -81,6 +81,11 @@ boot2_start:
 	mov si, MEM_LAYOUT_MSG
 	call write_string
 	call write_newline
+	mov si, DIVIDER_MSG
+	call write_string
+	mov si, DIVIDER_MSG
+	call write_string
+	call write_newline
 	
 	call .display_mem_map_entry
 	; Fun Experiment: Read the entire
