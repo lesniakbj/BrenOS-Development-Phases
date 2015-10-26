@@ -14,9 +14,6 @@ boot2_start:
 	call write_color_row
 	call write_newline
 	call write_newline
-	
-	; Tell the user that we are now
-	; detecting memory in their system.
 	mov si, MEM_DET_MSG
 	call write_string
 	call write_newline
@@ -24,9 +21,6 @@ boot2_start:
 	call write_string
 	call write_newline
 	call write_newline
-	
-	; Now we should write what we are 
-	; are doing, for record keeping.
 	mov si, LOW_MEM_DET_MSG
 	call write_string
 	
@@ -44,9 +38,6 @@ boot2_start:
 	call write_newline
 	call write_newline
 	
-	mov si, HIGH_MEM_MSG
-	call write_string
-	call write_newline
 	; TEST: This mem should be 0'ed
 	; mov si, memoryMapBuffer
 	; mov cx, 12
@@ -59,6 +50,8 @@ boot2_start:
 	; if there is an error. 
 	call detect_memory_map_e820
 	
+	mov si, HIGH_MEM_MSG
+	call write_string
 	mov dx, [mMapEntries]
 	call write_hex_16
 	call write_newline
@@ -74,16 +67,11 @@ boot2_start:
 	; Number of entries x Entries Per Row
 	mov ax, [mMapEntries]
 	imul ax, 12
-	mov cx, ax						; After 1 call, the buffer fills with 20-24 bytes.
+	mov cx, ax					; After 1 call, the buffer fills with 20-24 bytes.
 									; Typically 20, so we will use that.
 	mov ax, 12
 	call write_memory_range_16
 	call write_newline
-	
-	; mov si, memoryMapBuffer
-	; mov cx, 20
-	; mov ax, 10
-	; call write_memory_range_8
 	
 	; Fun Experiment: Read the entire
 	; bootsector1 code and addresses.
@@ -115,9 +103,9 @@ boot2_start:
 ;===============================;
 MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
-DIVIDER_MSG			db ' =================================', 0
-HIGH_MEM_MSG 		db ' Detecting High Memory: ', 0
-BYTES_DET_MSG		db ' Bytes Stored (0x): ', 0
+DIVIDER_MSG				db ' =================================', 0
+HIGH_MEM_MSG 			db ' Number of E820 Entries: ', 0
+BYTES_DET_MSG			db ' Bytes Stored (0x): ', 0
 HIGHMEMERR_MSG		db ' Error Using INT 0x15, AX 0xE820!', 0
 
 
