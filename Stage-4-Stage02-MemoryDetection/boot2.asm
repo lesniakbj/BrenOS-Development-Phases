@@ -76,7 +76,9 @@ boot2_start:
 	mov ax, 12
 	call write_memory_range_16
 	call write_newline
-	
+	mov si, DIVIDER_MSG
+	call write_string
+	call write_newline
 	; Fun Experiment: Read the entire
 	; bootsector1 code and addresses.
 	; mov si, 0x7C00
