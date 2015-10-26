@@ -122,7 +122,7 @@ boot2_start:
 ;===============================;
 MEM_DET_MSG			db ' Detecting Memory Map', 0
 LOW_MEM_DET_MSG 	db ' Detecting Low Memory (KB): ', 0
-DIVIDER_MSG				db ' =================================', 0
+DIVIDER_MSG				db ' ===================================================', 0
 HIGH_MEM_MSG 			db ' Number of E820 Entries: ', 0
 MEM_LAYOUT_MSG		db ' Start			End				Type', 0
 BYTES_DET_MSG			db ' Bytes Stored (0x): ', 0
